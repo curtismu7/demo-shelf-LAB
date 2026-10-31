@@ -1,0 +1,67 @@
+{
+  "schema": "demo-tags/1",
+  "groups": [
+    {
+      "id": "product",
+      "label": "Ping products",
+      "tags": [
+        { "id": "pingone", "label": "PingOne" },
+        { "id": "pingone-authorize", "label": "PingOne Authorize" },
+        { "id": "pingone-davinci", "label": "PingOne DaVinci" },
+        { "id": "pingone-protect", "label": "PingOne Protect" },
+        { "id": "pingone-mfa", "label": "PingOne MFA" },
+        { "id": "pingone-privilege", "label": "PingOne Privilege", "hint": "The AI / agent gateway and its policy enforcement" },
+        { "id": "agent-gateway", "label": "Agent Gateway" },
+        { "id": "pingone-mcp", "label": "PingOne MCP server" },
+        { "id": "pingfederate", "label": "PingFederate" },
+        { "id": "pinggateway", "label": "PingGateway" }
+      ]
+    },
+    {
+      "id": "usecase",
+      "label": "Use cases",
+      "tags": [
+        { "id": "ai-agent-security", "label": "AI agent security" },
+        { "id": "mcp-security", "label": "MCP security" },
+        { "id": "tool-poisoning", "label": "Tool poisoning and rug-pulls" },
+        { "id": "agent-identity", "label": "Agent identity and delegation", "hint": "Non-human identity, acting for a person, who the agent is" },
+        { "id": "authorization-policy", "label": "Authorization and policy" },
+        { "id": "human-in-the-loop", "label": "Human approval" },
+        { "id": "agent-controls", "label": "Agent limits and guardrails", "hint": "Rate and cost caps, kill switch, guardrail sidecar" },
+        { "id": "sign-in-and-mfa", "label": "Sign-in, MFA and step-up" },
+        { "id": "token-security", "label": "Token security" },
+        { "id": "audit-observability", "label": "Audit and observability" },
+        { "id": "learning", "label": "Learning and tooling" }
+      ]
+    },
+    {
+      "id": "mode",
+      "label": "Simulated or real",
+      "tags": [
+        { "id": "simulated", "label": "Simulated", "hint": "Runs offline on fake data, no tenant needed" },
+        { "id": "real", "label": "Real", "hint": "Can also run against something real: a PingOne or PingFederate tenant, or a server you point it at. The hosted copy is always simulated." }
+      ]
+    },
+    {
+      "id": "standard",
+      "label": "Standards and protocols",
+      "tags": [
+        { "id": "oauth", "label": "OAuth 2.0" },
+        { "id": "oidc", "label": "OpenID Connect" },
+        { "id": "token-exchange", "label": "Token Exchange (RFC 8693)" },
+        { "id": "id-jag", "label": "ID-JAG" },
+        { "id": "dpop", "label": "DPoP (RFC 9449)" },
+        { "id": "mtls", "label": "mTLS" },
+        { "id": "par", "label": "PAR (RFC 9126)" },
+        { "id": "ciba", "label": "CIBA" },
+        { "id": "step-up", "label": "Step-up (RFC 9470)" },
+        { "id": "rfc9728", "label": "Protected Resource Metadata (RFC 9728)" },
+        { "id": "fapi", "label": "FAPI 2.0" },
+        { "id": "mcp", "label": "MCP" },
+        { "id": "a2a", "label": "A2A" },
+        { "id": "cimd", "label": "CIMD" },
+        { "id": "cedar", "label": "Cedar" }
+      ]
+    }
+  ]
+}

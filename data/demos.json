@@ -1,0 +1,131 @@
+{
+  "demos": [
+    {
+      "id": "ai-gateway-client",
+      "name": "Agent Privilege Client LAB",
+      "catalogId": "D20",
+      "kind": "Tester",
+      "description": "A local, no-login test client for an OAuth-protected MCP gateway. Shows one tool call through the gateway and directly, so the policy difference is visible.",
+      "url": "http://127.0.0.1:6880",
+      "healthPath": "/api/health",
+      "composeFile": "ai-gateway-client-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingone-privilege",
+        "agent-gateway",
+        "oauth",
+        "mcp",
+        "real"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "mcp-demo-client-privilege",
+      "name": "MCP Demo Client for Privilege LAB",
+      "kind": "Demo",
+      "description": "Chat-first local MCP demo client for protected MCP demos behind a PingOne Privilege gateway.",
+      "url": "http://127.0.0.1:6884",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-demo-client-privilege-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "catalogId": "D2",
+      "tags": [
+        "pingone-privilege",
+        "mcp",
+        "oauth",
+        "real"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "privilege-a2a-anthropic-demo",
+      "name": "Privilege A2A Anthropic demo LAB",
+      "kind": "Demo",
+      "description": "Three Node processes that show an access review through A2A and MCP, on Anthropic or Google models.",
+      "url": "http://127.0.0.1:6881",
+      "healthPath": "/api/health",
+      "composeFile": "privilege-a2a-anthropic-demo-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingone-privilege",
+        "a2a",
+        "agent-identity",
+        "real"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "id-jag-standalone",
+      "name": "ID-JAG Standalone LAB",
+      "catalogId": "C1",
+      "kind": "Demo",
+      "description": "Token exchange with ID-JAG, using a mock authorization server and a sample MCP server.",
+      "url": "http://localhost:4720",
+      "healthPath": "/api/health",
+      "composeFile": "id-jag-standalone-LAB/deploy/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingfederate",
+        "id-jag",
+        "token-exchange",
+        "oauth",
+        "agent-identity",
+        "simulated",
+        "real"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "privilege-demo",
+      "name": "Privilege demo LAB",
+      "kind": "Demo",
+      "description": "An AI agent's MCP tool calls pass a policy enforcement point that decides allow, deny or hold with Cedar. Runs offline in mock mode (in-process mock issuer and tool backends) or verifies Bearer tokens from your own PingFederate in live mode.",
+      "url": "http://127.0.0.1:4510",
+      "healthPath": "/api/health",
+      "composeFile": "privilege-demo-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "port": 4510,
+      "catalogId": "D1",
+      "tags": [
+        "pingone-privilege",
+        "authorization-policy",
+        "cedar",
+        "mcp",
+        "simulated"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "privilege-map",
+      "name": "Privilege Map LAB",
+      "kind": "Demo",
+      "description": "The PingOne Privilege Federated Identity model as ReactFlow diagrams you can drag and walk through, plus 21 Privilege feature cards, stories and a talk track. Mock only.",
+      "url": "http://127.0.0.1:5301",
+      "healthPath": "/api/health",
+      "composeFile": "privilege-map-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingone-privilege",
+        "authorization-policy",
+        "simulated"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "agent-mcp-door-demo",
+      "name": "Agent Meets the MCP Door LAB",
+      "kind": "Demo",
+      "description": "A member's own AI agent reaches an enterprise MCP door: discover, register, consent, per-call token exchange, gateway, policy decision, human approval, audit. Movable React Flow sequence diagram with a payload or mock token under each message, talk track and presenter mode. Mock only.",
+      "url": "http://localhost:6850",
+      "healthPath": "/api/health",
+      "composeFile": "agent-mcp-door-demo-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "mcp",
+        "pingone-privilege",
+        "simulated"
+      ],
+      "where": "installed"
+    }
+  ]
+}

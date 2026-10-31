@@ -1,0 +1,11 @@
+# The shelf as a read-only catalog on this Mac: http://127.0.0.1:4401/  (published on loopback only; Start / Stop is off in the container)
+services:
+  shelf:
+    build: .
+    image: demo-shelf:local
+    ports: ["127.0.0.1:4401:4400"]
+    read_only: true
+    tmpfs: ["/data", "/tmp"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped

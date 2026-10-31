@@ -1,0 +1,28 @@
+{
+  "name": "demo-shelf-LAB",
+  "private": true,
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "engines": {
+    "node": ">=26"
+  },
+  "scripts": {
+    "dev": "npm run dev -w server & npm run dev -w web",
+    "start": "npm start -w server",
+    "test": "npm test -w server && npm test -w web",
+    "build": "npm run build -w web",
+    "doctor": "node scripts/doctor.mjs",
+    "catalog": "node scripts/build-catalog.mjs",
+    "prepare": "git config core.hooksPath .githooks || true",
+    "e2e": "node scripts/e2e.mjs",
+    "e2e:refresh-docs": "node scripts/e2e.mjs --refresh-docs"
+  },
+  "devDependencies": {
+    "playwright": "^1.58.2"
+  },
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "A local launcher: every Ping demo on your machine, with a status light for each."
+}

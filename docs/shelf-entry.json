@@ -1,0 +1,12 @@
+{
+  "id": "demo-shelf-lab",
+  "name": "Demo Shelf LAB",
+  "catalogId": "E2",
+  "kind": "Tool",
+  "description": "The launcher for every demo on your machine: a status light for each, search, tag filters and a copy-ready start command.",
+  "url": "http://127.0.0.1:4400",
+  "healthPath": "/api/health",
+  "composeFile": "docker-compose.yml",
+  "composeOverlays": [],
+  "notes": "Host-run: npm start (port 4400). Docker: docker compose up -d --build (read-only catalog on 127.0.0.1:4401)."
+}

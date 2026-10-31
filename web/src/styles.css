@@ -1,0 +1,452 @@
+/* Demo Shelf. Layout: a header, a row of status lights, filters, then one shelf per group with demos standing on it.
+   Colours, fonts and theme come from standalone-ui.css; this file only uses its tokens. */
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-block: 28px 8px;
+}
+
+.top__name {
+  min-width: 0;
+}
+
+.top h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.top__dot {
+  color: var(--accent);
+}
+
+.top__sub {
+  margin: 8px 0 0;
+  max-width: 46ch;
+  color: var(--muted);
+}
+
+.top__tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.seg {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.room {
+  display: grid;
+  gap: 20px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-block: 16px 64px;
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+html[data-present] {
+  font-size: 125%;
+}
+
+.note {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.note[data-state="error"] {
+  border-left: 4px solid var(--accent);
+}
+
+.howto {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* Status lights and chips */
+.lights,
+.filters__where,
+.tag-filters__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.chip {
+  display: inline-flex;
+  gap: 6px;
+  align-items: baseline;
+  min-height: 0;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
+.chip b {
+  font-size: 1rem;
+}
+
+.chip small {
+  font-weight: 500;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filters label {
+  display: flex;
+  flex: 1 1 180px;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.tag-filters {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.tag-filters__group {
+  flex: 0 0 11rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tag-chip {
+  padding: 3px 12px;
+  font-size: 0.8rem;
+}
+
+.tag-filters__bar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.tag-toggle {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.empty {
+  padding: 32px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* A shelf: a heading, a row of boxes and the plank they stand on. */
+.shelf {
+  display: grid;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.shelf__title {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.shelf__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+  align-items: stretch;
+  padding: 0 6px 22px;
+}
+
+.shelf__row::after {
+  content: "";
+  position: absolute;
+  right: -6px;
+  bottom: 0;
+  left: -6px;
+  height: 18px;
+  border-radius: 3px 3px 6px 6px;
+  background: linear-gradient(
+    color-mix(in srgb, var(--surface) 40%, var(--border)) 0 35%,
+    color-mix(in srgb, var(--bg) 45%, var(--border)) 35% 100%
+  );
+  box-shadow: 0 14px 20px -8px var(--shadow-ink);
+}
+
+/* A box standing on the plank. The spine colour says what kind of thing it is. */
+.box {
+  --spine: var(--muted);
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  min-height: 250px;
+  padding: 18px 14px 14px;
+  border: 1px solid color-mix(in srgb, var(--border) 45%, var(--surface));
+  border-radius: 6px 6px 3px 3px;
+  background: var(--surface);
+  box-shadow: 0 6px 14px -10px var(--shadow-ink);
+}
+
+.box::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 7px;
+  border-radius: 5px 5px 0 0;
+  background: var(--spine);
+}
+
+.box[data-kind="Demo"] {
+  --spine: var(--accent);
+}
+
+.box[data-kind="Tester"] {
+  --spine: var(--status-info);
+}
+
+.box[data-kind="Tool"] {
+  --spine: var(--box-grey);
+}
+
+.box[data-planned="true"] {
+  min-height: 170px;
+  border-style: dashed;
+  background: transparent;
+  box-shadow: none;
+}
+
+.box[data-planned="true"]::before {
+  background: var(--muted);
+}
+
+.box h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+
+.box p {
+  margin: 0;
+}
+
+.box__place {
+  color: var(--muted);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.box__desc {
+  color: var(--text-body);
+  font-size: 0.9rem;
+}
+
+.box__meta {
+  color: var(--muted);
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.box__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.box__actions button,
+.box__open {
+  min-height: 0;
+  padding: 6px 12px;
+  font-size: 0.78rem;
+}
+
+.box__open {
+  border: 1px solid var(--primary-edge);
+  border-radius: 8px;
+  background: var(--accent-gradient);
+  color: var(--on-accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Status light: the dot carries the state, the words repeat it. */
+.light {
+  --light: var(--muted);
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.light::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--light);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--light) 22%, transparent);
+}
+
+.light[data-state="ready"] {
+  --light: var(--status-ok);
+}
+
+.light[data-state="needs-setup"] {
+  --light: var(--status-warn);
+}
+
+.light[data-state="broken"] {
+  --light: var(--accent);
+}
+
+.light[data-state="up-no-contract"] {
+  --light: var(--status-info);
+}
+
+.light[data-state="ready"]::before {
+  animation: glow 2.4s ease-in-out infinite;
+}
+
+@keyframes glow {
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--light) 10%, transparent);
+  }
+}
+
+/* Tags on a box */
+.tag-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag-pill {
+  min-height: 0;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 500;
+}
+
+.tag-more {
+  align-self: center;
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+
+/* Details drawer */
+.drawer {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(26rem, 100%);
+  padding: 16px;
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  overflow-y: auto;
+  border-left: 3px solid var(--accent);
+  background: var(--surface);
+  box-shadow: -8px 0 24px var(--shadow-ink);
+}
+
+.drawer__head {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.drawer h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.drawer dt {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.drawer dd {
+  margin: 2px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.mono {
+  font-size: 0.8rem;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .box {
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .box:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 24px -16px var(--shadow-ink);
+  }
+}
+
+@media (max-width: 600px) {
+  .shelf__row {
+    grid-template-columns: 1fr;
+  }
+
+  .tag-filters__group {
+    flex-basis: 100%;
+  }
+}
