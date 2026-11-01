@@ -20,10 +20,10 @@ cd demo-shelf-LAB
 npm install
 npm run doctor          # Node, registry, Docker context
 npm run agent           # the start agent: leave it running in its own terminal
-npm run docker          # builds and starts the shelf container: http://127.0.0.1:4400
+npm run docker          # builds and starts the shelf container, then opens http://127.0.0.1:4400 in your browser
 ```
 
-The shelf runs in Docker (non-root, read-only, no Docker socket). It cannot start containers itself, so the small **start agent** on your machine does `docker compose up -d` / `down` for the demos the shelf lists, and the shelf's Start and Stop buttons call it. If the agent is not running, the shelf says so and disables Start. Stop the shelf with `npm run docker:down`.
+The shelf runs in Docker (non-root, read-only, no Docker socket). It cannot start containers itself, so the small **start agent** on your machine does `docker compose up -d` / `down` for the demos the shelf lists, and the shelf's Start and Stop buttons call it. If the agent is not running, the shelf says so and disables Start. Stop the shelf with `npm run docker:down`. `npm run docker` opens your browser once the shelf answers; set `SHELF_OPEN=0` to stop that (it is also skipped when `CI` is set). `npm run agent` has no page of its own, so it opens nothing.
 
 Keep this folder next to the demo folders (all under one parent, for example `~/Development`). The shelf finds demos, and demos find the shelf, by sitting side by side.
 

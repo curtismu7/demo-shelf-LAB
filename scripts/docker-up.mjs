@@ -30,6 +30,20 @@ try {
   process.exit(1);
 }
 if (action === 'up') {
-  console.log(`\nShelf: http://127.0.0.1:${process.env.SHELF_HOST_PORT || 4400}`);
+  const url = `http://127.0.0.1:${process.env.SHELF_HOST_PORT || 4400}`;
+  console.log(`\nShelf: ${url}`);
   console.log('For Start / Stop, keep the start agent running on this machine: npm run agent');
+  // Open it in the default browser once it answers. SHELF_OPEN=0 (or CI) turns this off.
+  if (process.env.SHELF_OPEN !== '0' && !process.env.CI) {
+    let up = false;
+    for (let i = 0; i < 60 && !up; i++) {
+      up = await fetch(`${url}/api/health`).then((r) => r.ok, () => false);
+      if (!up) await new Promise((r) => setTimeout(r, 500));
+    }
+    if (!up) console.log('The shelf did not answer within 30 s; not opening the browser. Check: docker compose logs');
+    else {
+      const opener = process.platform === 'darwin' ? 'open' : 'xdg-open';
+      try { execFileSync(opener, [url], { stdio: 'ignore' }); } catch { console.log(`Could not open a browser; go to ${url}`); }
+    }
+  }
 }

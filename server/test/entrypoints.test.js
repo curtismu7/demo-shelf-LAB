@@ -1,5 +1,6 @@
 import { spawn, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
+import http from 'node:http';
 import net from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
@@ -54,7 +55,7 @@ describe('entry points', () => {
     const bin = fs.mkdtempSync(path.join(os.tmpdir(), 'shelf-fakebin-'));
     const log = path.join(bin, 'log.txt');
     const fake = (ctx) => fs.writeFileSync(path.join(bin, 'docker'), `#!/bin/sh\nif [ "$1" = context ]; then echo ${ctx}; exit 0; fi\nprintf '%s ' "$@" >> "${log}"\nprintf 'TOKEN_SET=%s\\n' "\${SHELF_AGENT_TOKEN:+yes}" >> "${log}"\n`, { mode: 0o755 });
-    const run = () => spawnSync('node', ['scripts/docker-up.mjs', 'up'], { cwd: repo, env: clean({ PATH: `${bin}:${process.env.PATH}` }), encoding: 'utf8', timeout: 20000 });
+    const run = () => spawnSync('node', ['scripts/docker-up.mjs', 'up'], { cwd: repo, env: clean({ PATH: `${bin}:${process.env.PATH}`, SHELF_OPEN: '0' }), encoding: 'utf8', timeout: 20000 });
     fake('desktop-linux');
     const bad = run();
     expect(bad.status).toBe(1);
@@ -66,5 +67,48 @@ describe('entry points', () => {
     expect(fs.readFileSync(log, 'utf8')).toBe('compose up -d --build TOKEN_SET=yes\n');
     const token = fs.readFileSync(path.join(repo, '.data', 'agent-token'), 'utf8').trim();
     expect(good.stdout + good.stderr).not.toContain(token);
+  });
+  describe('npm run docker opens the browser', () => {
+    const setup = () => {
+      const bin = fs.mkdtempSync(path.join(os.tmpdir(), 'shelf-fakebin-'));
+      const opened = path.join(bin, 'opened.txt');
+      fs.writeFileSync(path.join(bin, 'docker'), '#!/bin/sh\nif [ "$1" = context ]; then echo orbstack; fi\nexit 0\n', { mode: 0o755 });
+      for (const name of ['open', 'xdg-open']) fs.writeFileSync(path.join(bin, name), `#!/bin/sh\necho "$1" > "${opened}"\n`, { mode: 0o755 });
+      return { bin, opened };
+    };
+    const runDocker = (bin, env) => new Promise((resolve) => {
+      const child = spawn('node', ['scripts/docker-up.mjs', 'up'], { cwd: repo, env: clean({ PATH: `${bin}:${process.env.PATH}`, ...env }) });
+      let out = '';
+      child.stdout.on('data', (d) => { out += d; });
+      child.on('close', (status) => resolve({ status, out }));
+    });
+    const healthServer = async (ok) => {
+      const port = await freePort();
+      const srv = http.createServer((req, res) => { res.statusCode = ok ? 200 : 503; res.end('{}'); });
+      await new Promise((r) => srv.listen(port, '127.0.0.1', r));
+      return { port, close: () => srv.close() };
+    };
+
+    it('opens the shelf URL once /api/health answers', async () => {
+      const { bin, opened } = setup();
+      const srv = await healthServer(true);
+      try {
+        const r = await runDocker(bin, { SHELF_HOST_PORT: String(srv.port) });
+        expect(r.status).toBe(0);
+        expect(fs.readFileSync(opened, 'utf8').trim()).toBe(`http://127.0.0.1:${srv.port}`);
+      } finally { srv.close(); }
+    });
+
+    it('opens nothing when SHELF_OPEN=0 or CI is set', async () => {
+      const { bin, opened } = setup();
+      const srv = await healthServer(true);
+      try {
+        for (const env of [{ SHELF_OPEN: '0' }, { CI: 'true' }]) {
+          const r = await runDocker(bin, { SHELF_HOST_PORT: String(srv.port), ...env });
+          expect(r.status).toBe(0);
+          expect(fs.existsSync(opened)).toBe(false);
+        }
+      } finally { srv.close(); }
+    });
   });
 });
