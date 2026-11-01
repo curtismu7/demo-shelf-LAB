@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { allowedHostsFromEnv, loadRegistry, RegistryError } from './registry.js';
 import { createApp } from './app.js';
+import { loadShelfEnv } from './dotenv.js';
 import { createAgentClient } from './agent-client.js';
 import { createProbeFetch } from './probe.js';
 import { loadCatalogTags, loadTaxonomy, tagIdSet, untaggedPlanned } from './tags.js';
@@ -47,6 +48,7 @@ export function loadAll(env = process.env) {
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   try {
+    loadShelfEnv(root);
     const bind = resolveBind();
     const port = resolvePort();
     const { demos, catalog, tags, catalogTags } = loadAll();

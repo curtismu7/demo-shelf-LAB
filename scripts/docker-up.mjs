@@ -7,8 +7,10 @@ import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ensureToken } from '../server/src/agent.js';
+import { loadShelfEnv } from '../server/src/dotenv.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+loadShelfEnv(root);
 const action = process.argv[2] === 'down' ? 'down' : 'up';
 
 try {

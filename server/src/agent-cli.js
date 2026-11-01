@@ -6,9 +6,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { AGENT_PORT_DEFAULT, createAgent, ensureToken } from './agent.js';
 import { expandWhere } from './app.js';
+import { loadShelfEnv } from './dotenv.js';
 import { loadAll } from './index.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+loadShelfEnv(root);
 const port = Number(process.env.SHELF_AGENT_PORT || AGENT_PORT_DEFAULT);
 if (!Number.isInteger(port) || port < 1 || port > 65535) {
   console.error('SHELF_AGENT_PORT must be 1-65535');
