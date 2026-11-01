@@ -95,7 +95,7 @@ describe("shelf page", () => {
     fireEvent.click(screen.getByRole("button", { name: "Mock" }));
     expect(screen.getByText("No mock copies yet.")).toBeInTheDocument();
   });
-  it("hides Start/Stop unless the server enables them, and in Present mode", async () => {
+  it("shows Stop on an up demo, hides Start/Stop unless the server enables them, and in Present mode", async () => {
     mockFetch(shelf());
     const { unmount } = render(<App />);
     await screen.findByText("Demo A");
@@ -104,10 +104,11 @@ describe("shelf page", () => {
     mockFetch(shelf({ startEnabled: true }));
     render(<App />);
     await screen.findByRole("heading", { name: "Demo A" });
-    expect(screen.getAllByRole("button", { name: /^Start/ })).toHaveLength(1);
+    expect(screen.getAllByRole("button", { name: /^Stop/ })).toHaveLength(1); // Demo A is up, so Stop; no Start while it is up
+    expect(screen.queryByRole("button", { name: /^Start/ })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Present" }));
     expect(document.documentElement.dataset.present).toBe("1");
-    expect(screen.queryByRole("button", { name: /^Start/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /^Stop/ })).toBeNull();
   });
   it("copies the exact start command", async () => {
     mockFetch(shelf());

@@ -78,4 +78,4 @@ Every demo carries tags (Ping products, use cases, simulated or real, standards 
 
 ## Safety
 
-Listens on `127.0.0.1` only unless `SHELF_BIND` is set on purpose; fetches only registered URLs; Start / Stop exists only with `SHELF_ALLOW_START=1`. No host beyond loopback is allowed unless `SHELF_ALLOWED_HOSTS` names it. Full notes in [docs/security.md](docs/security.md).
+Listens on `127.0.0.1` only unless `SHELF_BIND` is set on purpose; fetches only registered URLs; Start / Stop runs only `docker compose up -d` or `down` for a registered demo, from a click on loopback, and only when Docker's context is OrbStack (`SHELF_ALLOW_START=0` hides the buttons). No host beyond loopback is allowed unless `SHELF_ALLOWED_HOSTS` names it. Full notes in [docs/security.md](docs/security.md).

@@ -60,12 +60,9 @@ export function Card({ item, startEnabled, present, busy, onAction, onCopy, onDe
       <div className="box__actions">
         {isUp(s.state) && <a className="box__open" href={item.url} target="_blank" rel="noopener noreferrer">Open<span className="sr"> {label} in a new tab</span></a>}
         {item.startCommand && <button type="button" onClick={() => onCopy(item)}>Copy start command<span className="sr"> for {label}</span></button>}
-        {!present && startEnabled && item.canStart && (
-          <>
-            <button type="button" disabled={busy} onClick={() => onAction(item.id, "start")}>Start<span className="sr"> {label}</span></button>
-            <button type="button" disabled={busy} onClick={() => onAction(item.id, "stop")}>Stop<span className="sr"> {label}</span></button>
-          </>
-        )}
+        {!present && startEnabled && item.canStart && (isUp(s.state)
+          ? <button type="button" disabled={busy} onClick={() => onAction(item.id, "stop")}>Stop<span className="sr"> {label}</span></button>
+          : <button type="button" className="primary" disabled={busy} onClick={() => onAction(item.id, "start")}>Start<span className="sr"> {label}</span></button>)}
         <button type="button" onClick={() => onDetails(item)}>Details<span className="sr"> for {label}</span></button>
       </div>
     </article>

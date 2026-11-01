@@ -16,8 +16,9 @@ export function resolveBind(env = process.env) {
 
 // Start/Stop needs the explicit opt-in AND a loopback bind. A non-loopback SHELF_BIND always turns it off.
 export function resolveAllowStart(env, bind) {
-  const requested = env.SHELF_ALLOW_START === '1';
-  return { allowStart: requested && bind.loopback, refused: requested && !bind.loopback };
+  // On by default on loopback; SHELF_ALLOW_START=0 turns it off. A non-loopback bind turns it off, with a warning only if it was asked for.
+  const requested = env.SHELF_ALLOW_START !== '0';
+  return { allowStart: requested && bind.loopback, refused: env.SHELF_ALLOW_START === '1' && !bind.loopback };
 }
 
 export function resolvePort(env = process.env) {

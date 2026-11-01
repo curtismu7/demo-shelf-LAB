@@ -30,13 +30,14 @@ try {
   } catch (e) {
     check('Registry valid', false, e.message);
   }
-  if (process.env.SHELF_ALLOW_START === '1') {
+  if (process.env.SHELF_ALLOW_START !== '0') {
+    // Start buttons need Docker on OrbStack. Without it they refuse, and the shelf still works, so this only reports.
     let ctx = null;
-    try { ctx = (await run('docker', ['context', 'show'])).stdout.trim(); } catch { /* handled below */ }
-    check('docker CLI runs', ctx !== null, 'Install OrbStack and make sure `docker` is on PATH (open -a OrbStack).');
-    if (ctx !== null) check(`docker context is orbstack (is "${ctx}")`, ctx === 'orbstack', 'Run: docker context use orbstack. Never use Docker Desktop.');
+    try { ctx = (await run('docker', ['context', 'show'])).stdout.trim(); } catch { /* reported below */ }
+    if (ctx === null) check('Start buttons: docker not found (they will refuse; the shelf still works)', true);
+    else check(`Start buttons: docker context is ${ctx === 'orbstack' ? 'orbstack' : `"${ctx}", not orbstack (Start will refuse)`}`, true);
   } else {
-    check('Start/Stop off (SHELF_ALLOW_START not 1): docker not needed', true);
+    check('Start / Stop off (SHELF_ALLOW_START=0): docker not needed', true);
   }
 } catch (e) {
   check('Configuration', false, e.message);
