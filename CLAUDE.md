@@ -3,7 +3,7 @@
 Tier: Tool. A local launcher that lists every registered demo with a status light, plus the planned ideas from the catalog. Node 26, Express server (`server/`), React + Vite page (`web/`), loopback only.
 
 ## Run and test
-- Docker (the normal way): `npm install`, then `npm run agent` (start agent, keep running) and `npm run docker` serve http://127.0.0.1:4400 (`SHELF_HOST_PORT` changes it). `npm run docker:down` stops it.
+- Docker (the normal way): `npm install`, then `npm run agent` (start agent, keep running; it also runs `npm run docker`, which builds the container and opens the browser) serves http://127.0.0.1:4400 (`SHELF_HOST_PORT` changes it). `npm run docker:down` stops it.
 - Host-run: `npm run build && npm start` (`SHELF_PORT`). It runs Docker itself, no agent needed.
 - `npm test` runs the server and web tests. `npm run doctor` checks the port, the registry and Node.
 - `npm run e2e` needs Playwright's Chromium; it is not part of CI.

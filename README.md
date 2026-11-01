@@ -19,11 +19,12 @@ git clone https://github.com/ping-sandbox/demo-shelf-LAB.git
 cd demo-shelf-LAB
 npm install
 npm run doctor          # Node, registry, Docker context
-npm run agent           # the start agent: leave it running in its own terminal
-npm run docker          # builds and starts the shelf container, then opens http://127.0.0.1:4400 in your browser
+npm run agent           # starts the start agent, builds and starts the shelf container, opens http://127.0.0.1:4400 in your browser
 ```
 
-The shelf runs in Docker (non-root, read-only, no Docker socket). It cannot start containers itself, so the small **start agent** on your machine does `docker compose up -d` / `down` for the demos the shelf lists, and the shelf's Start and Stop buttons call it. If the agent is not running, the shelf says so and disables Start. Stop the shelf with `npm run docker:down`. `npm run docker` opens your browser once the shelf answers; set `SHELF_OPEN=0` to stop that (it is also skipped when `CI` is set). `npm run agent` has no page of its own, so it opens nothing.
+Leave that terminal open: it is the start agent.
+
+The shelf runs in Docker (non-root, read-only, no Docker socket). It cannot start containers itself, so the small **start agent** on your machine does `docker compose up -d` / `down` for the demos the shelf lists, and the shelf's Start and Stop buttons call it. If the agent is not running, the shelf says so and disables Start. `npm run agent` also runs `npm run docker` for you, which opens your browser once the shelf answers. Ctrl-C stops the agent but leaves the container running; stop that with `npm run docker:down`. If the container cannot start (for example another shelf holds port 4400), the agent stays up and says so; fix it and run `npm run docker`. Settings: `SHELF_AUTOSTART=0` makes `npm run agent` start only the agent; `SHELF_OPEN=0` stops the browser opening; both are skipped when `CI` is set, and `SHELF_AUTOSTART` is also skipped when `SHELF_DATA_DIR` is set (the container reads `./.data`).
 
 Keep this folder next to the demo folders (all under one parent, for example `~/Development`). The shelf finds demos, and demos find the shelf, by sitting side by side.
 
@@ -69,8 +70,8 @@ Not applicable: this is a Tool, with nothing to simulate.
 ## Docker
 
 ```
-npm run agent      # once, in its own terminal
-npm run docker     # http://127.0.0.1:4400
+npm run agent      # leave it running: starts the agent and the container, http://127.0.0.1:4400
+npm run docker     # the container alone (the agent must already be running)
 ```
 
 The container is published on `127.0.0.1` only. It has no Docker socket and no mount of your demo folders. `npm run docker:down` stops it.
