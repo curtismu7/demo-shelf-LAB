@@ -1,4 +1,4 @@
-// Opt-in start/stop. Runs exactly `docker compose -f <file> [-f <overlay>...] up -d` or `down` for a
+// Start/stop. Runs exactly `docker compose -f <file> [-f <overlay>...] up -d` or `down` for a
 // registered demo, via execFile (no shell), and only when Docker's current context is OrbStack.
 import { execFile } from 'node:child_process';
 import fs from 'node:fs';
@@ -38,14 +38,34 @@ export function composeArgs(demo, action) {
 const LOOPBACK_ADDR = new Set(['127.0.0.1', '::1', '::ffff:127.0.0.1']);
 export const isLoopbackAddr = (a) => LOOPBACK_ADDR.has(a);
 
-// Express middleware factory. `exec` and `fileExists` are injectable for tests.
-export function createControlRouter({ express, getDemos, onChange, exec = defaultExec, fileExists = fs.existsSync }) {
+// The one place that touches Docker. Used by the shelf (host-run) and by the start agent. Returns { status, body }.
+// `exec` and `fileExists` are injectable for tests.
+export async function runCompose(demo, action, { exec = defaultExec, fileExists = fs.existsSync } = {}) {
+  const fail = (status, error, extra = {}) => ({ status, body: { ok: false, error, ...extra } });
+  let ctx;
+  try { ctx = (await exec('docker', ['context', 'show'])).stdout.trim(); } catch { return fail(503, 'docker-unavailable'); }
+  if (ctx !== 'orbstack') return fail(409, 'docker-context-not-orbstack');
+  const missing = [demo.composeFile, ...(demo.composeOverlays || [])].filter((f) => !fileExists(f));
+  if (missing.length) return fail(409, 'compose-file-missing', { missing });
+  try {
+    const out = await exec('docker', composeArgs(demo, action));
+    return { status: 200, body: { ok: true, id: demo.id, action, output: redact(`${out.stdout}\n${out.stderr}`) } };
+  } catch (e) {
+    const timedOut = e.killed || e.signal === 'SIGTERM';
+    return fail(502, timedOut ? 'timeout' : 'compose-failed', { output: redact(`${e.stdout || ''}\n${e.stderr || ''}`) });
+  }
+}
+
+// Express middleware factory. With `agent` (the shelf in a container) the compose call is handed to the host-side start agent;
+// without it the shelf runs Docker itself. `inDocker` skips the remote-address check, because inside a container every request
+// arrives from the Docker network: the compose file publishes the port on 127.0.0.1 only, and the Host and Origin checks still apply.
+export function createControlRouter({ express, getDemos, onChange, exec = defaultExec, fileExists = fs.existsSync, agent = null, inDocker = false }) {
   const router = express.Router();
   const busy = new Set();
 
   router.post('/demos/:id/:action(start|stop)', async (req, res) => {
     const fail = (code, error) => res.status(code).json({ ok: false, error });
-    if (!isLoopbackAddr(req.socket.remoteAddress)) return fail(403, 'loopback-only');
+    if (!inDocker && !isLoopbackAddr(req.socket.remoteAddress)) return fail(403, 'loopback-only');
     // Same-origin: a browser POST always carries Origin. A missing or foreign one is refused.
     if (!req.headers.origin || req.headers.origin !== `http://${req.headers.host}`) return fail(403, 'bad-origin');
     const demo = getDemos().find((d) => d.id === req.params.id);
@@ -54,18 +74,9 @@ export function createControlRouter({ express, getDemos, onChange, exec = defaul
     if (busy.has(demo.id)) return fail(409, 'busy');
     busy.add(demo.id);
     try {
-      let ctx;
-      try { ctx = (await exec('docker', ['context', 'show'])).stdout.trim(); } catch { return fail(503, 'docker-unavailable'); }
-      if (ctx !== 'orbstack') return fail(409, 'docker-context-not-orbstack');
-      if (![demo.composeFile, ...demo.composeOverlays].every((f) => fileExists(f))) return fail(409, 'compose-file-missing');
-      try {
-        const out = await exec('docker', composeArgs(demo, req.params.action));
-        onChange?.();
-        return res.json({ ok: true, id: demo.id, action: req.params.action, output: redact(`${out.stdout}\n${out.stderr}`) });
-      } catch (e) {
-        const timedOut = e.killed || e.signal === 'SIGTERM';
-        return res.status(502).json({ ok: false, error: timedOut ? 'timeout' : 'compose-failed', output: redact(`${e.stdout || ''}\n${e.stderr || ''}`) });
-      }
+      const r = agent ? await agent.run(demo.id, req.params.action) : await runCompose(demo, req.params.action, { exec, fileExists });
+      if (r.status === 200) onChange?.();
+      return res.status(r.status).json(r.body);
     } finally {
       busy.delete(demo.id);
     }

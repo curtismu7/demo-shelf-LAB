@@ -3,7 +3,8 @@
 Tier: Tool. A local launcher that lists every registered demo with a status light, plus the planned ideas from the catalog. Node 26, Express server (`server/`), React + Vite page (`web/`), loopback only.
 
 ## Run and test
-- `npm install && npm run build && npm start` serves http://127.0.0.1:4400 (`SHELF_PORT` changes it).
+- Docker (the normal way): `npm install`, then `npm run agent` (start agent, keep running) and `npm run docker` serve http://127.0.0.1:4400 (`SHELF_HOST_PORT` changes it). `npm run docker:down` stops it.
+- Host-run: `npm run build && npm start` (`SHELF_PORT`). It runs Docker itself, no agent needed.
 - `npm test` runs the server and web tests. `npm run doctor` checks the port, the registry and Node.
 - `npm run e2e` needs Playwright's Chromium; it is not part of CI.
 
@@ -16,5 +17,5 @@ Tier: Tool. A local launcher that lists every registered demo with a status ligh
 - Loopback bind and Host check stay on. The shelf fetches only registered URLs plus `healthPath`.
 - Every hosted host must be named in `SHELF_ALLOWED_HOSTS`; none is built in.
 - No internal hostnames, tenant ids, personal names or customer names anywhere, including tests and docs. Use `.example` hosts.
-- The Docker image is a read-only catalog: inside a container `localhost` is the container.
+- Start / Stop is always Docker and has no off switch. The container has no socket and no demo-folder mounts: it calls the start agent (`server/src/agent.js`), which runs `docker compose` for ids in the host's own registry. Never let a request carry a path or command. The container reaches demos through `host.docker.internal` with the registered Host header (`server/src/probe.js`). `SHELF_IN_DOCKER=1` is only for the image and needs `/.dockerenv`.
 - Node 26 only. CI runs build, test, doctor, gitleaks and the forbidden-strings check.

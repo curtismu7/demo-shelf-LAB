@@ -110,6 +110,26 @@ describe("shelf page", () => {
     expect(document.documentElement.dataset.present).toBe("1");
     expect(screen.queryByRole("button", { name: /^Stop/ })).toBeNull();
   });
+  it("warns when the start agent is down and disables Start", async () => {
+    const body = shelf({ startEnabled: true, agent: "down" });
+    body.demos[1].canStart = true;
+    mockFetch(body);
+    render(<App />);
+    await screen.findByRole("heading", { name: "Demo B" });
+    expect(screen.getByText(/start agent is not running/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Start/ })).toBeDisabled();
+  });
+  it("explains a refused start in plain words", async () => {
+    const body = shelf({ startEnabled: true, agent: "up" });
+    body.demos[1].canStart = true;
+    vi.stubGlobal("fetch", vi.fn(async (url, init) => (init?.method === "POST"
+      ? { ok: false, json: async () => ({ error: "agent-not-running" }) }
+      : { ok: true, json: async () => body })));
+    render(<App />);
+    await screen.findByRole("heading", { name: "Demo B" });
+    fireEvent.click(screen.getByRole("button", { name: /^Start/ }));
+    expect(await screen.findByText(/did not run: the start agent is not running\. In the demo-shelf-LAB folder run: npm run agent/)).toBeInTheDocument();
+  });
   it("copies the exact start command", async () => {
     mockFetch(shelf());
     const writeText = vi.fn(async () => {});

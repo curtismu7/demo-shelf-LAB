@@ -30,15 +30,15 @@ try {
   } catch (e) {
     check('Registry valid', false, e.message);
   }
-  if (process.env.SHELF_ALLOW_START !== '0') {
-    // Start buttons need Docker on OrbStack. Without it they refuse, and the shelf still works, so this only reports.
-    let ctx = null;
-    try { ctx = (await run('docker', ['context', 'show'])).stdout.trim(); } catch { /* reported below */ }
-    if (ctx === null) check('Start buttons: docker not found (they will refuse; the shelf still works)', true);
-    else check(`Start buttons: docker context is ${ctx === 'orbstack' ? 'orbstack' : `"${ctx}", not orbstack (Start will refuse)`}`, true);
-  } else {
-    check('Start / Stop off (SHELF_ALLOW_START=0): docker not needed', true);
-  }
+  // Docker on OrbStack is how every demo starts, so it is required, not optional.
+  let ctx = null;
+  try { ctx = (await run('docker', ['context', 'show'])).stdout.trim(); } catch { /* reported below */ }
+  check('docker CLI runs', ctx !== null, 'Install OrbStack and make sure `docker` is on PATH (open -a OrbStack).');
+  if (ctx !== null) check(`docker context is orbstack (is "${ctx}")`, ctx === 'orbstack', 'Run: docker context use orbstack. Never use Docker Desktop.');
+  // The start agent is only needed by the shelf in a container; report it, do not fail on it.
+  const agentPort = Number(process.env.SHELF_AGENT_PORT || 4405);
+  const agentUp = !(await portFree('127.0.0.1', agentPort));
+  check(`start agent ${agentUp ? `is listening on ${agentPort}` : 'is not running (only the container shelf needs it: npm run agent)'}`, true);
 } catch (e) {
   check('Configuration', false, e.message);
 }

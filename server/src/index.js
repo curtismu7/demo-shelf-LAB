@@ -3,6 +3,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { allowedHostsFromEnv, loadRegistry, RegistryError } from './registry.js';
 import { createApp } from './app.js';
+import { createAgentClient } from './agent-client.js';
+import { createProbeFetch } from './probe.js';
 import { loadCatalogTags, loadTaxonomy, tagIdSet, untaggedPlanned } from './tags.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -14,11 +16,11 @@ export function resolveBind(env = process.env) {
   return { host, explicit: Boolean(env.SHELF_BIND?.trim()), loopback: LOOPBACK.has(host) };
 }
 
-// Start/Stop needs the explicit opt-in AND a loopback bind. A non-loopback SHELF_BIND always turns it off.
+// Start / Stop is always on. Host-run it needs a loopback bind (a non-loopback SHELF_BIND turns it off). In a container
+// (SHELF_IN_DOCKER=1) the bind is 0.0.0.0 inside, so the shelf hands the compose call to the host-side start agent instead.
 export function resolveAllowStart(env, bind) {
-  // On by default on loopback; SHELF_ALLOW_START=0 turns it off. A non-loopback bind turns it off, with a warning only if it was asked for.
-  const requested = env.SHELF_ALLOW_START !== '0';
-  return { allowStart: requested && bind.loopback, refused: env.SHELF_ALLOW_START === '1' && !bind.loopback };
+  const inDocker = env.SHELF_IN_DOCKER === '1';
+  return { allowStart: inDocker || bind.loopback, refused: !inDocker && !bind.loopback, inDocker };
 }
 
 export function resolvePort(env = process.env) {
@@ -48,13 +50,17 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const bind = resolveBind();
     const port = resolvePort();
     const { demos, catalog, tags, catalogTags } = loadAll();
-    const { allowStart, refused } = resolveAllowStart(process.env, bind);
+    const { allowStart, refused, inDocker } = resolveAllowStart(process.env, bind);
     if (refused) console.warn('Start/Stop disabled: it is only available when listening on loopback.');
+    if (inDocker && !fs.existsSync('/.dockerenv')) throw new Error('SHELF_IN_DOCKER=1 is only for the container image; on the host run npm start');
+    if (inDocker && !(process.env.SHELF_AGENT_URL && process.env.SHELF_AGENT_TOKEN)) throw new Error('SHELF_IN_DOCKER=1 needs SHELF_AGENT_URL and SHELF_AGENT_TOKEN (npm run docker sets them)');
+    const agent = inDocker ? createAgentClient({ url: process.env.SHELF_AGENT_URL, token: process.env.SHELF_AGENT_TOKEN }) : null;
+    const fetchFn = process.env.SHELF_PROBE_HOST ? createProbeFetch({ probeHost: process.env.SHELF_PROBE_HOST }) : undefined;
     const untagged = untaggedPlanned(catalog, demos, catalogTags);
     if (untagged.length) console.warn(`${untagged.length} planned idea${untagged.length > 1 ? 's have' : ' has'} no tags (add to data/catalog-tags.json): ${untagged.join(', ')}`);
-    const app = createApp({ demos, catalog, tags, catalogTags, allowStart, onlineOnly: process.env.SHELF_ONLINE_ONLY === '1', loopbackOnly: bind.loopback, webDist: path.join(root, 'web', 'dist') });
+    const app = createApp({ demos, catalog, tags, catalogTags, allowStart, agent, inDocker, fetchFn, onlineOnly: process.env.SHELF_ONLINE_ONLY === '1', loopbackOnly: bind.loopback || inDocker, webDist: path.join(root, 'web', 'dist') });
     app.listen(port, bind.host, () => {
-      console.log(`demo-shelf on http://${bind.host}:${port}  (${demos.length} demos${process.env.SHELF_ONLINE_ONLY === '1' ? ', online copies only' : ''}, start/stop ${allowStart ? 'on' : 'off'})`);
+      console.log(`demo-shelf on http://${bind.host}:${port}  (${demos.length} demos${process.env.SHELF_ONLINE_ONLY === '1' ? ', online copies only' : ''}, start/stop ${allowStart ? (inDocker ? 'via the start agent' : 'on') : 'off'})`);
     });
   } catch (e) {
     console.error(e instanceof RegistryError ? e.message : `demo-shelf: ${e.message}`);

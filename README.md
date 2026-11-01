@@ -9,18 +9,21 @@ Each demo you start adds itself to the shelf the first time (see "How demos get 
 
 ## Run from a clone
 
-Needs Node 26.
+Needs Node 26 and OrbStack (Docker). Two processes, both on your machine:
 
 ```
 git clone https://github.com/ping-sandbox/demo-shelf-LAB.git
 cd demo-shelf-LAB
 npm install
-npm run doctor          # port free, registry valid, Node version, docker context if Start is on
-npm run build           # builds web/dist
-npm start               # http://127.0.0.1:4400
+npm run agent           # the start agent: leave it running in its own terminal
+npm run docker          # builds and starts the shelf container: http://127.0.0.1:4400
 ```
 
+The shelf runs in Docker (non-root, read-only, no Docker socket). It cannot start containers itself, so the small **start agent** on your machine does `docker compose up -d` / `down` for the demos the shelf lists, and the shelf's Start and Stop buttons call it. If the agent is not running, the shelf says so and disables Start. Stop the shelf with `npm run docker:down`.
+
 Keep this folder next to the demo folders (all under one parent, for example `~/Development`). The shelf finds demos, and demos find the shelf, by sitting side by side.
+
+**Without the container:** `npm run build && npm start` runs the shelf directly on your machine at http://127.0.0.1:4400. It runs Docker itself, so no agent is needed. Use one or the other: both want port 4400.
 
 ## How demos get on the shelf
 
@@ -28,19 +31,11 @@ Every -LAB app ships `docs/shelf-entry.json` and a `scripts/shelf-register.mjs`.
 
 ## What to do if the port is taken
 
-The shelf uses 4400. If something else has it, run `SHELF_PORT=4491 npm start` (any port; 4400 and up keeps clear of the demos). `npm run doctor` names the fix. `npm run dev` runs the API on 4400 and the page on 4401 with hot reload. Settings are in `.env.example`; the shelf reads real environment variables, not a `.env` file.
+The shelf uses 4400. If something else has it, run `SHELF_HOST_PORT=4491 npm run docker` for the container, or `SHELF_PORT=4491 npm start` host-run (any port; 4400 and up keeps clear of the demos). The agent uses 4405 (`SHELF_AGENT_PORT`). `npm run doctor` names the fix. `npm run dev` runs the API on 4400 and the page on 4401 with hot reload. Settings are in `.env.example`; the shelf reads real environment variables, not a `.env` file.
 
 ## Health
 
 `GET /api/health` returns `demo-health/1` for the shelf itself. The shelf's server polls each registered demo's `/api/health` (3 s timeout, 4 KB cap, results cached 10 s). A demo with no endpoint but a page that loads shows "Up (no health contract)"; one that does not answer shows "Down". Contract in [docs/health-contract.md](docs/health-contract.md).
-
-## In Docker: a read-only catalog
-
-```sh
-docker compose up -d --build     # OrbStack
-```
-
-Open `http://127.0.0.1:4401/`. The container shows the catalog, the tag filters and search. It has no status lights for your demos and no Start / Stop, because inside a container `localhost` is the container and there is no host Docker to drive. For lights, run the shelf on the host as above. The image runs as a non-root user with a read-only filesystem and is published on loopback only.
 
 ## Checks
 
@@ -78,4 +73,4 @@ Every demo carries tags (Ping products, use cases, simulated or real, standards 
 
 ## Safety
 
-Listens on `127.0.0.1` only unless `SHELF_BIND` is set on purpose; fetches only registered URLs; Start / Stop runs only `docker compose up -d` or `down` for a registered demo, from a click on loopback, and only when Docker's context is OrbStack (`SHELF_ALLOW_START=0` hides the buttons). No host beyond loopback is allowed unless `SHELF_ALLOWED_HOSTS` names it. Full notes in [docs/security.md](docs/security.md).
+The container is published on `127.0.0.1` only and has no Docker access. Start / Stop runs only `docker compose up -d` or `down` for a registered demo, from a same-origin click, and only when Docker's context is OrbStack. The start agent listens on loopback with a token. The shelf fetches only registered URLs. No host beyond loopback is allowed unless `SHELF_ALLOWED_HOSTS` names it. Full notes in [docs/security.md](docs/security.md).

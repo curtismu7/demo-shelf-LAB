@@ -26,7 +26,7 @@ export function expandWhere(demos) {
 const LOOPBACK_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
 
 // `loopbackOnly` guards against DNS rebinding: a loopback-bound shelf only answers to loopback Host names.
-export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, onlineOnly = false, loopbackOnly = true, webDist, fetchFn, exec, fileExists, now, random, wait }) {
+export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, onlineOnly = false, loopbackOnly = true, webDist, fetchFn, exec, fileExists, now, random, wait }) {
   const expanded = expandWhere(registry);
   // Online-only (the Docker image): installed copies point at localhost, which inside a container is the container itself, so only the
   // hosted copies are listed. Their catalog rows are still "registered", so they do not come back as planned ideas.
@@ -67,7 +67,9 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     const planned = catalogItems
       .filter((i) => i.status === 'active' && !have.has(i.id))
       .map(({ id, name, kind, group, wave, seed }) => ({ id, name, kind, group, wave, seed, tags: catalogTags[id] ?? [], status: { state: 'planned' } }));
-    return { schema: 'demo-shelf/1', generatedAt: new Date().toISOString(), startEnabled: allowStart, groups: catalog?.groups || {}, tagGroups: tags?.groups || [], demos: registered, planned };
+    // 'local' = the shelf runs Docker itself; 'up' / 'down' = the start agent a containerised shelf depends on.
+    const agentState = agent ? await agent.ping() : 'local';
+    return { schema: 'demo-shelf/1', generatedAt: new Date().toISOString(), startEnabled: allowStart, agent: agentState, groups: catalog?.groups || {}, tagGroups: tags?.groups || [], demos: registered, planned };
   }
 
   app.get('/api/shelf', async (req, res, next) => {
@@ -77,7 +79,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     try { res.set('Cache-Control', 'no-store').json(await shelf(await poller.refresh())); } catch (e) { next(e); }
   });
 
-  if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: () => poller.invalidate(), exec, fileExists }));
+  if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: () => poller.invalidate(), exec, fileExists, agent, inDocker }));
   app.use('/api', (req, res) => res.status(404).json({ error: 'not-found' }));
 
   if (webDist && fs.existsSync(path.join(webDist, 'index.html'))) {

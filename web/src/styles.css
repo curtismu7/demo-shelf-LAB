@@ -74,6 +74,10 @@ html[data-present] {
   background: var(--surface);
 }
 
+.note[data-state="warn"] {
+  border-left: 4px solid var(--status-warn);
+}
+
 .note[data-state="error"] {
   border-left: 4px solid var(--accent);
 }
