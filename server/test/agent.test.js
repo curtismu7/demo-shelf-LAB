@@ -181,3 +181,44 @@ describe('agent client', () => {
     expect(await c.ping()).toBe('down');
   });
 });
+
+describe('Stop never takes the shelf down', () => {
+  const SHELF = '/home/me/dev/demo-shelf-LAB';
+  const entry = (id, composeFile, composeOverlays = []) => ({ id, composeFile, composeOverlays, where: 'installed' });
+  const run = async (demo, action = 'stop', shelfDir = SHELF) => {
+    const exec = okExec();
+    const r = await call(mk({ exec, shelfDir, getDemos: () => [demo] }), 'post', `/v1/demos/${demo.id}/${action}`);
+    return { r, calls: exec.mock.calls };
+  };
+
+  it('stop runs exactly one compose down, on the named demo\'s file and nothing else', async () => {
+    const { r, calls } = await run(entry('a', '/home/me/dev/a-LAB/docker-compose.yml'));
+    expect(r.status).toBe(200);
+    expect(calls.map(([, args]) => args)).toEqual([['context', 'show'], ['compose', '-f', '/home/me/dev/a-LAB/docker-compose.yml', 'down']]);
+  });
+
+  it.each([
+    ['the shelf\'s own compose file', `${SHELF}/docker-compose.yml`, []],
+    ['another file in the shelf\'s folder', `${SHELF}/other.yml`, []],
+    ['an overlay in the shelf\'s folder', '/home/me/dev/a-LAB/docker-compose.yml', [`${SHELF}/docker-compose.override.yml`]],
+    ['a folder that gets the same compose project name', '/elsewhere/Demo-Shelf-LAB/docker-compose.yml', []],
+    ['a relative path that resolves into the shelf', `${SHELF}/web/../docker-compose.yml`, []],
+  ])('refuses start and stop for %s, and runs no docker command', async (_what, file, overlays) => {
+    for (const action of ['start', 'stop']) {
+      const { r, calls } = await run(entry('x', file, overlays), action);
+      expect(r.status).toBe(409);
+      expect(r.body).toMatchObject({ ok: false, error: 'is-the-shelf' });
+      expect(calls).toHaveLength(0);
+    }
+  });
+
+  it('does not refuse a demo just because its folder name contains the shelf\'s', async () => {
+    const { r } = await run(entry('a', '/home/me/dev/demo-shelf-LAB-extra/docker-compose.yml'));
+    expect(r.status).toBe(200);
+  });
+
+  it('without a shelf folder the guard is off (the unit default)', async () => {
+    const { r } = await run(entry('a', `${SHELF}/docker-compose.yml`), 'stop', null);
+    expect(r.status).toBe(200);
+  });
+});

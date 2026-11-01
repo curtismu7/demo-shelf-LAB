@@ -434,14 +434,33 @@ html[data-present] {
   font-size: 0.8rem;
 }
 
+/* Hover or keyboard focus: the box lights up in its spine colour (red Demo, blue Tester, grey Tool). Colour only, so it also
+   applies with reduced motion; the lift below is motion and does not. */
+.box:not([data-planned="true"]):hover,
+.box:not([data-planned="true"]):focus-within {
+  border-color: var(--spine);
+  background: color-mix(in srgb, var(--spine) 6%, var(--surface));
+  box-shadow:
+    0 0 0 2px var(--spine),
+    0 22px 30px -14px color-mix(in srgb, var(--spine) 55%, var(--shadow-ink));
+}
+
+.box:not([data-planned="true"]):hover::before,
+.box:not([data-planned="true"]):focus-within::before {
+  height: 11px;
+}
+
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .box {
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+  }
+
+  .box::before {
+    transition: height 0.18s ease;
   }
 
   .box:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 24px -16px var(--shadow-ink);
+    transform: translateY(-8px);
   }
 }
 

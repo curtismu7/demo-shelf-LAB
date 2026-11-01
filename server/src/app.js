@@ -26,7 +26,7 @@ export function expandWhere(demos) {
 const LOOPBACK_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
 
 // `loopbackOnly` guards against DNS rebinding: a loopback-bound shelf only answers to loopback Host names.
-export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, onlineOnly = false, loopbackOnly = true, webDist, fetchFn, exec, fileExists, now, random, wait }) {
+export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, onlineOnly = false, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait }) {
   const expanded = expandWhere(registry);
   // Online-only (the Docker image): installed copies point at localhost, which inside a container is the container itself, so only the
   // hosted copies are listed. Their catalog rows are still "registered", so they do not come back as planned ideas.
@@ -80,7 +80,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     try { res.set('Cache-Control', 'no-store').json(await shelf(await poller.refresh())); } catch (e) { next(e); }
   });
 
-  if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: () => poller.invalidate(), exec, fileExists, agent, inDocker }));
+  if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: () => poller.invalidate(), exec, fileExists, agent, inDocker, shelfDir }));
   app.use('/api', (req, res) => res.status(404).json({ error: 'not-found' }));
 
   if (webDist && fs.existsSync(path.join(webDist, 'index.html'))) {

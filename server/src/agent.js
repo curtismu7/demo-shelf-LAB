@@ -28,7 +28,7 @@ const digest = (s) => crypto.createHash('sha256').update(String(s)).digest();
 export const sameToken = (a, b) => crypto.timingSafeEqual(digest(a), digest(b));
 
 // `getDemos()` returns the host's registered installed demos; it may throw if the registry is invalid.
-export function createAgent({ getDemos, token, port, exec, fileExists }) {
+export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir = null }) {
   const hosts = new Set([`127.0.0.1:${port}`, `localhost:${port}`, `[::1]:${port}`, `host.docker.internal:${port}`]);
   const busy = new Set();
   const app = express();
@@ -54,7 +54,7 @@ export function createAgent({ getDemos, token, port, exec, fileExists }) {
     if (busy.has(demo.id)) return res.status(409).json({ ok: false, error: 'busy' });
     busy.add(demo.id);
     try {
-      const r = await runCompose(demo, req.params.action, { exec, fileExists });
+      const r = await runCompose(demo, req.params.action, { exec, fileExists, shelfDir });
       res.status(r.status).json(r.body);
     } catch {
       res.status(500).json({ ok: false, error: 'internal' });

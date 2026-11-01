@@ -13,6 +13,7 @@ const WHY = {
   "docker-unavailable": "Docker is not running. Start OrbStack",
   timeout: "Docker took longer than 60 seconds. Check the demo's logs",
   busy: "another start or stop for this demo is still running",
+  "is-the-shelf": "that entry is the shelf itself, and Stop would take the shelf down. Stop it from a terminal with npm run docker:down",
 };
 
 async function call(path, method = "GET") {

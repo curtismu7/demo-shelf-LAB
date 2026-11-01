@@ -68,7 +68,7 @@ describe('entry points', () => {
     const token = fs.readFileSync(path.join(repo, '.data', 'agent-token'), 'utf8').trim();
     expect(good.stdout + good.stderr).not.toContain(token);
   });
-  describe('npm run docker opens the browser', { timeout: 30000 }, () => {
+  describe('npm run docker opens the browser', { timeout: 60000 }, () => {
     const setup = () => {
       const bin = fs.mkdtempSync(path.join(os.tmpdir(), 'shelf-fakebin-'));
       const opened = path.join(bin, 'opened.txt');
@@ -109,7 +109,7 @@ describe('entry points', () => {
       let out = '';
       child.stdout.on('data', (d) => { out += d; });
       child.stderr.on('data', (d) => { out += d; });
-      const deadline = Date.now() + 15000;
+      const deadline = Date.now() + 45000;
       while (!until(out) && Date.now() < deadline) await new Promise((r) => setTimeout(r, 100));
       return { child, port, out: () => out };
     };

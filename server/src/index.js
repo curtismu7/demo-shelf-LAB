@@ -58,7 +58,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const fetchFn = process.env.SHELF_PROBE_HOST ? createProbeFetch({ probeHost: process.env.SHELF_PROBE_HOST }) : undefined;
     const untagged = untaggedPlanned(catalog, demos, catalogTags);
     if (untagged.length) console.warn(`${untagged.length} planned idea${untagged.length > 1 ? 's have' : ' has'} no tags (add to data/catalog-tags.json): ${untagged.join(', ')}`);
-    const app = createApp({ demos, catalog, tags, catalogTags, allowStart, agent, inDocker, fetchFn, onlineOnly: process.env.SHELF_ONLINE_ONLY === '1', loopbackOnly: bind.loopback || inDocker, webDist: path.join(root, 'web', 'dist') });
+    const app = createApp({ demos, catalog, tags, catalogTags, allowStart, agent, inDocker, fetchFn, onlineOnly: process.env.SHELF_ONLINE_ONLY === '1', loopbackOnly: bind.loopback || inDocker, shelfDir: root, webDist: path.join(root, 'web', 'dist') });
     app.listen(port, bind.host, () => {
       console.log(`demo-shelf on http://${bind.host}:${port}  (${demos.length} demos${process.env.SHELF_ONLINE_ONLY === '1' ? ', online copies only' : ''}, start/stop ${allowStart ? (inDocker ? 'via the start agent' : 'on') : 'off'})`);
     });

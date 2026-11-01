@@ -104,6 +104,12 @@ describe('start/stop', () => {
     await post(app(exec), '/api/demos/a/stop', sameOrigin);
     expect(exec.mock.calls[1][1]).toEqual(['compose', '-f', '/tmp/a/c.yml', '-f', '/tmp/a/o.yml', 'down']);
   });
+  it('host-run: refuses to stop a demo whose compose file is the shelf\'s own folder, without calling docker', async () => {
+    const exec = okExec();
+    const r = await post(app(exec, { shelfDir: '/tmp/a' }), '/api/demos/a/stop', sameOrigin);
+    expect([r.status, r.body.error]).toEqual([409, 'is-the-shelf']);
+    expect(exec).not.toHaveBeenCalled();
+  });
   it('refuses a missing Origin', async () => {
     const exec = okExec();
     const r = await post(app(exec), '/api/demos/a/start', {});
