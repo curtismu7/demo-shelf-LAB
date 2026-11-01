@@ -311,6 +311,16 @@ html[data-present] {
   font-size: 0.78rem;
 }
 
+/* A Start that cannot be pressed must not look like a red call to action: the shared sheet keeps a disabled primary red so its
+   label stays readable, but on a card it reads as clickable. Muted text on the surface stays above 4.5:1 in both themes. */
+.box__actions button.primary:disabled {
+  background: var(--surface);
+  color: var(--muted);
+  border-color: var(--border);
+  box-shadow: none;
+  opacity: 0.75;
+}
+
 .box__open {
   border: 1px solid var(--primary-edge);
   border-radius: 8px;
@@ -472,4 +482,50 @@ html[data-present] {
   .tag-filters__group {
     flex-basis: 100%;
   }
+}
+
+/* Install state: "Not installed" is normal on a fresh download, so it is a quiet tag and a dashed edge, not a warning. */
+.box[data-install="not-installed"] {
+  border-style: dashed;
+}
+
+.box__install {
+  color: var(--text-body);
+  font-size: 0.78rem;
+}
+
+.box__tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.box__copied {
+  color: var(--status-ok);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* Empty, it stays in the accessibility tree (visually hidden, not display:none) so the "Copied" that appears is announced. */
+.box__copied:empty {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.box__clone {
+  flex-basis: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--text);
+  overflow-wrap: anywhere;
+  user-select: all;
 }

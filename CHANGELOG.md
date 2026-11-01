@@ -2,6 +2,10 @@
 
 ## 1.0.0
 
+- A Start button that cannot be pressed (not installed, no compose file) is drawn muted, not red, so it no longer looks clickable.
+
+- Each installed card says whether the demo is running, installed but stopped, or not installed. The start agent checks for the registered compose file and whether its images are built (read-only `GET /v1/installs`; host-run the shelf does the same itself). "Not installed" greys out Start and shows a tag; with the new optional `repo` field it also offers Copy clone command. "Installed, not built yet" is normal before the first Start, which builds the images. If the check cannot tell (agent not running, Docker slow or not OrbStack), the card behaves as before. The seed entries carry their `repo`. Refresh re-checks the install state (so clone, then Refresh, works at once).
+
 - Removed the unused `SHELF_ONLINE_ONLY` switch (hosted copies only); it had no setting in this repo. `npm test -w server` now allows 30 s per test, so it passes on a busy machine.
 
 - Hovering (or tabbing into) a card lights it up in its kind colour: ring and glow in the spine colour (red Demo, blue Tester, grey Tool), a thicker spine and a faint tint. The colour change also applies with reduced motion; only the lift is motion.

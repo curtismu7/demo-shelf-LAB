@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import express from 'express';
 import { composeArgs, createControlRouter } from './control.js';
+import { createInstallState } from './install.js';
 import { createPoller } from './poller.js';
 import { hostedTags } from './tags.js';
 
@@ -23,10 +24,22 @@ export function expandWhere(demos) {
   });
 }
 
+// install: 'installed' | 'not-installed' | 'unknown', plus imagesBuilt true | false | null. Only an installed copy with a compose file
+// has an install state, and only when the host answered. A demo that answers its health probe is never "not-installed": it is running
+// from somewhere else, whatever the registered path says.
+export function installOf(d, status, map) {
+  const unknown = { install: 'unknown', imagesBuilt: null };
+  const r = d.where === 'installed' && d.composeFile ? map?.get(d.id) : null;
+  if (!r) return unknown;
+  const answers = status && status.state !== 'down' && status.reason !== 'not-polled';
+  if (r.compose === 'missing') return answers ? { install: 'installed', imagesBuilt: null } : { install: 'not-installed', imagesBuilt: null };
+  return { install: 'installed', imagesBuilt: r.images === 'built' ? true : r.images === 'missing' ? false : null };
+}
+
 const LOOPBACK_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
 
 // `loopbackOnly` guards against DNS rebinding: a loopback-bound shelf only answers to loopback Host names.
-export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait }) {
+export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, installSource = null, refreshWaitMs = 4000, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait }) {
   const demos = expandWhere(registry);
   const app = express();
   app.disable('x-powered-by');
@@ -41,10 +54,12 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
   app.get('/api/health', (req, res) => res.json({ schema: 'demo-health/1', at: new Date().toISOString(), state: 'ready', runtime: 'offline', demo: { id: 'demo-shelf-LAB', name: 'Demo Shelf LAB', version: VERSION } }));
 
   const poller = createPoller({ getDemos: () => demos, fetchFn, now, random, wait });
+  const install = createInstallState({ source: installSource, now });
   const catalogItems = catalog?.items || [];
   const byCatalogId = new Map(catalogItems.map((i) => [i.id, i]));
 
   async function shelf(results) {
+    const inst = install.snapshot(); // cached; a stale one is refreshed in the background, never awaited here
     const registered = demos.map((d) => ({
       id: d.id,
       name: d.name,
@@ -59,6 +74,8 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
       where: d.where,
       wave: byCatalogId.get(d.catalogId)?.wave ?? null,
       canStart: allowStart && Boolean(d.composeFile),
+      repo: d.repo ?? null,
+      ...installOf(d, results[d.id], inst.map),
       status: results[d.id] || { state: 'unknown', reason: 'not-polled' },
     }));
     const have = new Set(demos.map((d) => d.catalogId).filter(Boolean));
@@ -67,17 +84,25 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
       .map(({ id, name, kind, group, wave, seed }) => ({ id, name, kind, group, wave, seed, tags: catalogTags[id] ?? [], status: { state: 'planned' } }));
     // 'local' = the shelf runs Docker itself; 'up' / 'down' = the start agent a containerised shelf depends on.
     const agentState = agent ? await agent.ping() : 'local';
-    return { schema: 'demo-shelf/1', generatedAt: new Date().toISOString(), startEnabled: allowStart, agent: agentState, groups: catalog?.groups || {}, tagGroups: tags?.groups || [], demos: registered, planned };
+    return { schema: 'demo-shelf/1', generatedAt: new Date().toISOString(), installPending: inst.pending, startEnabled: allowStart, agent: agentState, groups: catalog?.groups || {}, tagGroups: tags?.groups || [], demos: registered, planned };
   }
 
   app.get('/api/shelf', async (req, res, next) => {
     try { res.set('Cache-Control', 'no-store').json(await shelf(await poller.get())); } catch (e) { next(e); }
   });
   app.post('/api/shelf/refresh', async (req, res, next) => {
-    try { res.set('Cache-Control', 'no-store').json(await shelf(await poller.refresh())); } catch (e) { next(e); }
+    try {
+      // Refresh re-checks the install state too (the card says "press Refresh" after a clone), but waits only a few seconds for it;
+      // a slower answer shows up on the page's quick re-poll (installPending stays true until it lands).
+      let timer;
+      const forced = install.force();
+      await Promise.race([forced, new Promise((r) => { timer = setTimeout(r, refreshWaitMs); })]);
+      clearTimeout(timer);
+      res.set('Cache-Control', 'no-store').json(await shelf(await poller.refresh()));
+    } catch (e) { next(e); }
   });
 
-  if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: () => poller.invalidate(), exec, fileExists, agent, inDocker, shelfDir }));
+  if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: (id) => { poller.invalidate(); install.invalidate(id); }, exec, fileExists, agent, inDocker, shelfDir }));
   app.use('/api', (req, res) => res.status(404).json({ error: 'not-found' }));
 
   if (webDist && fs.existsSync(path.join(webDist, 'index.html'))) {

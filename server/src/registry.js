@@ -10,7 +10,17 @@ const LOOPBACK = new Set(['localhost', '127.0.0.1', '[::1]', '::1']);
 // Characters that mean something to a shell. execFile never uses one, but a path holding them is a typo or an attack.
 const SHELL_CHARS = /[;&|$`<>\\"'*?(){}!#\n\r\t\0]/;
 const WHERE = ['installed', 'mock', 'both'];
-const FIELDS = ['id', 'name', 'catalogId', 'kind', 'description', 'url', 'where', 'mockUrl', 'healthPath', 'composeFile', 'composeOverlays', 'notes', 'tags'];
+const FIELDS = ['id', 'name', 'catalogId', 'kind', 'description', 'url', 'where', 'mockUrl', 'healthPath', 'composeFile', 'composeOverlays', 'notes', 'tags', 'repo'];
+
+// https://github.com/<org>/<name> only (optional .git). Returns the canonical form without ".git", or null. The web page builds
+// `git clone <repo>.git` from it (so a name that still ends in .git after one is stripped is refused: stripping twice would name another repo), so nothing else may get through: no query, fragment, userinfo, port, spaces or newlines.
+const REPO = /^https:\/\/github\.com\/([A-Za-z0-9._-]{1,39})\/([A-Za-z0-9._-]{1,100})$/;
+export function cleanRepo(value) {
+  if (typeof value !== 'string' || value.length > 160) return null;
+  const m = REPO.exec(value.endsWith('.git') ? value.slice(0, -4) : value);
+  if (!m || m[1] === '.' || m[1] === '..' || m[2] === '.' || m[2] === '..' || m[2].endsWith('.git')) return null;
+  return `https://github.com/${m[1]}/${m[2]}`;
+}
 
 export class RegistryError extends Error {
   constructor(errors) {
@@ -98,6 +108,8 @@ export function validateDemos(demos, { allowedHosts = [], demoRoot, tagIds } = {
       else d.composeOverlays.forEach((o, j) => checkPath(`${at}: composeOverlays[${j}]`, o, errors, demoRoot));
       if (d.composeFile === undefined && d.composeOverlays?.length) errors.push(`${at}: composeOverlays needs composeFile`);
     }
+    const repo = d.repo === undefined ? undefined : cleanRepo(d.repo);
+    if (d.repo !== undefined && !repo) errors.push(`${at}: repo must be https://github.com/<org>/<name> (letters, digits, ".", "_" and "-" only)`);
     let tags;
     if (d.tags !== undefined) {
       if (!Array.isArray(d.tags) || d.tags.length > 20) errors.push(`${at}: tags must be an array of up to 20 tag ids`);
@@ -110,6 +122,7 @@ export function validateDemos(demos, { allowedHosts = [], demoRoot, tagIds } = {
     const out = {};
     for (const f of FIELDS) if (d[f] !== undefined) out[f] = d[f];
     if (tags) out.tags = tags;
+    if (repo) out.repo = repo;
     out.where = where;
     out.healthPath = hp;
     if (d.composeFile !== undefined) out.composeFile = resolvePath(d.composeFile, demoRoot);

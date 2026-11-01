@@ -9,10 +9,10 @@ const OUT_MAX = 2000;
 // Only what docker needs. No tokens, no cloud credentials, no DOCKER_HOST (it could point away from the context we check).
 const PASS_ENV = ['PATH', 'HOME', 'USER', 'TMPDIR', 'LANG', 'DOCKER_CONFIG'];
 
-export function defaultExec(file, args) {
+export function defaultExec(file, args, { timeoutMs = EXEC_TIMEOUT_MS } = {}) {
   const env = Object.fromEntries(PASS_ENV.filter((k) => process.env[k] !== undefined).map((k) => [k, process.env[k]]));
   return new Promise((resolve, reject) => {
-    execFile(file, args, { timeout: EXEC_TIMEOUT_MS, maxBuffer: 1 << 20, env, shell: false }, (err, stdout, stderr) => {
+    execFile(file, args, { timeout: timeoutMs, maxBuffer: 1 << 20, env, shell: false }, (err, stdout, stderr) => {
       if (err) { err.stdout = stdout; err.stderr = stderr; return reject(err); }
       resolve({ stdout, stderr });
     });
@@ -33,8 +33,9 @@ export function redact(text) {
 
 export function composeArgs(demo, action) {
   const files = [demo.composeFile, ...(demo.composeOverlays || [])].flatMap((f) => ['-f', f]);
-  if (action !== 'start' && action !== 'stop') throw new Error(`unknown action: ${action}`);
-  return ['compose', ...files, ...(action === 'start' ? ['up', '-d'] : ['down'])];
+  const tail = { start: ['up', '-d'], stop: ['down'], images: ['config', '--images'] }[action];
+  if (!tail) throw new Error(`unknown action: ${action}`);
+  return ['compose', ...files, ...tail];
 }
 
 const LOOPBACK_ADDR = new Set(['127.0.0.1', '::1', '::ffff:127.0.0.1']);
@@ -49,14 +50,21 @@ export const isShelfItself = (demo, shelfDir) => {
   return [demo.composeFile, ...(demo.composeOverlays || [])].some((f) => path.resolve(path.dirname(path.resolve(f))) === path.resolve(shelfDir) || projectOf(f) === mine);
 };
 
+// 'ok' only when Docker's current context is OrbStack. Shared by Start / Stop and the install check.
+export async function orbstackGuard(exec, opts) {
+  let ctx;
+  try { ctx = (await (opts ? exec('docker', ['context', 'show'], opts) : exec('docker', ['context', 'show']))).stdout.trim(); } catch { return 'docker-unavailable'; }
+  return ctx === 'orbstack' ? 'ok' : 'docker-context-not-orbstack';
+}
+
 // The one place that touches Docker. Used by the shelf (host-run) and by the start agent. Returns { status, body }.
 // `exec` and `fileExists` are injectable for tests.
 export async function runCompose(demo, action, { exec = defaultExec, fileExists = fs.existsSync, shelfDir = null } = {}) {
   const fail = (status, error, extra = {}) => ({ status, body: { ok: false, error, ...extra } });
   if (isShelfItself(demo, shelfDir)) return fail(409, 'is-the-shelf');
-  let ctx;
-  try { ctx = (await exec('docker', ['context', 'show'])).stdout.trim(); } catch { return fail(503, 'docker-unavailable'); }
-  if (ctx !== 'orbstack') return fail(409, 'docker-context-not-orbstack');
+  const guard = await orbstackGuard(exec);
+  if (guard === 'docker-unavailable') return fail(503, guard);
+  if (guard !== 'ok') return fail(409, guard);
   const missing = [demo.composeFile, ...(demo.composeOverlays || [])].filter((f) => !fileExists(f));
   if (missing.length) return fail(409, 'compose-file-missing', { missing });
   try {
@@ -87,7 +95,7 @@ export function createControlRouter({ express, getDemos, onChange, exec = defaul
     busy.add(demo.id);
     try {
       const r = agent ? await agent.run(demo.id, req.params.action) : await runCompose(demo, req.params.action, { exec, fileExists, shelfDir });
-      if (r.status === 200) onChange?.();
+      if (r.status === 200) onChange?.(demo.id);
       return res.status(r.status).json(r.body);
     } catch {
       return fail(500, 'internal'); // Express 4 does not catch a rejected handler: answer instead of hanging

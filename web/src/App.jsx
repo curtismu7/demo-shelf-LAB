@@ -110,6 +110,15 @@ export default function App() {
     try { window.localStorage.setItem("shelf-theme", theme); } catch { /* the choice is a convenience */ }
   }, [theme]);
 
+  // The server checks what is installed in the background. Until the first answer is in, look again soon instead of in 30 s.
+  const pendingTries = useRef(0);
+  useEffect(() => {
+    if (!data?.installPending) { pendingTries.current = 0; return undefined; }
+    if (pendingTries.current >= 12) return undefined;
+    const t = setTimeout(() => { pendingTries.current += 1; load(false); }, 2500);
+    return () => clearTimeout(t);
+  }, [data, load]);
+
   useEffect(() => { if (open) closeRef.current?.focus(); }, [open]);
 
   async function act(id, action) {

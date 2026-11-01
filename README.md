@@ -26,6 +26,16 @@ Leave that terminal open: it is the start agent.
 
 The shelf runs in Docker (non-root, read-only, no Docker socket). It cannot start containers itself, so the small **start agent** on your machine does `docker compose up -d` / `down` for the demos the shelf lists, and the shelf's Start and Stop buttons call it. Every installed card has both a Start and a Stop button; the one that does not apply is greyed out, with a tooltip saying why. Stop takes down only the demo you pressed it on, and the shelf keeps running; the shelf refuses to start or stop any entry that is its own compose project. If the agent is not running, the shelf says so and disables both. `npm run agent` also runs `npm run docker` for you, which opens your browser once the shelf answers. Ctrl-C stops the agent but leaves the container running; stop that with `npm run docker:down`. If the container cannot start (for example another shelf holds port 4400), the agent stays up and says so; fix it and run `npm run docker`. Settings: `SHELF_AUTOSTART=0` makes `npm run agent` start only the agent; `SHELF_OPEN=0` stops the browser opening; both are skipped when `CI` is set, and `SHELF_AUTOSTART` is also skipped when `SHELF_DATA_DIR` is set (the container reads `./.data`).
 
+### Running, installed but stopped, not installed
+
+Each installed card tells you which of these it is:
+
+- **Running.** The status light comes from the health probe, and Stop is on.
+- **Installed, stopped.** The demo's compose file is on your machine and it is not answering its health check (stopped, still starting, or crashed); the card says "Installed, not answering". Start is on. If its Docker images are not built yet the card says "Installed, not built yet: Start builds it (can take a few minutes)". That is normal before the first Start; Start stays on.
+- **Not installed.** The compose file is not on your machine (a fresh download of the shelf alone looks like this). The card shows a "Not installed" tag and Start is off. If the demo's entry has a `repo`, **Copy clone command** copies `git clone https://github.com/<org>/<name>.git`; clone it next to the shelf (or where `SHELF_DEMO_ROOT` points) and press Refresh (it re-checks at once).
+
+How it is detected: the shelf in Docker cannot see your files, so the start agent looks, read-only. It checks that the registered compose file exists, then (OrbStack context only) runs `docker compose config --images` and `docker image inspect` to see whether the images are built. Answers are cached for 30 s and re-checked after a Start or Stop on that demo, and when you press Refresh (the page waits up to about 4 s for the new answer; a slower one lands on the page's next look). Loading the page never waits for it: for the first moments after it opens, and whenever the agent is not running, Docker is slow or the context is not OrbStack, a card shows no install text and behaves as before. A demo that answers its health check is never shown as not installed. Mock cards, planned ideas and entries with no compose file have no install state.
+
 Keep this folder next to the demo folders (all under one parent, for example `~/Development`). The shelf finds demos, and demos find the shelf, by sitting side by side.
 
 **Without the container:** `npm run build && npm start` runs the shelf directly on your machine at http://127.0.0.1:4400. It runs Docker itself, so no agent is needed. Use one or the other: both want port 4400.
@@ -82,13 +92,14 @@ The container is published on `127.0.0.1` only. It has no Docker socket and no m
 npm test
 ```
 
-On Node 26: 165 server tests and 38 web tests pass. `npm run e2e` drives a real browser against fake demos (needs Playwright's Chromium, not run in CI).
+On Node 26: 289 server tests and 77 web tests pass. `npm run e2e` drives a real browser against fake demos (needs Playwright's Chromium, not run in CI).
 
 ## Troubleshooting
 
 - **Start says "the start agent is not running".** In the shelf folder run `npm run agent` and leave it running.
 - **"The start agent refused the shelf's token".** Run `npm run docker` again; it gives the container the current token.
 - **"Docker's context is not OrbStack".** Run `docker context use orbstack`.
+- **A card says "Not installed" but the demo is cloned.** The registered path is relative to the folder above the shelf (or `SHELF_DEMO_ROOT`). Put the demo there, or set `SHELF_DEMO_ROOT`, then press Refresh. The compose-file check is read fresh each time; the Docker image check is cached for up to 30 s.
 - **"Its compose file was not found beside the shelf".** The registered path is relative to the folder above the shelf. Some apps (privilege-demo, privilege-map, agent-mcp-door-demo) live in `AI-DEMO-Standalone/standalone/`: put the shelf there too, or set `SHELF_DEMO_ROOT`.
 - **A demo is running but shows Down.** Check its health route with `curl -H 'Host: 127.0.0.1:<port>' http://127.0.0.1:<port>/api/health`. The shelf connects through `host.docker.internal` and sends that Host header.
 - **Port taken.** See the ports section above.
@@ -105,7 +116,7 @@ Every -LAB app ships `docs/shelf-entry.json` and a `scripts/shelf-register.mjs`.
 
 - [docs/health-contract.md](docs/health-contract.md): the `demo-health/1` field table, what each light tells you, and a short example for adding `GET /api/health` to a demo.
 - [docs/registry.md](docs/registry.md): the registry files, every field, tags, and the catalog regeneration command.
-- [docs/security.md](docs/security.md): loopback, no secrets, the Start / Stop allowlist, the SSRF stance.
+- [docs/security.md](docs/security.md): loopback, no secrets, the Start / Stop allowlist, the read-only install check, the SSRF stance.
 - [CHANGELOG.md](CHANGELOG.md).
 
 ## Registry and catalog

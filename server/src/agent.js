@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import express from 'express';
 import { isLoopbackAddr, runCompose } from './control.js';
+import { createInstallChecker } from './install.js';
 
 export const AGENT_PORT_DEFAULT = 4405;
 const TOKEN_FILE = 'agent-token';
@@ -28,9 +29,10 @@ const digest = (s) => crypto.createHash('sha256').update(String(s)).digest();
 export const sameToken = (a, b) => crypto.timingSafeEqual(digest(a), digest(b));
 
 // `getDemos()` returns the host's registered installed demos; it may throw if the registry is invalid.
-export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir = null }) {
+export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir = null, installOptions = {} }) {
   const hosts = new Set([`127.0.0.1:${port}`, `localhost:${port}`, `[::1]:${port}`, `host.docker.internal:${port}`]);
   const busy = new Set();
+  const installs = createInstallChecker({ getDemos, exec, fileExists, shelfDir, ...installOptions });
   const app = express();
   app.disable('x-powered-by');
   app.set('case sensitive routing', true); // /START must not match start
@@ -46,6 +48,16 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
 
   app.get('/v1/health', (req, res) => res.json({ ok: true, schema: 'shelf-agent/1' }));
 
+  // Read-only. For each registered demo with a compose file: is the file there, and are its images built. Enum values only: no
+  // paths, no command output, no error text. Nothing in the request is used (not even the query).
+  app.get('/v1/installs', async (req, res) => {
+    try {
+      res.json({ ok: true, schema: 'shelf-agent-installs/1', installs: Object.fromEntries(await installs.checkAll()) });
+    } catch {
+      res.status(500).json({ ok: false, error: 'registry-invalid' });
+    }
+  });
+
   app.post('/v1/demos/:id/:action(start|stop)', async (req, res) => {
     let demo;
     try { demo = getDemos().find((d) => d.id === req.params.id); } catch { return res.status(500).json({ ok: false, error: 'registry-invalid' }); }
@@ -59,6 +71,7 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
     } catch {
       res.status(500).json({ ok: false, error: 'internal' });
     } finally {
+      installs.invalidate(demo.id);
       busy.delete(demo.id);
     }
   });
