@@ -26,11 +26,8 @@ export function expandWhere(demos) {
 const LOOPBACK_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
 
 // `loopbackOnly` guards against DNS rebinding: a loopback-bound shelf only answers to loopback Host names.
-export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, onlineOnly = false, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait }) {
-  const expanded = expandWhere(registry);
-  // Online-only (the Docker image): installed copies point at localhost, which inside a container is the container itself, so only the
-  // hosted copies are listed. Their catalog rows are still "registered", so they do not come back as planned ideas.
-  const demos = onlineOnly ? expanded.filter((d) => d.where === 'mock') : expanded;
+export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait }) {
+  const demos = expandWhere(registry);
   const app = express();
   app.disable('x-powered-by');
   app.set('case sensitive routing', true);
@@ -64,7 +61,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
       canStart: allowStart && Boolean(d.composeFile),
       status: results[d.id] || { state: 'unknown', reason: 'not-polled' },
     }));
-    const have = new Set(expanded.map((d) => d.catalogId).filter(Boolean));
+    const have = new Set(demos.map((d) => d.catalogId).filter(Boolean));
     const planned = catalogItems
       .filter((i) => i.status === 'active' && !have.has(i.id))
       .map(({ id, name, kind, group, wave, seed }) => ({ id, name, kind, group, wave, seed, tags: catalogTags[id] ?? [], status: { state: 'planned' } }));

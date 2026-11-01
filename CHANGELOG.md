@@ -2,6 +2,8 @@
 
 ## 1.0.0
 
+- Removed the unused `SHELF_ONLINE_ONLY` switch (hosted copies only); it had no setting in this repo. `npm test -w server` now allows 30 s per test, so it passes on a busy machine.
+
 - Hovering (or tabbing into) a card lights it up in its kind colour: ring and glow in the spine colour (red Demo, blue Tester, grey Tool), a thicker spine and a faint tint. The colour change also applies with reduced motion; only the lift is motion.
 
 - Every installed card shows Start and Stop side by side (the one that does not apply is disabled, with a tooltip). Stop stops only that demo. Start and Stop refuse an entry that is the shelf's own compose project (`is-the-shelf`), so a Stop can never take the shelf down.

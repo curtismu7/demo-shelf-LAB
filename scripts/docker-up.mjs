@@ -32,7 +32,7 @@ try {
 if (action === 'up') {
   const url = `http://127.0.0.1:${process.env.SHELF_HOST_PORT || 4400}`;
   console.log(`\nShelf: ${url}`);
-  console.log('For Start / Stop, keep the start agent running on this machine (npm run agent starts it, and runs this script).');
+  console.log('Start / Stop on the cards need the start agent running on this machine: npm run agent.');
   // Open it in the default browser once it answers. SHELF_OPEN=0 (or CI) turns this off.
   if (process.env.SHELF_OPEN !== '0' && !process.env.CI) {
     let up = false;
