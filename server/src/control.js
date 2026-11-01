@@ -32,6 +32,7 @@ export function redact(text) {
 
 export function composeArgs(demo, action) {
   const files = [demo.composeFile, ...(demo.composeOverlays || [])].flatMap((f) => ['-f', f]);
+  if (action !== 'start' && action !== 'stop') throw new Error(`unknown action: ${action}`);
   return ['compose', ...files, ...(action === 'start' ? ['up', '-d'] : ['down'])];
 }
 
@@ -60,7 +61,7 @@ export async function runCompose(demo, action, { exec = defaultExec, fileExists 
 // without it the shelf runs Docker itself. `inDocker` skips the remote-address check, because inside a container every request
 // arrives from the Docker network: the compose file publishes the port on 127.0.0.1 only, and the Host and Origin checks still apply.
 export function createControlRouter({ express, getDemos, onChange, exec = defaultExec, fileExists = fs.existsSync, agent = null, inDocker = false }) {
-  const router = express.Router();
+  const router = express.Router({ caseSensitive: true });
   const busy = new Set();
 
   router.post('/demos/:id/:action(start|stop)', async (req, res) => {
@@ -77,6 +78,8 @@ export function createControlRouter({ express, getDemos, onChange, exec = defaul
       const r = agent ? await agent.run(demo.id, req.params.action) : await runCompose(demo, req.params.action, { exec, fileExists });
       if (r.status === 200) onChange?.();
       return res.status(r.status).json(r.body);
+    } catch {
+      return fail(500, 'internal'); // Express 4 does not catch a rejected handler: answer instead of hanging
     } finally {
       busy.delete(demo.id);
     }

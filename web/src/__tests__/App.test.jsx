@@ -130,6 +130,37 @@ describe("shelf page", () => {
     fireEvent.click(screen.getByRole("button", { name: /^Start/ }));
     expect(await screen.findByText(/did not run: the start agent is not running\. In the demo-shelf-LAB folder run: npm run agent/)).toBeInTheDocument();
   });
+  it("tells you when the agent refuses the token, and keeps Start disabled", async () => {
+    const body = shelf({ startEnabled: true, agent: "token-rejected" });
+    body.demos[1].canStart = true;
+    mockFetch(body);
+    render(<App />);
+    await screen.findByRole("heading", { name: "Demo B" });
+    expect(screen.getByText(/refused the shelf's token/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Start/ })).toBeDisabled();
+  });
+  it("hides the agent warning in Present mode", async () => {
+    const body = shelf({ startEnabled: true, agent: "down" });
+    body.demos[1].canStart = true;
+    mockFetch(body);
+    render(<App />);
+    await screen.findByText(/start agent is not running/);
+    fireEvent.click(screen.getByRole("button", { name: "Present" }));
+    expect(screen.queryByText(/start agent is not running/)).toBeNull();
+  });
+  it.each([
+    ["docker-context-not-orbstack", /Docker's context is not OrbStack\. Run: docker context use orbstack/],
+    ["compose-file-missing", /its compose file was not found beside the shelf/],
+    ["docker-unavailable", /Docker is not running\. Start OrbStack/],
+  ])("explains %s in plain words", async (code, text) => {
+    const body = shelf({ startEnabled: true, agent: "up" });
+    body.demos[1].canStart = true;
+    vi.stubGlobal("fetch", vi.fn(async (url, init) => (init?.method === "POST" ? { ok: false, json: async () => ({ error: code }) } : { ok: true, json: async () => body })));
+    render(<App />);
+    await screen.findByRole("heading", { name: "Demo B" });
+    fireEvent.click(screen.getByRole("button", { name: /^Start/ }));
+    expect(await screen.findByText(text)).toBeInTheDocument();
+  });
   it("copies the exact start command", async () => {
     mockFetch(shelf());
     const writeText = vi.fn(async () => {});

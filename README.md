@@ -1,20 +1,24 @@
 # Demo Shelf LAB
 
+The launcher for every Ping demo on your machine: one page, one card per demo, a status light on each, and a Start or Stop button that works through Docker.
+
 Tier: Tool
 Repo: https://github.com/ping-sandbox/demo-shelf-LAB
+Catalog: E2
 
-The launcher for every Ping demo on your machine. One page, one card per demo, a status light on each card (ready, needs setup, broken, down), search, tag filters, a copy-ready start command, and the planned ideas from the catalog. It runs on your laptop, listens on loopback only, and holds no accounts, secrets or tokens.
+## What is simulated
 
-Each demo you start adds itself to the shelf the first time (see "How demos get on the shelf"), so there is nothing to register by hand.
+Nothing. The shelf shows the real state of the demos running on your machine. The "planned" cards come from the catalog (`data/catalog.json`) and are ideas, not built demos. It has no mock or live mode. It holds no accounts, secrets or provider tokens; its only secret is the start agent's local token (see Safety).
 
 ## Run from a clone
 
-Needs Node 26 and OrbStack (Docker). Two processes, both on your machine:
+Needs Node 26 and OrbStack (Docker). Never Docker Desktop. Two processes, both on your machine:
 
 ```
 git clone https://github.com/ping-sandbox/demo-shelf-LAB.git
 cd demo-shelf-LAB
 npm install
+npm run doctor          # Node, registry, Docker context
 npm run agent           # the start agent: leave it running in its own terminal
 npm run docker          # builds and starts the shelf container: http://127.0.0.1:4400
 ```
@@ -25,28 +29,76 @@ Keep this folder next to the demo folders (all under one parent, for example `~/
 
 **Without the container:** `npm run build && npm start` runs the shelf directly on your machine at http://127.0.0.1:4400. It runs Docker itself, so no agent is needed. Use one or the other: both want port 4400.
 
+## Settings file
+
+The shelf reads real environment variables, not `~/Development/.env`. All are optional (`.env.example` lists them).
+
+| Variable | Default | What it does |
+| --- | --- | --- |
+| `SHELF_HOST_PORT` | 4400 | Host port the container is published on (127.0.0.1 only) |
+| `SHELF_PORT` | 4400 | Port when run without the container |
+| `SHELF_AGENT_PORT` | 4405 | Port of the start agent (loopback only) |
+| `SHELF_ALLOWED_HOSTS` | none | Extra hosts, besides loopback, a registered demo URL may use |
+| `SHELF_DATA_DIR` | `.data` | Where your `demos.local.json` and the agent token live |
+| `SHELF_DEMO_ROOT` | folder above the shelf | Where relative `composeFile` paths start |
+| `SHELF_BIND` | 127.0.0.1 | Address to listen on without the container; anything else turns Start off |
+
+## Ports, and what to do if the port is taken
+
+Ports: the shelf listens on 4400 (set with `SHELF_HOST_PORT` for the container or `SHELF_PORT` without it, default 4400). The start agent listens on 4405 (`SHELF_AGENT_PORT`).
+Port range for this app: 4400-4449.
+
+If the port is taken:
+1. Find what is using it:
+   `lsof -iTCP:4400 -sTCP:LISTEN -n -P`
+2. If it is an old copy of this app, stop that process: `kill <PID>`.
+3. If it is something else, stop it, or start this app on another port:
+   `SHELF_HOST_PORT=4491 npm run docker` (or `SHELF_PORT=4491 npm start`)
+4. Do not use 8080, 5173, 3000, 4000, 4510, 4600-4601, 18080, 19080 or 19090.
+
+## Mock and live modes
+
+Not applicable: this is a Tool, with nothing to simulate.
+
+## Health, doctor and reset
+
+- `GET /api/health` returns `demo-health/1` for the shelf itself. The shelf's server polls each registered demo's `/api/health` (3 s timeout, 4 KB cap, results cached 10 s). A demo with no endpoint but a page that loads shows "Up (no health contract)"; one that does not answer shows "Down". Contract in [docs/health-contract.md](docs/health-contract.md).
+- `npm run doctor` prints one line per check and exits 1 on failure: Node, port, registry, catalog, Docker CLI and context, and whether the start agent is running.
+- There is nothing to reset: the shelf keeps no run state. Your own entries live in `.data/demos.local.json`.
+
+## Docker
+
+```
+npm run agent      # once, in its own terminal
+npm run docker     # http://127.0.0.1:4400
+```
+
+The container is published on `127.0.0.1` only. It has no Docker socket and no mount of your demo folders. `npm run docker:down` stops it.
+
+## Tests
+
+```
+npm test
+```
+
+On Node 26: 165 server tests and 38 web tests pass. `npm run e2e` drives a real browser against fake demos (needs Playwright's Chromium, not run in CI).
+
+## Troubleshooting
+
+- **Start says "the start agent is not running".** In the shelf folder run `npm run agent` and leave it running.
+- **"The start agent refused the shelf's token".** Run `npm run docker` again; it gives the container the current token.
+- **"Docker's context is not OrbStack".** Run `docker context use orbstack`.
+- **"Its compose file was not found beside the shelf".** The registered path is relative to the folder above the shelf. Some apps (privilege-demo, privilege-map, agent-mcp-door-demo) live in `AI-DEMO-Standalone/standalone/`: put the shelf there too, or set `SHELF_DEMO_ROOT`.
+- **A demo is running but shows Down.** Check its health route with `curl -H 'Host: 127.0.0.1:<port>' http://127.0.0.1:<port>/api/health`. The shelf connects through `host.docker.internal` and sends that Host header.
+- **Port taken.** See the ports section above.
+
+## Ownership
+
+Owner: the Ping AI demo family maintainers. Licence: MIT ([LICENSE](LICENSE)). Report problems as an issue on https://github.com/ping-sandbox/demo-shelf-LAB.
+
 ## How demos get on the shelf
 
 Every -LAB app ships `docs/shelf-entry.json` and a `scripts/shelf-register.mjs`. On `npm start` the app looks for a `demo-shelf-LAB` folder next to it. If its id is already on the shelf (the committed `data/demos.json` or your `.data/demos.local.json`) it does nothing. If not, it appends its entry to `.data/demos.local.json` and prints one line. Restart the shelf to see the new card. No shelf folder, or `SHELF_AUTOREGISTER=0`: it skips and the app starts as normal. An app started only with `docker compose up` cannot reach your shelf folder, so it does not register; run its `npm start` once, or add its entry by hand ([docs/registry.md](docs/registry.md)).
-
-## What to do if the port is taken
-
-The shelf uses 4400. If something else has it, run `SHELF_HOST_PORT=4491 npm run docker` for the container, or `SHELF_PORT=4491 npm start` host-run (any port; 4400 and up keeps clear of the demos). The agent uses 4405 (`SHELF_AGENT_PORT`). `npm run doctor` names the fix. `npm run dev` runs the API on 4400 and the page on 4401 with hot reload. Settings are in `.env.example`; the shelf reads real environment variables, not a `.env` file.
-
-## Health
-
-`GET /api/health` returns `demo-health/1` for the shelf itself. The shelf's server polls each registered demo's `/api/health` (3 s timeout, 4 KB cap, results cached 10 s). A demo with no endpoint but a page that loads shows "Up (no health contract)"; one that does not answer shows "Down". Contract in [docs/health-contract.md](docs/health-contract.md).
-
-## Checks
-
-```
-npm test                          # server and page unit tests
-npm run e2e                       # real browser against 7 fake demos; screenshots to .data/e2e-screenshots (git-ignored)
-npm run e2e -- --real [url]       # read-only look at a demo that is already running
-npm run e2e -- --kit <dir>        # runs a demo-health/1 kit from <dir> in mock mode on :4531 and expects Ready
-```
-
-`e2e` is not run by CI. It needs `npm run build` first and a Chromium for Playwright (`npx playwright install chromium`). To use a Chromium you already have, set `E2E_CHROMIUM` to its executable. It uses ports 4490 (shelf), 4520-4526 (fakes) and 4531 (kit) and stops everything it starts.
 
 ## Docs
 
@@ -73,4 +125,4 @@ Every demo carries tags (Ping products, use cases, simulated or real, standards 
 
 ## Safety
 
-The container is published on `127.0.0.1` only and has no Docker access. Start / Stop runs only `docker compose up -d` or `down` for a registered demo, from a same-origin click, and only when Docker's context is OrbStack. The start agent listens on loopback with a token. The shelf fetches only registered URLs. No host beyond loopback is allowed unless `SHELF_ALLOWED_HOSTS` names it. Full notes in [docs/security.md](docs/security.md).
+The container is published on `127.0.0.1` only and has no Docker access. Start / Stop runs only `docker compose up -d` or `down` for a registered demo, from a same-origin click, and only when Docker's context is OrbStack. The start agent listens on loopback with a token. The shelf fetches only registered URLs. Full notes, including the trust boundary, in [docs/security.md](docs/security.md).

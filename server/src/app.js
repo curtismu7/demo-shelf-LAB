@@ -33,6 +33,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
   const demos = onlineOnly ? expanded.filter((d) => d.where === 'mock') : expanded;
   const app = express();
   app.disable('x-powered-by');
+  app.set('case sensitive routing', true);
   app.use((req, res, next) => {
     res.set('X-Content-Type-Options', 'nosniff');
     if (loopbackOnly && !LOOPBACK_HOSTS.has((req.headers.host || '').replace(/:\d+$/, '').toLowerCase())) return res.status(403).json({ error: 'bad-host' });
@@ -87,7 +88,8 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     app.get('*', (req, res) => res.sendFile(path.join(webDist, 'index.html')));
   }
   app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
-    res.status(500).json({ error: 'internal' });
+    const status = err.status >= 400 && err.status < 500 ? err.status : 500;
+    res.status(status).json({ error: status === 500 ? 'internal' : 'bad-request' });
   });
   return app;
 }

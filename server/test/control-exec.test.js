@@ -20,6 +20,17 @@ describe('defaultExec runs without a shell', () => {
     fs.rmSync(dir, { recursive: true, force: true });
   });
 
+  it('passes docker only a minimal environment: no tokens or cloud credentials', async () => {
+    fs.writeFileSync(path.join(dir, 'docker'), `#!/bin/sh\nenv > "${dir}/env.txt"\n`, { mode: 0o755 });
+    process.env.SHELF_TEST_SECRET = 'do-not-leak';
+    process.env.AWS_SECRET_ACCESS_KEY = 'do-not-leak';
+    try { await defaultExec('docker', ['compose']); } finally { delete process.env.SHELF_TEST_SECRET; delete process.env.AWS_SECRET_ACCESS_KEY; }
+    const names = fs.readFileSync(path.join(dir, 'env.txt'), 'utf8').split('\n').map((l) => l.split('=')[0]).filter(Boolean);
+    expect(names).not.toContain('SHELF_TEST_SECRET');
+    expect(names).not.toContain('AWS_SECRET_ACCESS_KEY');
+    expect(names).not.toContain('DOCKER_HOST');
+  });
+
   it('passes shell metacharacters through as literal argv entries', async () => {
     const pwned = path.join(dir, 'pwned');
     const nasty = [`a b; touch ${pwned}`, '$(touch ' + pwned + ')', '`touch ' + pwned + '`', '| cat', '*'];

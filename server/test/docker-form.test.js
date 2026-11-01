@@ -27,6 +27,16 @@ describe('the Docker form of the shelf', () => {
     expect(docker).toMatch(/^USER node$/m);
     expect(docker).toMatch(/^FROM node:26-alpine/m);
   });
+  it('runs a real init so docker stop is quick, and keeps /tmp as the only writable path', () => {
+    expect(compose).toMatch(/init:\s*true/);
+    expect(compose).toMatch(/tmpfs:\s*\["\/tmp"\]/);
+  });
+  it('sets container mode in the image and passes the agent port and allowed hosts through from the host', () => {
+    expect(docker).toMatch(/SHELF_IN_DOCKER=1/);
+    expect(docker).toMatch(/SHELF_BIND=0\.0\.0\.0/);
+    expect(compose).toMatch(/SHELF_AGENT_URL:\s*http:\/\/host\.docker\.internal:\$\{SHELF_AGENT_PORT:-4405\}/);
+    expect(compose).toMatch(/SHELF_ALLOWED_HOSTS:/);
+  });
   it('gets its agent token and demo root from npm run docker, never from a committed value', () => {
     expect(compose).toMatch(/SHELF_AGENT_TOKEN:\s*\$\{SHELF_AGENT_TOKEN:\?/);
     expect(compose).toMatch(/SHELF_DEMO_ROOT:\s*\$\{SHELF_DEMO_ROOT:\?/);

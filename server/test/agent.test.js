@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
 import request from 'supertest';
@@ -83,6 +84,48 @@ describe('start agent', () => {
   });
 });
 
+
+describe('start agent: further guarantees', () => {
+  it('ignores a body or query that names a path, overlay or command: only the registry decides what runs', async () => {
+    const exec = okExec();
+    const r = await call(mk({ exec }), 'post', '/v1/demos/a/start?composeFile=/etc/x&command=rm')
+      .send({ composeFile: '/etc/passwd', composeOverlays: ['/tmp/evil.yml'], command: 'rm -rf /' });
+    expect(r.status).toBe(200);
+    expect(exec).toHaveBeenLastCalledWith('docker', ['compose', '-f', '/x/a/docker-compose.yml', 'up', '-d']);
+  });
+  it('matches the action case-sensitively: START is not start', async () => {
+    const exec = okExec();
+    const app = mk({ exec });
+    for (const a of ['START', 'Start', 'STOP', 'Stop']) expect((await call(app, 'post', `/v1/demos/a/${a}`)).status, a).toBe(404);
+    expect(exec).not.toHaveBeenCalled();
+  });
+  it('answers 400, not 500, for a malformed percent-escape', async () => {
+    const r = await call(mk(), 'post', '/v1/demos/%E0%A4%A/start');
+    expect(r.status).toBe(400);
+  });
+  it('releases the per-demo lock after a failed compose, so the next start works', async () => {
+    let fail = true;
+    const exec = vi.fn(async (file, args) => {
+      if (args[0] === 'compose' && fail) throw Object.assign(new Error('boom'), { stdout: '', stderr: 'nope' });
+      return { stdout: args[0] === 'context' ? 'orbstack' : 'ok', stderr: '' };
+    });
+    const app = mk({ exec });
+    expect((await call(app, 'post', '/v1/demos/a/start')).body.error).toBe('compose-failed');
+    fail = false;
+    expect((await call(app, 'post', '/v1/demos/a/start')).status).toBe(200);
+  });
+  it('requires the token on /v1/health too', async () => {
+    expect((await call(mk(), 'get', '/v1/health', { token: null })).status).toBe(401);
+  });
+  it('refuses a peer that is not loopback, even with the right token and Host', async () => {
+    const server = http.createServer(mk());
+    server.on('connection', (sock) => Object.defineProperty(sock, 'remoteAddress', { value: '192.168.215.1' }));
+    const r = await call(server, 'get', '/v1/health');
+    expect(r.status).toBe(403);
+    expect(r.body.error).toBe('loopback-only');
+  });
+});
+
 describe('agent token', () => {
   it('is created once with mode 600 and reused', () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'shelf-token-'));
@@ -119,6 +162,12 @@ describe('agent client', () => {
   it('maps a rejected token and a bad reply to their own errors', async () => {
     expect((await createAgentClient({ url: 'http://x:1', token: TOKEN, fetchFn: async () => json(401, { ok: false }) }).run('a', 'start')).body.error).toBe('agent-token-rejected');
     expect((await createAgentClient({ url: 'http://x:1', token: TOKEN, fetchFn: async () => ({ status: 200, json: async () => { throw new Error('x'); } }) }).run('a', 'start')).body.error).toBe('agent-bad-reply');
+  });
+  it('pings with the token and tells a refused token from a stopped agent', async () => {
+    const f = vi.fn(async () => json(401, { ok: false }));
+    expect(await createAgentClient({ url: 'http://x:1', token: TOKEN, fetchFn: f }).ping()).toBe('token-rejected');
+    expect(f.mock.calls[0][1].headers).toEqual({ authorization: `Bearer ${TOKEN}` });
+    expect(await createAgentClient({ url: 'http://x:1', token: TOKEN, fetchFn: async () => json(500, {}) }).ping()).toBe('down');
   });
   it('pings, caching the answer for a few seconds', async () => {
     let t = 0;

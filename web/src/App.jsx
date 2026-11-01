@@ -223,6 +223,9 @@ export default function App() {
         <div className="sr" role="status" aria-live="polite">{announce}</div>
         {error && <div className="note" data-state="error" role="alert">Cannot reach the shelf server ({error}). {data ? "Showing the last known state." : "Is it running?"}</div>}
         {note && !present && <div className="note" role="status">{note}</div>}
+        {data?.agent === "token-rejected" && !present && (
+          <div className="note" role="status" data-state="warn">The start agent is running but refused the shelf's token, so Start and Stop cannot work. In the demo-shelf-LAB folder run <code className="mono">npm run docker</code> again to give the shelf the current token.</div>
+        )}
         {data?.agent === "down" && !present && (
           <div className="note" role="status" data-state="warn">The start agent is not running, so Start and Stop cannot work. In the demo-shelf-LAB folder run <code className="mono">npm run agent</code> and leave it running.</div>
         )}
@@ -299,7 +302,7 @@ export default function App() {
                 <h2 id={`g-${sec.key}`} className="shelf__title">{sec.title}</h2>
                 <div className="shelf__row">
                   {sec.rows.map((i) => (
-                    <Card key={`${i.planned ? "p" : "r"}-${i.id}`} item={i} present={present} startEnabled={data.startEnabled} busy={busy || data.agent === "down"}
+                    <Card key={`${i.planned ? "p" : "r"}-${i.id}`} item={i} present={present} startEnabled={data.startEnabled} busy={busy || data.agent === "down" || data.agent === "token-rejected"}
                       onAction={act} onCopy={copy} onDetails={showDetails} tagInfo={tagInfo} picked={picked} onTag={toggleTag} />
                   ))}
                 </div>

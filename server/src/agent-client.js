@@ -22,13 +22,13 @@ export function createAgentClient({ url, token, fetchFn = fetch, now = () => Dat
       if (!body || typeof body !== 'object') return { status: 502, body: { ok: false, error: 'agent-bad-reply' } };
       return { status: res.status, body };
     },
-    // 'up' or 'down'. Cached for a few seconds so many open tabs do not multiply the checks.
+    // 'up', 'down' (nothing answers) or 'token-rejected' (it answers but refuses our token). Cached for a few seconds so many open tabs do not multiply the checks.
     async ping() {
       if (ping && now() - ping.at < PING_CACHE_MS) return ping.state;
       let state = 'down';
       try {
         const res = await fetchFn(`${base}/v1/health`, { headers, signal: AbortSignal.timeout(PING_TIMEOUT_MS) });
-        state = res.ok ? 'up' : 'down';
+        state = res.ok ? 'up' : res.status === 401 ? 'token-rejected' : 'down';
       } catch { /* not running */ }
       ping = { at: now(), state };
       return state;

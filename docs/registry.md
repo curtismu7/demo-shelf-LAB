@@ -37,7 +37,7 @@ The shelf lists the demos in two files, merged by `id`:
 | `kind` | no | `Demo`, `Tester` or `Tool`; defaults to the catalog row's kind. |
 | `tags` | no | Up to 20 tag ids from `data/tags.json` (see Tags below). An id that is not in the taxonomy stops the server and is named in the message. Shown as pills on the card and used by the tag filter. |
 | `healthPath` | no | Plain path starting with `/`. Default `/api/health`. |
-| `composeFile`, `composeOverlays` | no | `.yml` / `.yaml` paths with no shell characters or `..`: absolute, or relative to the demo root. The demo root is `SHELF_DEMO_ROOT`, and defaults to the folder above this shelf (where the demo repos sit). A relative path makes an entry portable across machines, so use it for new entries. Used for Copy start command and, only if enabled, Start / Stop. Overlays need a `composeFile`. |
+| `composeFile`, `composeOverlays` | no | `.yml` / `.yaml` paths with no shell characters or `..`: absolute, or relative to the demo root. The demo root is `SHELF_DEMO_ROOT`, and defaults to the folder above this shelf (where the demo repos sit). A relative path makes an entry portable across machines, so use it for new entries. Used for Copy start command and for Start / Stop (always on). Overlays need a `composeFile`. |
 
 A bad file stops the server and the message names every problem.
 

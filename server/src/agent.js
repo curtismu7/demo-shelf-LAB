@@ -33,6 +33,7 @@ export function createAgent({ getDemos, token, port, exec, fileExists }) {
   const busy = new Set();
   const app = express();
   app.disable('x-powered-by');
+  app.set('case sensitive routing', true); // /START must not match start
 
   app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store');
@@ -55,6 +56,8 @@ export function createAgent({ getDemos, token, port, exec, fileExists }) {
     try {
       const r = await runCompose(demo, req.params.action, { exec, fileExists });
       res.status(r.status).json(r.body);
+    } catch {
+      res.status(500).json({ ok: false, error: 'internal' });
     } finally {
       busy.delete(demo.id);
     }
@@ -62,7 +65,8 @@ export function createAgent({ getDemos, token, port, exec, fileExists }) {
 
   app.use((req, res) => res.status(404).json({ ok: false, error: 'not-found' }));
   app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
-    res.status(500).json({ ok: false, error: 'internal' });
+    const status = err.status >= 400 && err.status < 500 ? err.status : 500; // e.g. a malformed %-escape is the caller's 400
+    res.status(status).json({ ok: false, error: status === 500 ? 'internal' : 'bad-request' });
   });
   return app;
 }

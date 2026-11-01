@@ -34,6 +34,24 @@ describe('Start / Stop through the start agent (the shelf in a container)', () =
     expect(r.status).toBe(503);
     expect(r.body.error).toBe('agent-not-running');
   });
+  it('compares the whole Origin: a host that merely starts with the right one is refused', async () => {
+    const agent = agentStub();
+    const r = await post(mk(agent), '/api/demos/a/start', { Origin: 'http://localhost:4400.evil.example' });
+    expect(r.status).toBe(403);
+    expect(agent.run).not.toHaveBeenCalled();
+  });
+  it('matches the action case-sensitively', async () => {
+    const agent = agentStub();
+    expect((await post(mk(agent), '/api/demos/a/START')).status).toBe(404);
+    expect(agent.run).not.toHaveBeenCalled();
+  });
+  it('releases the per-demo lock when the agent call throws, so the next click works', async () => {
+    let n = 0;
+    const agent = agentStub({ run: vi.fn(async () => { if (n++ === 0) throw new Error('boom'); return { status: 200, body: { ok: true } }; }) });
+    const app = mk(agent);
+    expect((await post(app, '/api/demos/a/start')).status).toBe(500);
+    expect((await post(app, '/api/demos/a/start')).status).toBe(200);
+  });
   it('keeps the Host check on in the container, so a foreign Host is refused', async () => {
     const r = await request(mk(agentStub())).get('/api/shelf').set('Host', 'evil.example');
     expect(r.status).toBe(403);

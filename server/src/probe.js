@@ -14,10 +14,20 @@ export function createProbeFetch({ probeHost, fetchImpl = fetch, request = http.
       const req = request(
         { host: probeHost, port: u.port || 80, path: `${u.pathname}${u.search}`, method: init.method || 'GET', headers: { ...init.headers, host: u.host }, signal: init.signal },
         (res) => {
-          const headers = new Headers();
-          for (const [k, v] of Object.entries(res.headers)) for (const x of [].concat(v)) headers.append(k, x);
-          const empty = res.statusCode === 204 || res.statusCode === 304;
-          resolve(new Response(empty ? null : Readable.toWeb(res), { status: res.statusCode, headers }));
+          try {
+            const status = res.statusCode;
+            // A status the Response constructor refuses (outside 200-599) is a failed probe, not a crash.
+            if (!(status >= 200 && status <= 599)) { res.destroy(); return reject(new Error('bad-status')); }
+            const headers = new Headers();
+            for (const [k, v] of Object.entries(res.headers)) for (const x of [].concat(v)) headers.append(k, x);
+            const noBody = status === 204 || status === 205 || status === 304;
+            if (noBody) res.resume();
+            res.on('error', () => {}); // a reset mid-body surfaces through the Response stream
+            resolve(new Response(noBody ? null : Readable.toWeb(res), { status, headers }));
+          } catch (e) {
+            res.destroy();
+            reject(e);
+          }
         },
       );
       req.on('error', reject);
