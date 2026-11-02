@@ -158,6 +158,7 @@ describe('loadRegistry', () => {
       ['privilege-map', undefined, 'http://127.0.0.1:5301'],
       ['agent-mcp-door-demo', undefined, 'http://localhost:6850'],
       ['pingone-signin-lab', 'A11', 'http://127.0.0.1:6171'],
+      ['pingone-lab', 'A29', 'http://127.0.0.1:5500'],
     ]);
   });
   it('the committed pingone-signin-lab entry covers A4 and A5 too, with real catalog rows and a portable compose path', () => {

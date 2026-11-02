@@ -157,6 +157,20 @@
       ],
       "where": "installed",
       "repo": "https://github.com/ping-sandbox/pingone-signin-LAB"
+    },
+    {
+      "id": "pingone-lab",
+      "name": "PingOne LAB",
+      "catalogId": "A29",
+      "kind": "Demo",
+      "description": "A card for each thing PingOne advertises in its discovery document: pi.flow sign-in, PKCE, PAR, JAR, client credentials, token lifecycle, Userinfo, device authorization, CIBA, token exchange, plus a playground. Mock PingOne by default, or your own environment.",
+      "url": "http://127.0.0.1:5500",
+      "healthPath": "/api/health",
+      "composeFile": "pingone-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": ["pingone", "oauth", "oidc", "par", "ciba", "token-exchange", "simulated", "real"],
+      "where": "installed",
+      "repo": "https://github.com/ping-sandbox/pingone-LAB"
     }
   ]
 }

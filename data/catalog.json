@@ -255,6 +255,15 @@
       "status": "backlog"
     },
     {
+      "id": "A29",
+      "name": "PingOne LAB (protocol cards and playground)",
+      "kind": "Demo",
+      "group": "A",
+      "seed": "built",
+      "wave": 3,
+      "status": "active"
+    },
+    {
       "id": "B1",
       "name": "PingOne Authorize (P1AZ)",
       "kind": "Demo",
