@@ -80,7 +80,7 @@ describe('the committed seed', () => {
   it('has the five starter groups', () => {
     expect(tags.groups.map((g) => g.label)).toEqual(['Ping products', 'Use cases', 'Simulated or real', 'Standards and protocols', 'What we built']);
   });
-  // "An MCP server we built": a curated list, so a new entry gets the tag on purpose. Clients, testers and inspectors never carry it.
+  // "An MCP tool we built" (servers, clients and tools): a curated list, so a new entry gets the tag on purpose.
   it('mcp-server-built is in the taxonomy and sits on exactly the entries the owner named', () => {
     expect(known.has('mcp-server-built')).toBe(true);
     expect(demos.filter((d) => d.tags.includes('mcp-server-built')).map((d) => d.id).sort()).toEqual(['hostile-mcp', 'mcp-resource-server', 'mcp-scanner', 'mcp-surface-lab', 'mcp-tools']);
