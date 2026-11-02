@@ -133,7 +133,7 @@ npm run catalog -- /path/to/standalone-demo-family-plan.md --out /tmp/full-plan-
 
 ## Tags and search
 
-Every demo carries tags (Ping products, use cases, simulated or real, standards and protocols). Open "Filter by tag", click chips (inside a group they are alternatives, across groups they all apply), type in the search box to match names, descriptions and tags, and share the filtered view by its address. How to add tags and groups: [docs/registry.md](docs/registry.md#tags).
+Every demo carries tags (Ping products, use cases, simulated or real, standards and protocols, and what we built, such as an MCP server we wrote). Open "Filter by tag", click chips (inside a group they are alternatives, across groups they all apply), type in the search box to match names, descriptions and tags, and share the filtered view by its address. How to add tags and groups: [docs/registry.md](docs/registry.md#tags).
 
 ## Safety
 

@@ -173,6 +173,17 @@
           "label": "Cedar"
         }
       ]
+    },
+    {
+      "id": "built",
+      "label": "What we built",
+      "tags": [
+        {
+          "id": "mcp-server-built",
+          "label": "MCP server we built",
+          "hint": "An MCP server we wrote ourselves. Not a client, tester or inspector."
+        }
+      ]
     }
   ]
 }
