@@ -63,6 +63,22 @@ function CloneCopy({ name, command }) {
   );
 }
 
+// Copy start command, with a visible answer next to it (the live-region announcement alone is invisible).
+function StartCopy({ item, label, onCopy }) {
+  const [state, setState] = useState(null); // null | "copied" | "blocked"
+  useEffect(() => {
+    if (!state) return undefined;
+    const t = setTimeout(() => setState(null), 2500);
+    return () => clearTimeout(t);
+  }, [state]);
+  return (
+    <>
+      <button type="button" onClick={async () => setState((await onCopy(item)) ? "copied" : "blocked")}>Copy start command<span className="sr"> for {label}</span></button>
+      <span className="box__copied" aria-hidden="true" data-state={state || undefined}>{state === "copied" ? "\u2713 Copied" : state === "blocked" ? "Blocked: see Details" : ""}</span>
+    </>
+  );
+}
+
 export function Card({ item, startEnabled, present, busy, onAction, onCopy, onDetails, tagInfo, picked, onTag }) {
   const s = item.status;
   if (item.planned) {
@@ -113,7 +129,7 @@ export function Card({ item, startEnabled, present, busy, onAction, onCopy, onDe
         })()}
         {isUp(s.state) && <a className="box__open" href={item.url} target="_blank" rel="noopener noreferrer">Open<span className="sr"> {label} in a new tab</span></a>}
         {clone && <CloneCopy name={label} command={clone} />}
-        {item.startCommand && <button type="button" onClick={() => onCopy(item)}>Copy start command<span className="sr"> for {label}</span></button>}
+        {item.startCommand && <StartCopy item={item} label={label} onCopy={onCopy} />}
         <button type="button" onClick={() => onDetails(item)}>Details<span className="sr"> for {label}</span></button>
       </div>
     </article>

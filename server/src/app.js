@@ -8,9 +8,9 @@ import { hostedTags } from './tags.js';
 
 const VERSION = JSON.parse(fs.readFileSync(new URL('../../package.json', import.meta.url), 'utf8')).version;
 
-// Shell-safe display form of the exact command Start runs, for the Copy button.
+// Shell-safe display form of what Start runs, for the Copy button: change into the compose file's folder first, as Start does.
 const q = (a) => (/^[\w@%+=:,./-]+$/.test(a) ? a : `'${a.replace(/'/g, `'\\''`)}'`);
-export const startCommand = (d) => (d.composeFile ? ['docker', ...composeArgs({ composeOverlays: [], ...d }, 'start')].map(q).join(' ') : null);
+export const startCommand = (d) => (d.composeFile ? `cd ${q(path.dirname(d.composeFile))} && ${['docker', ...composeArgs({ composeOverlays: [], ...d }, 'start')].map(q).join(' ')}` : null);
 
 // One registry entry becomes one card per place it lives. A mock copy is polled and linked at mockUrl and
 // has no compose file, so Start / Stop never applies to it. A "both" demo gets a second, "-mock" card.

@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "../App.jsx";
 
 const st = (state, extra = {}) => ({ state, lastChecked: "2026-10-21T10:00:00Z", latencyMs: 12, ...extra });
@@ -16,6 +16,7 @@ const shelf = (over = {}) => ({
 });
 const cardOf = (name) => within(screen.getByRole("heading", { name }).closest("article"));
 const mockFetch = (body) => { const f = vi.fn(async () => ({ ok: true, json: async () => body })); vi.stubGlobal("fetch", f); return f; };
+beforeEach(() => { window.history.replaceState(null, "", "/?status=all"); }); // tests look at every card; the page itself opens on Ready
 afterEach(() => { vi.unstubAllGlobals(); vi.useRealTimers(); Object.defineProperty(document, "hidden", { value: false, configurable: true }); window.history.replaceState(null, "", "/"); }); // the filter lives in the address, so each test starts from a clean one
 
 describe("shelf page", () => {
@@ -219,7 +220,8 @@ describe("shelf page", () => {
     expect(screen.getAllByRole("button", { name: /Copy start command/ })).toHaveLength(1);
     fireEvent.click(screen.getByRole("button", { name: /Copy start command/ }));
     await waitFor(() => expect(writeText).toHaveBeenCalledWith("docker compose -f /x/c.yml up -d"));
-    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("Copied the start command for Demo A"));
+    await waitFor(() => expect(screen.getAllByRole("status").map((n) => n.textContent).join("|")).toContain("Copied the start command for Demo A"));
+    expect(within(screen.getByText("Demo A").closest("article")).getByText("\u2713 Copied")).toBeInTheDocument(); // visible, not only announced
   });
   it("opens a details drawer with the fix hint, hiding the registry path in Present mode", async () => {
     mockFetch(shelf());
@@ -254,7 +256,7 @@ describe("shelf page", () => {
     await screen.findByText("Demo A");
     fireEvent.click(within(screen.getByText("Passwordless").closest("article")).getByRole("button", { name: /Details/ }));
     const d = screen.getByRole("dialog", { name: "Passwordless details" });
-    expect(within(d).getByText(/Not built yet/)).toBeInTheDocument();
+    expect(within(d).getByText(/built or proposed but not registered/)).toBeInTheDocument();
     expect(within(d).getByText(/A3, wave 3/)).toBeInTheDocument();
   });
   it("lists items with no kind under an Unclassified option", async () => {
@@ -465,7 +467,36 @@ describe("tags", () => {
     expect(p.get("q")).toBe("token");
     fireEvent.click(screen.getByRole("button", { name: "Clear tags" }));
     fireEvent.change(screen.getByLabelText("Search"), { target: { value: "" } });
+    expect(window.location.search).toBe("?status=all");
+  });
+
+  it("opens on Ready: only ready cards show, the Ready chip is pressed, and the address stays clean", async () => {
+    window.history.replaceState(null, "", "/");
+    mockFetch(shelf());
+    render(<App />);
+    await screen.findByText("Demo A");
+    expect(screen.getByText("Demo A")).toBeInTheDocument();
+    expect(screen.queryByText("Demo B")).toBeNull();
+    expect(screen.queryByText("Passwordless")).toBeNull();
+    expect(within(screen.getByRole("region", { name: "Summary by status" })).getByText("Ready").closest("button")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByLabelText("Status")).toHaveValue("ready");
     expect(window.location.search).toBe("");
+    fireEvent.change(screen.getByLabelText("Status"), { target: { value: "all" } });
+    expect(await screen.findByText("Demo B")).toBeInTheDocument();
+    expect(window.location.search).toBe("?status=all");
+  });
+
+  it("?status=planned opens on the planned ideas, and an unknown status falls back to Ready", async () => {
+    window.history.replaceState(null, "", "/?status=planned");
+    mockFetch(shelf());
+    const { unmount } = render(<App />);
+    expect(await screen.findByText("Passwordless")).toBeInTheDocument();
+    expect(screen.queryByText("Demo A")).toBeNull();
+    unmount();
+    window.history.replaceState(null, "", "/?status=bogus");
+    render(<App />);
+    await screen.findByText("Demo A");
+    expect(screen.getByLabelText("Status")).toHaveValue("ready");
   });
 
   it("starts from the address: ?tags=real&q=real picks the chip and the search, and unknown tags are ignored", async () => {

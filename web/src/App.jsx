@@ -11,7 +11,7 @@ const WHY = {
   "compose-file-missing": "its compose file was not found beside the shelf. Check the registered path in Details",
   "docker-context-not-orbstack": "Docker's context is not OrbStack. Run: docker context use orbstack",
   "docker-unavailable": "Docker is not running. Start OrbStack",
-  timeout: "Docker took longer than 60 seconds. Check the demo's logs",
+  timeout: "Docker took too long (the first Start builds the image and may need a few minutes). Check the demo's logs",
   busy: "another start or stop for this demo is still running",
   "is-the-shelf": "that entry is the shelf itself, and Stop would take the shelf down. Stop it from a terminal with npm run docker:down",
 };
@@ -42,13 +42,21 @@ const THEMES = [["auto", "Auto"], ["light", "Light"], ["dark", "Dark"]];
 const WHERES = [["all", "All"], ["installed", "Installed"], ["mock", "Mock"]];
 const kindOf = (i) => (i.kind || "").toLowerCase();
 
-// Filter state that is worth sharing lives in the address: ?q=oidc&tags=pingfederate,real
+// The page opens on Ready; ?status=all (or another state) overrides it.
+const DEFAULT_STATUS = "ready";
+
+// Filter state that is worth sharing lives in the address: ?q=oidc&tags=pingfederate,real&status=all
 function fromAddress() {
   try {
     const p = new URLSearchParams(window.location.search);
-    return { q: p.get("q") || "", tags: new Set((p.get("tags") || "").split(",").map((t) => t.trim()).filter(Boolean)) };
+    const st = p.get("status");
+    return {
+      q: p.get("q") || "",
+      tags: new Set((p.get("tags") || "").split(",").map((t) => t.trim()).filter(Boolean)),
+      status: st === "all" || STATES.includes(st) ? st : DEFAULT_STATUS,
+    };
   } catch {
-    return { q: "", tags: new Set() };
+    return { q: "", tags: new Set(), status: DEFAULT_STATUS };
   }
 }
 
@@ -60,7 +68,7 @@ export default function App() {
   const [announce, setAnnounce] = useState("");
   const [where, setWhere] = useState("all");
   const [kind, setKind] = useState("all");
-  const [status, setStatus] = useState("all");
+  const [status, setStatus] = useState(() => fromAddress().status);
   const [text, setText] = useState(() => fromAddress().q);
   const [picked, setPicked] = useState(() => fromAddress().tags);
   const [present, setPresent] = useState(false);
@@ -135,7 +143,9 @@ export default function App() {
   }
 
   async function copy(item) {
-    setAnnounce((await copyText(item.startCommand)) ? `Copied the start command for ${item.name}` : "Copy was blocked by the browser. Select the command in Details instead.");
+    const ok = await copyText(item.startCommand);
+    setAnnounce(ok ? `Copied the start command for ${item.name}` : "Copy was blocked by the browser. Select the command in Details instead.");
+    return ok;
   }
 
   function showDetails(item) {
@@ -168,9 +178,10 @@ export default function App() {
       const p = new URLSearchParams();
       if (text.trim()) p.set("q", text.trim());
       if (picked.size) p.set("tags", [...picked].join(","));
+      if (status !== DEFAULT_STATUS) p.set("status", status);
       window.history.replaceState(null, "", p.toString() ? `?${p}` : window.location.pathname);
     } catch { /* the address is a convenience */ }
-  }, [text, picked]);
+  }, [text, picked, status]);
 
   const toggleTag = useCallback((id) => setPicked((prev) => { const n = new Set(prev); if (n.has(id)) n.delete(id); else n.add(id); return n; }), []);
 

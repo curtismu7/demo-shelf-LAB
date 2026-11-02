@@ -20,7 +20,8 @@
     "e2e:refresh-docs": "node scripts/e2e.mjs --refresh-docs",
     "agent": "node server/src/agent-cli.js",
     "docker": "node scripts/docker-up.mjs up",
-    "docker:down": "node scripts/docker-up.mjs down"
+    "docker:down": "node scripts/docker-up.mjs down",
+    "ports": "node scripts/ports.mjs"
   },
   "devDependencies": {
     "playwright": "^1.58.2"

@@ -26,12 +26,12 @@ describe('start agent', () => {
     const r = await call(mk({ exec }), 'post', '/v1/demos/a/start');
     expect(r.status).toBe(200);
     expect(r.body).toMatchObject({ ok: true, id: 'a', action: 'start' });
-    expect(exec).toHaveBeenLastCalledWith('docker', ['compose', '-f', '/x/a/docker-compose.yml', 'up', '-d']);
+    expect(exec).toHaveBeenLastCalledWith('docker', ['compose', '-f', '/x/a/docker-compose.yml', 'up', '-d'], { cwd: '/x/a', timeoutMs: 600000 });
   });
   it('stops with down', async () => {
     const exec = okExec();
     await call(mk({ exec }), 'post', '/v1/demos/a/stop');
-    expect(exec).toHaveBeenLastCalledWith('docker', ['compose', '-f', '/x/a/docker-compose.yml', 'down']);
+    expect(exec).toHaveBeenLastCalledWith('docker', ['compose', '-f', '/x/a/docker-compose.yml', 'down'], { cwd: '/x/a', timeoutMs: 60000 });
   });
   it('refuses a missing or wrong token', async () => {
     const exec = okExec();
@@ -91,7 +91,7 @@ describe('start agent: further guarantees', () => {
     const r = await call(mk({ exec }), 'post', '/v1/demos/a/start?composeFile=/etc/x&command=rm')
       .send({ composeFile: '/etc/passwd', composeOverlays: ['/tmp/evil.yml'], command: 'rm -rf /' });
     expect(r.status).toBe(200);
-    expect(exec).toHaveBeenLastCalledWith('docker', ['compose', '-f', '/x/a/docker-compose.yml', 'up', '-d']);
+    expect(exec).toHaveBeenLastCalledWith('docker', ['compose', '-f', '/x/a/docker-compose.yml', 'up', '-d'], { cwd: '/x/a', timeoutMs: 600000 });
   });
   it('matches the action case-sensitively: START is not start', async () => {
     const exec = okExec();

@@ -125,10 +125,10 @@ Every -LAB app ships `docs/shelf-entry.json` and a `scripts/shelf-register.mjs`.
 
 Each demo is either installed (runs on your machine, the default), mock (a hosted mock-only copy at `mockUrl`), or both. The page has an All / Installed / Mock filter. No mock copy is registered today, so Mock is empty.
 
-To regenerate `data/catalog.json` from the plan (deterministic; commit the result):
+`data/catalog.json` is curated: only standalone apps and accepted proposals. To parse the whole plan into a scratch file instead (deterministic, never over the curated one):
 
 ```
-npm run catalog -- /path/to/standalone-demo-family-plan.md
+npm run catalog -- /path/to/standalone-demo-family-plan.md --out /tmp/full-plan-catalog.json
 ```
 
 ## Tags and search

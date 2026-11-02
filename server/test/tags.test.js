@@ -129,7 +129,7 @@ describe('tags on planned ideas (data/catalog-tags.json)', () => {
 describe('the committed planned-idea tags', () => {
   const { catalog, tags, demos, catalogTags } = loadAll({ ...process.env, SHELF_DATA_DIR: fs.mkdtempSync(path.join(os.tmpdir(), 'seed-')) });
   const known = tagIdSet(tags);
-  const planned = catalog.items.filter((i) => i.status === 'active' && !demos.some((d) => d.catalogId === i.id));
+  const planned = catalog.items.filter((i) => i.status === 'active' && !demos.some((d) => d.catalogId === i.id || d.alsoCatalogIds?.includes(i.id)));
   it('every planned idea is tagged, with no mode tag (nothing is built yet)', () => {
     expect(planned.length).toBeGreaterThan(0);
     for (const i of planned) {

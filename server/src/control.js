@@ -5,14 +5,16 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export const EXEC_TIMEOUT_MS = 60_000;
+// The first Start builds the image, which takes minutes; killing it at 60 s made every first Start fail and look like nothing happened.
+export const START_TIMEOUT_MS = 600_000;
 const OUT_MAX = 2000;
 // Only what docker needs. No tokens, no cloud credentials, no DOCKER_HOST (it could point away from the context we check).
 const PASS_ENV = ['PATH', 'HOME', 'USER', 'TMPDIR', 'LANG', 'DOCKER_CONFIG'];
 
-export function defaultExec(file, args, { timeoutMs = EXEC_TIMEOUT_MS } = {}) {
+export function defaultExec(file, args, { timeoutMs = EXEC_TIMEOUT_MS, cwd } = {}) {
   const env = Object.fromEntries(PASS_ENV.filter((k) => process.env[k] !== undefined).map((k) => [k, process.env[k]]));
   return new Promise((resolve, reject) => {
-    execFile(file, args, { timeout: timeoutMs, maxBuffer: 1 << 20, env, shell: false }, (err, stdout, stderr) => {
+    execFile(file, args, { timeout: timeoutMs, maxBuffer: 1 << 20, env, shell: false, cwd }, (err, stdout, stderr) => {
       if (err) { err.stdout = stdout; err.stderr = stderr; return reject(err); }
       resolve({ stdout, stderr });
     });
@@ -68,7 +70,8 @@ export async function runCompose(demo, action, { exec = defaultExec, fileExists 
   const missing = [demo.composeFile, ...(demo.composeOverlays || [])].filter((f) => !fileExists(f));
   if (missing.length) return fail(409, 'compose-file-missing', { missing });
   try {
-    const out = await exec('docker', composeArgs(demo, action));
+    // Run from the compose file's own folder, as a person would: relative paths, .env and build contexts then resolve the same way.
+    const out = await exec('docker', composeArgs(demo, action), { cwd: path.dirname(demo.composeFile), timeoutMs: action === 'start' ? START_TIMEOUT_MS : EXEC_TIMEOUT_MS });
     return { status: 200, body: { ok: true, id: demo.id, action, output: redact(`${out.stdout}\n${out.stderr}`) } };
   } catch (e) {
     const timedOut = e.killed || e.signal === 'SIGTERM';

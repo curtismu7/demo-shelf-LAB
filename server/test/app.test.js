@@ -40,7 +40,7 @@ describe('GET /api/shelf', () => {
     expect(r.body.demos[0]).toMatchObject({ catalogId: 'C1', kind: 'Demo', wave: 0, canStart: false });
     expect(r.body.planned.map((p) => [p.id, p.status.state])).toEqual([['E2', 'planned']]);
     expect(r.body.demos[0]).toMatchObject({ group: 'C', composeFile: '/tmp/a/c.yml' });
-    expect(r.body.demos[0].startCommand).toBe('docker compose -f /tmp/a/c.yml -f /tmp/a/o.yml up -d');
+    expect(r.body.demos[0].startCommand).toBe('cd /tmp/a && docker compose -f /tmp/a/c.yml -f /tmp/a/o.yml up -d');
   });
   it('alsoCatalogIds rows are covered by the one card and are not planned ideas', async () => {
     const r = await request(mk({ demos: [{ ...demos[0], alsoCatalogIds: ['E2'] }] })).get('/api/shelf').set('Host', 'localhost:4400');
@@ -102,7 +102,7 @@ describe('start/stop', () => {
     expect(r.body).toMatchObject({ ok: true, id: 'a', action: 'start', output: 'started' });
     expect(exec.mock.calls).toEqual([
       ['docker', ['context', 'show']],
-      ['docker', ['compose', '-f', '/tmp/a/c.yml', '-f', '/tmp/a/o.yml', 'up', '-d']],
+      ['docker', ['compose', '-f', '/tmp/a/c.yml', '-f', '/tmp/a/o.yml', 'up', '-d'], { cwd: '/tmp/a', timeoutMs: 600000 }],
     ]);
   });
   it('stop runs down', async () => {

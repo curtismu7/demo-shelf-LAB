@@ -12,33 +12,6 @@
   },
   "items": [
     {
-      "id": "A1",
-      "name": "MFA tester",
-      "kind": "Tester",
-      "group": "A",
-      "seed": "built",
-      "wave": 1,
-      "status": "active"
-    },
-    {
-      "id": "A2",
-      "name": "Passkey / FIDO2 tester",
-      "kind": "Tester",
-      "group": "A",
-      "seed": "partial",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "A3",
-      "name": "Passwordless sign-in",
-      "kind": "Demo",
-      "group": "A",
-      "seed": "built",
-      "wave": 3,
-      "status": "active"
-    },
-    {
       "id": "A4",
       "name": "CIBA lab",
       "kind": "Tester",
@@ -57,120 +30,12 @@
       "status": "active"
     },
     {
-      "id": "A6",
-      "name": "PingOne Protect / Risk",
-      "kind": "Demo",
-      "group": "A",
-      "seed": "partial",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "A7",
-      "name": "Risk signal simulator",
-      "kind": "Tester",
-      "group": "A",
-      "seed": "partial",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "A8",
-      "name": "PingOne Recognize",
-      "kind": "Demo",
-      "group": "A",
-      "seed": "partial",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "A9",
-      "name": "PingOne Verify / Credentials",
-      "kind": "Demo",
-      "group": "A",
-      "seed": "none",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "A10",
-      "name": "DaVinci flow runner",
-      "kind": "Demo/Tester",
-      "group": "A",
-      "seed": "built",
-      "wave": 3,
-      "status": "active"
-    },
-    {
       "id": "A11",
       "name": "pi.flow native sign-in kit",
       "kind": "Demo",
       "group": "A",
       "seed": "built",
       "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "A12",
-      "name": "User registration and self-service",
-      "kind": "Demo",
-      "group": "A",
-      "seed": "built",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "A13",
-      "name": "Population / group / attribute explorer",
-      "kind": "Tester",
-      "group": "A",
-      "seed": "built",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "A14",
-      "name": "AIC journeys",
-      "kind": "Demo",
-      "group": "A",
-      "seed": "built",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "A15",
-      "name": "PingFederate token factory",
-      "kind": "Demo",
-      "group": "A",
-      "seed": "built",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "A16",
-      "name": "PingFederate SAML SP/IdP lab",
-      "kind": "Demo/Tester",
-      "group": "A",
-      "seed": "partial",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "A17",
-      "name": "PingDirectory / consent and attribute access",
-      "kind": "Demo",
-      "group": "A",
-      "seed": "none",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "A18",
-      "name": "PingAccess rules lab",
-      "kind": "Demo",
-      "group": "A",
-      "seed": "none",
-      "wave": 6,
       "status": "active"
     },
     {
@@ -183,78 +48,6 @@
       "status": "active"
     },
     {
-      "id": "A20",
-      "name": "Social / external IdP login",
-      "kind": "Demo",
-      "group": "A",
-      "seed": "built",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "A21",
-      "name": "Branding / theming",
-      "kind": "Demo",
-      "group": "A",
-      "seed": "built",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "A22",
-      "name": "Session, SSO and logout tester",
-      "kind": "Tester",
-      "group": "A",
-      "seed": "built",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "A23",
-      "name": "Email / SMS delivery tester",
-      "kind": "Tester",
-      "group": "A",
-      "seed": "none",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "A24",
-      "name": "Support console with customer identity gate",
-      "kind": null,
-      "group": "A",
-      "seed": null,
-      "wave": "backlog",
-      "status": "backlog"
-    },
-    {
-      "id": "A25",
-      "name": "PingFederate + PingOne MFA wiring kit",
-      "kind": "Demo",
-      "group": "A",
-      "seed": "partial",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "A26",
-      "name": "PingFederate + DaVinci integration kit",
-      "kind": "Demo",
-      "group": "A",
-      "seed": "partial",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "A27",
-      "name": "Human or agent? (Protect computer-using-agent detection)",
-      "kind": null,
-      "group": "A",
-      "seed": null,
-      "wave": "backlog",
-      "status": "backlog"
-    },
-    {
       "id": "A29",
       "name": "PingOne LAB (protocol cards and playground)",
       "kind": "Demo",
@@ -264,126 +57,9 @@
       "status": "active"
     },
     {
-      "id": "B1",
-      "name": "PingOne Authorize (P1AZ)",
-      "kind": "Demo",
-      "group": "B",
-      "seed": "built",
-      "wave": 3,
-      "status": "active"
-    },
-    {
       "id": "B2",
       "name": "Authorize policy playground",
       "kind": "Tester",
-      "group": "B",
-      "seed": "partial",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "B3",
-      "name": "Cedar demo",
-      "kind": "Demo",
-      "group": "B",
-      "seed": "none",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "B4",
-      "name": "Cedar policy playground",
-      "kind": "Tester",
-      "group": "B",
-      "seed": "none",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "B5",
-      "name": "Cedar for agent tool calls",
-      "kind": "Demo",
-      "group": "B",
-      "seed": "none",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "B6",
-      "name": "Amazon Verified Permissions variant",
-      "kind": "Demo",
-      "group": "B",
-      "seed": "none",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "B7",
-      "name": "Group Policy",
-      "kind": "Standalone",
-      "group": "B",
-      "seed": "built",
-      "wave": 1,
-      "status": "active"
-    },
-    {
-      "id": "B8",
-      "name": "Policy-as-code drift checker",
-      "kind": "Tester",
-      "group": "B",
-      "seed": "built",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "B9",
-      "name": "Consent and delegation",
-      "kind": "Demo",
-      "group": "B",
-      "seed": "built",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "B10",
-      "name": "AuthZEN PDP tester",
-      "kind": "Tester",
-      "group": "B",
-      "seed": "partial",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "B11",
-      "name": "API access management side-band (PingGateway + P1 Authorize)",
-      "kind": "Demo",
-      "group": "B",
-      "seed": "built",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "B12",
-      "name": "P1AZ policy generator and offline deny predictor",
-      "kind": null,
-      "group": "B",
-      "seed": null,
-      "wave": null,
-      "status": "retired"
-    },
-    {
-      "id": "B13",
-      "name": "Intent-bound transactions (PAR + RAR + intent token)",
-      "kind": "Demo",
-      "group": "B",
-      "seed": "partial",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "B14",
-      "name": "Multi-party (caregiver) delegation",
-      "kind": "Demo",
       "group": "B",
       "seed": "partial",
       "wave": 3,
@@ -408,210 +84,12 @@
       "status": "active"
     },
     {
-      "id": "C3",
-      "name": "Token decoder / inspector",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "built",
-      "wave": 1,
-      "status": "active"
-    },
-    {
-      "id": "C4",
-      "name": "OIDC discovery checker",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "partial",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "C5",
-      "name": "JWKS / key-rotation tester",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "built",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "C6",
-      "name": "Token exchange / OBO",
-      "kind": "Demo",
-      "group": "C",
-      "seed": "built",
-      "wave": 2,
-      "status": "active"
-    },
-    {
-      "id": "C7",
-      "name": "PAR tester",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "built",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "C8",
-      "name": "RAR tester",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "partial",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "C9",
-      "name": "DPoP tester",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "partial",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "C10",
-      "name": "mTLS tester",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "none",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "C11",
-      "name": "Device authorization grant tester",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "none",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "C12",
-      "name": "Introspection and revocation tester",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "built",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "C13",
-      "name": "Client-authentication matrix",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "partial",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "C14",
-      "name": "SCIM tester",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "none",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "C15",
-      "name": "CORS / redirect-URI tester",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "none",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "C16",
-      "name": "Webhook / event viewer",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "none",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "C17",
-      "name": "PingOne API explorer",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "partial",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "C18",
-      "name": "SPIFFE / workload identity",
-      "kind": "Demo",
-      "group": "C",
-      "seed": "built",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "C19",
-      "name": "JWT claim mapping lab",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "built",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "C20",
-      "name": "OAuth profile checker (RFC 9700 BCP + FAPI 2.0 pack)",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "partial",
-      "wave": 2,
-      "status": "active"
-    },
-    {
-      "id": "C21",
-      "name": "Step-up challenge tester (RFC 9470 + MCP insufficient_scope)",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "built",
-      "wave": 3,
-      "status": "active"
-    },
-    {
       "id": "C22",
       "name": "Stolen-token lab (bearer vs DPoP / mTLS at the gateway)",
       "kind": "Demo",
       "group": "C",
       "seed": "partial",
       "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "C23",
-      "name": "Wrong-token rejection tester",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "built",
-      "wave": 2,
-      "status": "active"
-    },
-    {
-      "id": "C24",
-      "name": "JWT and SAML bearer grant tester (RFC 7523 / 7522)",
-      "kind": "Tester",
-      "group": "C",
-      "seed": "partial",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "C25",
-      "name": "Transaction Token (txn-token) lab",
-      "kind": "Demo",
-      "group": "C",
-      "seed": "partial",
-      "wave": 4,
       "status": "active"
     },
     {
@@ -635,15 +113,6 @@
     {
       "id": "D3",
       "name": "MCP inspector",
-      "kind": "Tester",
-      "group": "D",
-      "seed": "built",
-      "wave": 2,
-      "status": "active"
-    },
-    {
-      "id": "D4",
-      "name": "MCP scanner",
       "kind": "Tester",
       "group": "D",
       "seed": "built",
@@ -678,33 +147,6 @@
       "status": "active"
     },
     {
-      "id": "D8",
-      "name": "Prompt-injection side by side",
-      "kind": "Demo",
-      "group": "D",
-      "seed": "partial",
-      "wave": 2,
-      "status": "active"
-    },
-    {
-      "id": "D9",
-      "name": "A2A",
-      "kind": "Demo",
-      "group": "D",
-      "seed": "built",
-      "wave": 2,
-      "status": "active"
-    },
-    {
-      "id": "D10",
-      "name": "A2A agent-card validator",
-      "kind": "Tester",
-      "group": "D",
-      "seed": "partial",
-      "wave": 2,
-      "status": "active"
-    },
-    {
       "id": "D11",
       "name": "Agent Registry / onboarding",
       "kind": "Demo",
@@ -723,38 +165,11 @@
       "status": "active"
     },
     {
-      "id": "D13",
-      "name": "Caught errors",
-      "kind": "Demo",
-      "group": "D",
-      "seed": "partial",
-      "wave": 4,
-      "status": "active"
-    },
-    {
       "id": "D14",
       "name": "Kill switch / runaway agent",
       "kind": "Demo",
       "group": "D",
       "seed": "built",
-      "wave": 4,
-      "status": "active"
-    },
-    {
-      "id": "D15",
-      "name": "HITL approvals",
-      "kind": "Demo",
-      "group": "D",
-      "seed": "built",
-      "wave": 4,
-      "status": "active"
-    },
-    {
-      "id": "D16",
-      "name": "Shadow-agent discovery",
-      "kind": "Demo",
-      "group": "D",
-      "seed": "partial",
       "wave": 4,
       "status": "active"
     },
@@ -765,24 +180,6 @@
       "group": "D",
       "seed": "built",
       "wave": 4,
-      "status": "active"
-    },
-    {
-      "id": "D18",
-      "name": "Cost and token usage",
-      "kind": "Demo",
-      "group": "D",
-      "seed": "built",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "D19",
-      "name": "LLM gateway",
-      "kind": "Demo",
-      "group": "D",
-      "seed": "built",
-      "wave": 2,
       "status": "active"
     },
     {
@@ -813,15 +210,6 @@
       "status": "active"
     },
     {
-      "id": "D23",
-      "name": "Digital worker",
-      "kind": "Demo",
-      "group": "D",
-      "seed": "built",
-      "wave": 5,
-      "status": "active"
-    },
-    {
       "id": "D24",
       "name": "Standard AI use cases",
       "kind": "Demo",
@@ -840,47 +228,11 @@
       "status": "active"
     },
     {
-      "id": "D26",
-      "name": "Banking/MCP REST adapter",
-      "kind": "Demo",
-      "group": "D",
-      "seed": "built",
-      "wave": 2,
-      "status": "active"
-    },
-    {
-      "id": "D27",
-      "name": "Governing the PingOne and AIC admin MCP servers",
-      "kind": null,
-      "group": "D",
-      "seed": "partial",
-      "wave": "backlog",
-      "status": "backlog"
-    },
-    {
-      "id": "D28",
-      "name": "Enterprise-managed MCP access and central revocation",
-      "kind": null,
-      "group": "D",
-      "seed": null,
-      "wave": null,
-      "status": "retired"
-    },
-    {
       "id": "D29",
       "name": "Progressive trust ladder",
       "kind": "Demo",
       "group": "D",
       "seed": "partial",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "D30",
-      "name": "Consumer agent booking",
-      "kind": "Demo",
-      "group": "D",
-      "seed": "built",
       "wave": 3,
       "status": "active"
     },
@@ -894,15 +246,6 @@
       "status": "active"
     },
     {
-      "id": "D32",
-      "name": "Agent Gateway MCP tool guard",
-      "kind": null,
-      "group": "D",
-      "seed": null,
-      "wave": "backlog",
-      "status": "backlog"
-    },
-    {
       "id": "D33",
       "name": "Agent attack gallery (including MCP authorization attacks)",
       "kind": "Tester",
@@ -910,15 +253,6 @@
       "seed": "partial",
       "wave": 2,
       "status": "active"
-    },
-    {
-      "id": "D34",
-      "name": "MCP authorization attack lab",
-      "kind": null,
-      "group": "D",
-      "seed": null,
-      "wave": null,
-      "status": "retired"
     },
     {
       "id": "D35",
@@ -948,150 +282,6 @@
       "status": "active"
     },
     {
-      "id": "D38",
-      "name": "A2A in-task auth (AUTH_REQUIRED) and extended card",
-      "kind": "Demo",
-      "group": "D",
-      "seed": "partial",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "D39",
-      "name": "A2A trust tester (unauthorized caller, signed card, verified-trust assertion)",
-      "kind": "Tester",
-      "group": "D",
-      "seed": "built",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "D40",
-      "name": "Stateless HITL challenge and receipt binding",
-      "kind": null,
-      "group": "D",
-      "seed": null,
-      "wave": null,
-      "status": "retired"
-    },
-    {
-      "id": "D41",
-      "name": "Agent lifecycle with IGA and leaver cascade",
-      "kind": null,
-      "group": "D",
-      "seed": null,
-      "wave": "backlog",
-      "status": "backlog"
-    },
-    {
-      "id": "D42",
-      "name": "Ungoverned agent: before and after (session riding)",
-      "kind": "Demo",
-      "group": "D",
-      "seed": "built",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "D43",
-      "name": "Agent-token broker and JIT tool-bound credentials",
-      "kind": "Demo",
-      "group": "D",
-      "seed": "built",
-      "wave": 4,
-      "status": "active"
-    },
-    {
-      "id": "D44",
-      "name": "Bedrock AgentCore + PingOne agent",
-      "kind": null,
-      "group": "D",
-      "seed": null,
-      "wave": "backlog",
-      "status": "backlog"
-    },
-    {
-      "id": "D45",
-      "name": "Bring your own agent framework (LangChain, LlamaIndex, Pydantic AI)",
-      "kind": null,
-      "group": "D",
-      "seed": null,
-      "wave": "backlog",
-      "status": "backlog"
-    },
-    {
-      "id": "D46",
-      "name": "Real MCP clients kit (LibreChat, LM Studio, Muse)",
-      "kind": null,
-      "group": "D",
-      "seed": null,
-      "wave": "backlog",
-      "status": "backlog"
-    },
-    {
-      "id": "D47",
-      "name": "Privilege A2A access review",
-      "kind": null,
-      "group": "D",
-      "seed": null,
-      "wave": "backlog",
-      "status": "backlog"
-    },
-    {
-      "id": "D48",
-      "name": "Protected RAG (authorization on retrieval + grounding on/off)",
-      "kind": null,
-      "group": "D",
-      "seed": null,
-      "wave": "backlog",
-      "status": "backlog"
-    },
-    {
-      "id": "D49",
-      "name": "Delegated-agent commerce lifecycle",
-      "kind": "Demo",
-      "group": "D",
-      "seed": "built",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "D50",
-      "name": "SaaS-embedded worker",
-      "kind": "Demo",
-      "group": "D",
-      "seed": "built",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "D51",
-      "name": "JIT tool-bound credential broker",
-      "kind": null,
-      "group": "D",
-      "seed": null,
-      "wave": null,
-      "status": "retired"
-    },
-    {
-      "id": "D52",
-      "name": "Agent red-team runner",
-      "kind": "Tester",
-      "group": "D",
-      "seed": "built",
-      "wave": 4,
-      "status": "active"
-    },
-    {
-      "id": "D53",
-      "name": "Overscoped agent auditor",
-      "kind": "Tool",
-      "group": "D",
-      "seed": "built",
-      "wave": 4,
-      "status": "active"
-    },
-    {
       "id": "D98",
       "name": "P1 third-party token exchange (PingOne accepts third-party signed JWTs)",
       "kind": "Demo",
@@ -1110,24 +300,6 @@
       "status": "active"
     },
     {
-      "id": "E1",
-      "name": "Learning Hub standalone",
-      "kind": "Demo",
-      "group": "E",
-      "seed": "built",
-      "wave": 1,
-      "status": "active"
-    },
-    {
-      "id": "E2",
-      "name": "SE demo shelf (launcher)",
-      "kind": "Tool",
-      "group": "E",
-      "seed": "none",
-      "wave": 1,
-      "status": "active"
-    },
-    {
       "id": "E3",
       "name": "Diagram studio",
       "kind": "Standalone",
@@ -1137,309 +309,138 @@
       "status": "active"
     },
     {
-      "id": "E4",
-      "name": "Talk-track library",
-      "kind": "Tool",
-      "group": "E",
-      "seed": "none",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "E5",
-      "name": "Verticals (industry packs)",
-      "kind": "Base feature",
-      "group": "E",
-      "seed": "built",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "E6",
-      "name": "Customer-specific packs",
-      "kind": "Theme packs",
-      "group": "E",
-      "seed": "built",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "E7",
-      "name": "Demo health dashboard",
-      "kind": "Tool",
-      "group": "E",
-      "seed": "built",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "E8",
-      "name": "OWASP agentic threats mapper",
-      "kind": null,
-      "group": "E",
-      "seed": null,
-      "wave": null,
-      "status": "retired"
-    },
-    {
-      "id": "E9",
-      "name": "OAuth teaching agent",
-      "kind": null,
-      "group": "E",
-      "seed": null,
-      "wave": null,
-      "status": "retired"
-    },
-    {
-      "id": "E10",
-      "name": "Sign-in portal skin pack",
-      "kind": "Skin",
-      "group": "E",
-      "seed": "built",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "E11",
-      "name": "Client-chrome costume shells",
-      "kind": "Skin",
-      "group": "E",
-      "seed": "built",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "E12",
-      "name": "Jev decision model",
-      "kind": null,
-      "group": "E",
-      "seed": null,
-      "wave": null,
-      "status": "retired"
-    },
-    {
-      "id": "F1",
-      "name": "AI transaction trace (cross-product)",
-      "kind": "Demo",
-      "group": "F",
-      "seed": "built",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "F2",
-      "name": "Trace envelope and emitter library",
-      "kind": "Base",
-      "group": "F",
-      "seed": "partial",
-      "wave": 1,
-      "status": "active"
-    },
-    {
-      "id": "F3",
-      "name": "Trace timeline panel",
-      "kind": "Base",
-      "group": "F",
-      "seed": "built",
-      "wave": 1,
-      "status": "active"
-    },
-    {
-      "id": "F4",
-      "name": "OTel + Grafana profile",
-      "kind": "Base",
-      "group": "F",
-      "seed": "built",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "F5",
-      "name": "Correlation-ID propagation tester",
-      "kind": "Tester",
-      "group": "F",
-      "seed": "none",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "F6",
-      "name": "Cost and latency per hop",
-      "kind": "Demo",
-      "group": "F",
-      "seed": "built",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "F7",
-      "name": "Audit-to-trace join",
-      "kind": "Demo",
-      "group": "F",
-      "seed": "partial",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "F8",
-      "name": "SPIFFE workload identity for agents",
-      "kind": "Demo",
-      "group": "F",
-      "seed": "built",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "F9",
-      "name": "SVID-to-Ping token exchange",
-      "kind": "Demo",
-      "group": "F",
-      "seed": "partial",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "F10",
-      "name": "SPIFFE lab",
-      "kind": "Tester",
-      "group": "F",
-      "seed": "partial",
-      "wave": 5,
-      "status": "active"
-    },
-    {
-      "id": "G1",
-      "name": "PingOne tenant bootstrap CLI",
-      "kind": "Tool, live-tenant-only",
-      "group": "G",
-      "seed": "partial",
-      "wave": 2,
-      "status": "active"
-    },
-    {
-      "id": "G2",
-      "name": "PingOne app inventory and tenant cleaner",
-      "kind": "Tool, live-tenant-only",
-      "group": "G",
-      "seed": "built",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "G3",
-      "name": "Scope, audience and grant matrix verifier",
-      "kind": "Tool, live-tenant-only",
-      "group": "G",
-      "seed": "built",
-      "wave": 3,
-      "status": "active"
-    },
-    {
       "id": "G4",
       "name": "Mock Authorize server",
       "kind": null,
       "group": "G",
       "seed": null,
       "wave": null,
-      "status": "retired"
-    },
-    {
-      "id": "G5",
-      "name": "Vertical-in-a-box MCP resource server",
-      "kind": "Tool, mock-capable",
-      "group": "G",
-      "seed": "built",
-      "wave": 2,
       "status": "active"
     },
     {
-      "id": "G6",
-      "name": "PingFederate in a box",
-      "kind": null,
-      "group": "G",
-      "seed": null,
-      "wave": "backlog",
-      "status": "backlog"
-    },
-    {
-      "id": "G7",
-      "name": "Tenant snapshot and diff",
-      "kind": "Tool, live-tenant-only",
-      "group": "G",
-      "seed": "built",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "G8",
-      "name": "Postman / Bruno collection pack",
-      "kind": "Tool, offline",
-      "group": "G",
-      "seed": "built",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "G9",
-      "name": "PingCLI command playground",
-      "kind": "Tool, live-tenant-only",
-      "group": "G",
-      "seed": "partial",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "G10",
-      "name": "SE cluster deploy tool (internal)",
-      "kind": null,
-      "group": "G",
-      "seed": null,
-      "wave": "backlog",
-      "status": "backlog"
-    },
-    {
-      "id": "G11",
-      "name": "PingOne sample-app runner (custom-admin-role, m2m-credentials)",
-      "kind": "Tool, live-tenant-only",
-      "group": "G",
-      "seed": "partial",
-      "wave": 3,
-      "status": "active"
-    },
-    {
-      "id": "H1",
-      "name": "Shared Signals lab: revoke the session, stop the agent",
-      "kind": "Demo/Tester",
-      "group": "H",
-      "seed": "none",
-      "wave": 4,
-      "status": "active"
-    },
-    {
-      "id": "H2",
-      "name": "Credential tester (SD-JWT VC inspector + OpenID4VCI offer walker)",
-      "kind": "Tester",
-      "group": "H",
-      "seed": "none",
-      "wave": 6,
-      "status": "active"
-    },
-    {
-      "id": "H3",
-      "name": "Browser-based app token patterns (BFF vs SPA vs mediating backend)",
+      "id": "A28",
+      "name": "PingFederate LAB",
       "kind": "Demo",
-      "group": "H",
-      "seed": "partial",
-      "wave": 6,
+      "group": "A",
+      "seed": "built",
+      "wave": null,
       "status": "active"
     },
     {
-      "id": "H4",
-      "name": "Web Bot Auth / RFC 9421 message-signature verifier",
-      "kind": "Tester",
-      "group": "H",
+      "id": "A30",
+      "name": "Session LAB",
+      "kind": "Demo",
+      "group": "A",
       "seed": "built",
-      "wave": 4,
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "C40",
+      "name": "Intent / PAR Inspector",
+      "kind": "Demo",
+      "group": "C",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D54",
+      "name": "Agent Gateway Inspector",
+      "kind": "Tester",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D100",
+      "name": "Poppy Agent Tester",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D101",
+      "name": "Intent, Purpose and Behaviour LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D102",
+      "name": "Coding Agents LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D103",
+      "name": "Data Protection LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D104",
+      "name": "SaaS Access LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D105",
+      "name": "Agent Governance LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D106",
+      "name": "MCP Surface LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D107",
+      "name": "Federated Identity LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D108",
+      "name": "Secrets Vault LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D109",
+      "name": "AI Policies LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
       "status": "active"
     }
   ]

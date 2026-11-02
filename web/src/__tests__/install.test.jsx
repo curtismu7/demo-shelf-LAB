@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "../App.jsx";
 import { cloneCommand } from "../install.js";
 
@@ -13,6 +13,7 @@ const clipboard = (writeText) => Object.defineProperty(navigator, "clipboard", {
 const start = (name) => cardOf(name).getByRole("button", { name: /^Start/ });
 const stop = (name) => cardOf(name).getByRole("button", { name: /^Stop/ });
 const NOT_BUILT = "Installed, not built yet: Start builds it (can take a few minutes)";
+beforeEach(() => { window.history.replaceState(null, "", "/?status=all"); }); // tests look at every card; the page itself opens on Ready
 afterEach(() => { vi.unstubAllGlobals(); vi.useRealTimers(); window.history.replaceState(null, "", "/"); });
 
 const render1 = async (demos, name, over) => { mockFetch(body(demos, over)); render(<App />); await screen.findByRole("heading", { name }); };

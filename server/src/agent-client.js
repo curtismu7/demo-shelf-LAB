@@ -1,7 +1,8 @@
 import { COMPOSE_STATES, IMAGE_STATES } from './install.js';
 
 // The shelf's side of the start agent: asks it to start or stop a registered demo, and whether it is running.
-const RUN_TIMEOUT_MS = 70_000; // a little over the agent's own 60 s compose timeout
+const RUN_TIMEOUT_MS = 70_000; // a little over the agent's own 60 s compose timeout (stop)
+const START_RUN_TIMEOUT_MS = 610_000; // and over its 10 minute Start timeout, which includes the first image build
 const PING_TIMEOUT_MS = 1500;
 const PING_CACHE_MS = 5000;
 const INSTALLS_TIMEOUT_MS = 30_000; // the agent answers within about 20 s even if Docker hangs
@@ -16,7 +17,7 @@ export function createAgentClient({ url, token, fetchFn = fetch, now = () => Dat
     async run(id, action) {
       let res;
       try {
-        res = await fetchFn(`${base}/v1/demos/${encodeURIComponent(id)}/${action}`, { method: 'POST', headers, signal: AbortSignal.timeout(RUN_TIMEOUT_MS) });
+        res = await fetchFn(`${base}/v1/demos/${encodeURIComponent(id)}/${action}`, { method: 'POST', headers, signal: AbortSignal.timeout(action === 'start' ? START_RUN_TIMEOUT_MS : RUN_TIMEOUT_MS) });
       } catch {
         return { status: 503, body: { ok: false, error: 'agent-not-running' } };
       }

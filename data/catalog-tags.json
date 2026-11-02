@@ -1,250 +1,9 @@
 {
   "schema": "demo-catalog-tags/1",
   "tags": {
-    "A1": [
-      "pingone-mfa",
-      "sign-in-and-mfa"
-    ],
-    "A2": [
-      "pingone-mfa",
-      "sign-in-and-mfa"
-    ],
-    "A3": [
-      "pingone",
-      "sign-in-and-mfa"
-    ],
-    "A4": [
-      "pingone",
-      "sign-in-and-mfa",
-      "human-in-the-loop",
-      "ciba"
-    ],
-    "A5": [
-      "pingone",
-      "sign-in-and-mfa",
-      "step-up"
-    ],
-    "A6": [
-      "pingone-protect",
-      "sign-in-and-mfa"
-    ],
-    "A7": [
-      "pingone-protect",
-      "sign-in-and-mfa"
-    ],
-    "A8": [
-      "pingone",
-      "sign-in-and-mfa"
-    ],
-    "A9": [
-      "pingone"
-    ],
-    "A10": [
-      "pingone-davinci",
-      "sign-in-and-mfa"
-    ],
-    "A12": [
-      "pingone",
-      "sign-in-and-mfa"
-    ],
-    "A13": [
-      "pingone",
-      "learning"
-    ],
-    "A14": [
-      "sign-in-and-mfa",
-      "oidc"
-    ],
-    "A15": [
-      "pingfederate",
-      "token-security",
-      "oauth"
-    ],
-    "A16": [
-      "pingfederate",
-      "sign-in-and-mfa",
-      "learning"
-    ],
-    "A17": [
-      "authorization-policy"
-    ],
-    "A18": [
-      "authorization-policy"
-    ],
-    "A20": [
-      "pingone",
-      "sign-in-and-mfa",
-      "oidc"
-    ],
-    "A21": [
-      "pingone",
-      "sign-in-and-mfa"
-    ],
-    "A22": [
-      "sign-in-and-mfa",
-      "oidc"
-    ],
-    "A23": [
-      "pingone",
-      "sign-in-and-mfa"
-    ],
-    "A25": [
-      "pingfederate",
-      "pingone-mfa",
-      "sign-in-and-mfa"
-    ],
-    "A26": [
-      "pingfederate",
-      "pingone-davinci",
-      "sign-in-and-mfa"
-    ],
-    "B1": [
-      "pingone-authorize",
-      "authorization-policy"
-    ],
-    "B2": [
-      "pingone-authorize",
-      "authorization-policy",
-      "learning"
-    ],
-    "B3": [
-      "authorization-policy",
-      "cedar"
-    ],
-    "B4": [
-      "authorization-policy",
-      "cedar",
-      "learning"
-    ],
-    "B5": [
-      "ai-agent-security",
-      "authorization-policy",
-      "cedar"
-    ],
-    "B6": [
-      "authorization-policy",
-      "cedar"
-    ],
-    "B7": [
-      "authorization-policy"
-    ],
-    "B8": [
-      "authorization-policy",
-      "audit-observability"
-    ],
-    "B9": [
-      "authorization-policy",
-      "agent-identity"
-    ],
-    "B10": [
-      "pingone-authorize",
-      "authorization-policy"
-    ],
-    "B11": [
-      "pinggateway",
-      "pingone-authorize",
-      "authorization-policy"
-    ],
-    "B13": [
-      "par",
-      "oauth",
-      "authorization-policy"
-    ],
-    "B14": [
-      "authorization-policy",
-      "agent-identity"
-    ],
-    "C3": [
-      "token-security",
-      "learning"
-    ],
-    "C4": [
-      "oidc",
-      "learning"
-    ],
-    "C5": [
-      "token-security",
-      "oauth"
-    ],
-    "C6": [
-      "token-exchange",
-      "agent-identity",
-      "oauth"
-    ],
-    "C7": [
-      "par",
-      "oauth",
-      "learning"
-    ],
-    "C8": [
-      "oauth",
-      "learning"
-    ],
-    "C9": [
-      "dpop",
-      "token-security",
-      "oauth"
-    ],
-    "C10": [
-      "mtls",
-      "token-security",
-      "oauth"
-    ],
-    "C11": [
-      "oauth",
-      "learning"
-    ],
-    "C12": [
-      "oauth",
-      "token-security"
-    ],
-    "C13": [
-      "oauth",
-      "token-security"
-    ],
-    "C14": [
-      "learning"
-    ],
-    "C15": [
-      "oauth",
-      "token-security"
-    ],
-    "C16": [
-      "audit-observability"
-    ],
-    "C17": [
-      "pingone",
-      "learning"
-    ],
-    "C18": [
-      "agent-identity"
-    ],
-    "C19": [
-      "token-security",
-      "oauth"
-    ],
-    "C20": [
-      "oauth",
-      "fapi",
-      "token-security"
-    ],
-    "C21": [
-      "step-up",
-      "mcp",
-      "mcp-security",
-      "oauth"
-    ],
-    "C23": [
-      "token-security",
-      "oauth"
-    ],
-    "C24": [
-      "oauth",
-      "token-security"
-    ],
-    "C25": [
-      "token-exchange",
-      "token-security"
+    "D20": [
+      "agent-gateway",
+      "ai-agent-security"
     ],
     "D2": [
       "mcp",
@@ -252,63 +11,36 @@
       "oauth",
       "ai-agent-security"
     ],
-    "D8": [
-      "ai-agent-security"
-    ],
-    "D9": [
-      "a2a",
-      "ai-agent-security",
-      "agent-identity"
-    ],
-    "D10": [
-      "a2a",
-      "ai-agent-security"
-    ],
-    "D13": [
+    "D17": [
       "audit-observability",
       "ai-agent-security"
     ],
-    "D15": [
-      "human-in-the-loop",
-      "ai-agent-security"
-    ],
-    "D16": [
-      "ai-agent-security",
-      "agent-identity",
-      "audit-observability"
-    ],
-    "D18": [
-      "agent-controls",
-      "audit-observability"
-    ],
-    "D19": [
+    "D14": [
       "agent-gateway",
       "ai-agent-security",
       "agent-controls"
     ],
-    "D20": [
+    "D11": [
+      "pingone-privilege",
+      "agent-identity",
+      "ai-agent-security"
+    ],
+    "D12": [
       "agent-gateway",
-      "ai-agent-security"
-    ],
-    "D23": [
       "ai-agent-security",
-      "agent-identity"
+      "agent-controls"
     ],
-    "D24": [
-      "ai-agent-security"
-    ],
-    "D26": [
-      "mcp",
-      "mcp-security"
-    ],
-    "D30": [
+    "D33": [
       "ai-agent-security",
-      "agent-identity"
-    ],
-    "D35": [
-      "mcp",
       "mcp-security",
+      "mcp",
       "oauth"
+    ],
+    "D25": [
+      "agent-identity",
+      "mcp-security",
+      "oauth",
+      "mcp"
     ],
     "D36": [
       "cimd",
@@ -316,157 +48,44 @@
       "mcp-security",
       "oauth"
     ],
-    "D38": [
-      "a2a",
-      "ai-agent-security",
-      "agent-identity"
-    ],
-    "D39": [
-      "a2a",
-      "ai-agent-security",
-      "agent-identity"
-    ],
-    "D42": [
-      "ai-agent-security",
-      "agent-controls"
-    ],
-    "D43": [
-      "agent-identity",
-      "token-exchange",
-      "token-security",
+    "D24": [
       "ai-agent-security"
     ],
-    "D49": [
+    "E3": [
+      "learning"
+    ],
+    "D99": [
+      "agent-gateway",
+      "pingone-privilege",
+      "authorization-policy",
       "agent-identity",
-      "ai-agent-security",
-      "authorization-policy"
-    ],
-    "D50": [
-      "ai-agent-security",
-      "agent-identity"
-    ],
-    "D52": [
-      "ai-agent-security",
-      "mcp-security"
-    ],
-    "D53": [
-      "ai-agent-security",
-      "agent-identity",
-      "audit-observability"
-    ],
-    "D98": [
-      "pingone",
-      "token-exchange",
-      "oauth"
-    ],
-    "E2": [
-      "learning"
-    ],
-    "E4": [
-      "learning"
-    ],
-    "E5": [
-      "learning"
-    ],
-    "E6": [
-      "learning"
-    ],
-    "E7": [
-      "learning",
-      "audit-observability"
-    ],
-    "E10": [
-      "learning"
-    ],
-    "E11": [
-      "learning"
-    ],
-    "F1": [
-      "audit-observability",
-      "ai-agent-security"
-    ],
-    "F2": [
-      "audit-observability"
-    ],
-    "F3": [
-      "audit-observability"
-    ],
-    "F4": [
-      "audit-observability"
-    ],
-    "F5": [
-      "audit-observability"
-    ],
-    "F6": [
-      "audit-observability",
-      "agent-controls"
-    ],
-    "F7": [
-      "audit-observability"
-    ],
-    "F8": [
-      "agent-identity",
-      "ai-agent-security"
-    ],
-    "F9": [
-      "agent-identity",
+      "oauth",
       "token-exchange"
     ],
-    "F10": [
-      "agent-identity"
-    ],
-    "G1": [
-      "pingone",
-      "learning"
-    ],
-    "G2": [
-      "pingone"
-    ],
-    "G3": [
-      "pingone",
-      "oauth",
-      "authorization-policy"
-    ],
-    "G5": [
-      "mcp",
-      "mcp-security"
-    ],
-    "G7": [
-      "pingone"
-    ],
-    "G8": [
-      "pingone",
-      "learning"
-    ],
-    "G9": [
-      "pingone",
-      "learning"
-    ],
-    "G11": [
-      "pingone",
-      "oauth",
-      "learning"
-    ],
-    "H1": [
+    "D7": [
       "ai-agent-security",
-      "token-security"
-    ],
-    "H2": [
-      "learning"
-    ],
-    "H3": [
-      "oauth",
-      "token-security",
-      "oidc"
-    ],
-    "H4": [
-      "ai-agent-security",
-      "agent-identity"
+      "tool-poisoning",
+      "a2a"
     ],
     "D6": [
       "ai-agent-security",
       "mcp-security",
       "tool-poisoning",
+      "mcp"
+    ],
+    "D35": [
+      "mcp",
+      "mcp-security",
+      "oauth"
+    ],
+    "D5": [
+      "mcp-security",
+      "tool-poisoning",
+      "mcp"
+    ],
+    "D37": [
+      "human-in-the-loop",
+      "mcp-security",
       "mcp"
     ],
     "D3": [
@@ -478,108 +97,23 @@
       "pingone-mcp",
       "oauth"
     ],
-    "D4": [
-      "mcp-security",
-      "tool-poisoning",
-      "mcp"
-    ],
-    "D7": [
-      "ai-agent-security",
-      "tool-poisoning",
-      "a2a"
-    ],
-    "D33": [
-      "ai-agent-security",
-      "mcp-security",
-      "mcp",
-      "oauth"
-    ],
-    "E1": [
-      "learning"
-    ],
-    "D11": [
-      "pingone-privilege",
-      "agent-identity",
-      "ai-agent-security"
-    ],
-    "E3": [
-      "learning"
-    ],
-    "D5": [
-      "mcp-security",
-      "tool-poisoning",
-      "mcp"
-    ],
-    "C2": [
-      "token-security",
-      "learning",
-      "oauth",
-      "fapi"
+    "G4": [
+      "pingone-authorize",
+      "authorization-policy"
     ],
     "D31": [
       "ai-agent-security",
       "agent-controls"
     ],
-    "D12": [
-      "agent-gateway",
-      "ai-agent-security",
-      "agent-controls"
-    ],
-    "D14": [
-      "agent-gateway",
-      "ai-agent-security",
-      "agent-controls"
-    ],
-    "D17": [
-      "audit-observability",
-      "ai-agent-security"
-    ],
-    "D25": [
-      "agent-identity",
-      "mcp-security",
-      "oauth",
-      "mcp"
-    ],
-    "G4": [
-      "pingone-authorize",
-      "authorization-policy"
-    ],
-    "A11": [
+    "D98": [
       "pingone",
-      "pingone-davinci",
-      "sign-in-and-mfa",
-      "ciba",
-      "step-up",
-      "oidc"
-    ],
-    "C22": [
-      "token-security",
-      "oauth",
-      "dpop",
-      "mtls"
-    ],
-    "A19": [
-      "pinggateway",
-      "mcp-security",
-      "rfc9728",
-      "mcp",
+      "token-exchange",
       "oauth"
     ],
-    "D29": [
-      "sign-in-and-mfa",
-      "ai-agent-security",
-      "ciba",
-      "step-up"
-    ],
-    "D37": [
-      "human-in-the-loop",
-      "mcp-security",
-      "mcp"
-    ],
-    "D22": [
-      "agent-identity",
-      "ai-agent-security",
-      "authorization-policy"
+    "B2": [
+      "pingone-authorize",
+      "authorization-policy",
+      "learning"
     ],
     "D21": [
       "agent-gateway",
@@ -589,13 +123,125 @@
       "oauth",
       "mcp"
     ],
-    "D99": [
+    "A19": [
+      "pinggateway",
+      "mcp-security",
+      "rfc9728",
+      "mcp",
+      "oauth"
+    ],
+    "A11": [
+      "pingone",
+      "pingone-davinci",
+      "sign-in-and-mfa",
+      "ciba",
+      "step-up",
+      "oidc"
+    ],
+    "D29": [
+      "sign-in-and-mfa",
+      "ai-agent-security",
+      "ciba",
+      "step-up"
+    ],
+    "C22": [
+      "token-security",
+      "oauth",
+      "dpop",
+      "mtls"
+    ],
+    "C2": [
+      "token-security",
+      "learning",
+      "oauth",
+      "fapi"
+    ],
+    "D22": [
+      "agent-identity",
+      "ai-agent-security",
+      "authorization-policy"
+    ],
+    "A28": [
+      "pingfederate",
+      "oauth",
+      "dpop",
+      "par",
+      "ciba",
+      "token-exchange"
+    ],
+    "A29": [
+      "pingone",
+      "oauth",
+      "oidc",
+      "par",
+      "ciba",
+      "token-exchange"
+    ],
+    "A30": [
+      "pingone",
+      "pingone-davinci",
+      "sign-in-and-mfa"
+    ],
+    "C40": [
+      "par",
+      "oauth",
+      "authorization-policy"
+    ],
+    "D54": [
       "agent-gateway",
       "pingone-privilege",
-      "authorization-policy",
+      "mcp-security"
+    ],
+    "D100": [
+      "pingfederate",
       "agent-identity",
-      "oauth",
-      "token-exchange"
+      "oauth"
+    ],
+    "D101": [
+      "pingone-privilege",
+      "ai-agent-security",
+      "token-exchange",
+      "id-jag"
+    ],
+    "D102": [
+      "pingone-privilege",
+      "ai-agent-security",
+      "agent-controls"
+    ],
+    "D103": [
+      "pingone-privilege",
+      "ai-agent-security",
+      "audit-observability"
+    ],
+    "D104": [
+      "pingone-privilege",
+      "agent-identity",
+      "authorization-policy"
+    ],
+    "D105": [
+      "pingone-privilege",
+      "agent-identity",
+      "agent-controls"
+    ],
+    "D106": [
+      "pingone-privilege",
+      "mcp-security",
+      "mcp"
+    ],
+    "D107": [
+      "pingone-privilege",
+      "agent-identity",
+      "token-security"
+    ],
+    "D108": [
+      "pingone-privilege",
+      "ai-agent-security",
+      "agent-identity"
+    ],
+    "D109": [
+      "pingone-privilege",
+      "authorization-policy",
+      "human-in-the-loop"
     ]
   }
 }

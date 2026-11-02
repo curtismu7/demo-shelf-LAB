@@ -4,6 +4,11 @@
 
 - `alsoCatalogIds` on a demo: extra catalog rows the one card covers (they stop showing as planned, and search finds the card by them). The server warns, and `npm run doctor` fails, on an id that is not a catalog row, repeats the entry's own `catalogId`, or is claimed by another demo.
 - The seed lists pingone-signin-LAB under A11, covering A4 and A5.
+- The seed now registers every standalone app that has a repo and a shelf entry (31 more; 39 in all with pingone-signin-LAB) instead of showing them as Planned. Compose paths are relative to the demo root, so they show as Not installed until cloned there. Two repos claim the same port: ai-gateway-client and session-lab (6880), hostile-a2a and mcp-auth-conformance-lab (4901).
+- Planned cards now come only from standalone apps (a repo with a shelf entry) and accepted proposals: 42 instead of 133. The rest of the plan's survey ideas, which no standalone covers, are gone from `data/catalog.json` (the plan itself is untouched). New rows: A28-A30, C40, D54, D100-D109. G4 (mock-authorize) is active again because its repo exists.
+- The page opens filtered to Ready. Press the Ready chip (or pick All statuses) to see everything.
+- Seed paths follow the repo-home rule: each `composeFile` folder is the repo name (`<name>-LAB`, 21 fixed) and every entry carries its `repo` URL (30 added), so Copy clone command works for all of them.
+- The two port clashes are gone: hostile-a2a moved to 4750 (was 4901, held by mcp-auth-conformance-LAB) and session-lab to 6890 (was 6880, held by ai-gateway-client-LAB). `docs/ports.md` is generated from the committed seed only, so it no longer lists apps from a local registry file.
 
 ## 1.0.0
 
