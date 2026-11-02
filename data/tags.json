@@ -181,7 +181,7 @@
         {
           "id": "mcp-server-built",
           "label": "MCP server we built",
-          "hint": "An MCP server we wrote ourselves. Not a client, tester or inspector."
+          "hint": "An MCP server or MCP surface we built ourselves. Not a client, tester or inspector."
         }
       ]
     }
