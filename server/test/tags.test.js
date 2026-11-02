@@ -146,6 +146,7 @@ describe('untaggedPlanned', () => {
   it('lists active rows with no registered demo and no tags; ignores backlog and registered rows', () => {
     expect(untaggedPlanned(catalog, [{ catalogId: 'A3' }], { A1: ['a'] })).toEqual(['A2']);
     expect(untaggedPlanned(catalog, [], { A1: [] })).toEqual(['A1', 'A2', 'A3']);
+    expect(untaggedPlanned(catalog, [{ catalogId: 'A3', alsoCatalogIds: ['A1'] }], {})).toEqual(['A2']);
   });
 });
 

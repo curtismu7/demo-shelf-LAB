@@ -1,8 +1,10 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import request from 'supertest';
 import { describe, expect, it } from 'vitest';
-import { allowedHostsFromEnv, loadRegistry, RegistryError, validateDemos } from '../src/registry.js';
+import { loadAll } from '../src/index.js';
+import { allowedHostsFromEnv, alsoCatalogProblems, loadRegistry, RegistryError, validateDemos } from '../src/registry.js';
 
 const ok = { id: 'demo-a', name: 'A', description: 'd', url: 'http://localhost:4500', composeFile: '/tmp/a/docker-compose.yml' };
 const errs = (d, opts) => { try { validateDemos([d], opts); } catch (e) { return e.errors.join('\n'); } return ''; };
@@ -12,6 +14,10 @@ describe('validateDemos', () => {
     const [d] = validateDemos([ok]);
     expect(d.healthPath).toBe('/api/health');
     expect(d.composeOverlays).toEqual([]);
+  });
+  it('accepts alsoCatalogIds as a short array of strings and refuses anything else', () => {
+    expect(validateDemos([{ ...ok, alsoCatalogIds: ['A4', 'A5'] }])[0].alsoCatalogIds).toEqual(['A4', 'A5']);
+    for (const bad of ['A4', [4], Array(11).fill('A4'), ['x'.repeat(41)]]) expect(errs({ ...ok, alsoCatalogIds: bad })).toMatch(/alsoCatalogIds must be an array/);
   });
   it('defaults where to installed and accepts mock and both with a mockUrl', () => {
     expect(validateDemos([ok])[0].where).toBe('installed');
@@ -101,6 +107,19 @@ describe('validateDemos', () => {
   });
 });
 
+describe('alsoCatalogProblems', () => {
+  const cat = { items: [{ id: 'A4' }, { id: 'A5' }, { id: 'A11' }] };
+  it('is quiet when every extra id is a catalog row nobody else claims', () => {
+    expect(alsoCatalogProblems([{ id: 'x', catalogId: 'A11', alsoCatalogIds: ['A4', 'A5'] }], cat)).toEqual([]);
+  });
+  it('names a typo, the entry\'s own catalogId, and a row another demo claims', () => {
+    const out = alsoCatalogProblems([{ id: 'x', catalogId: 'A11', alsoCatalogIds: ['A44', 'A11', 'A5'] }, { id: 'y', catalogId: 'A5' }], cat).join('\n');
+    expect(out).toMatch(/x.*A44.*not a catalog row/);
+    expect(out).toMatch(/x.*A11.*its own catalogId/);
+    expect(out).toMatch(/x.*A5.*also claimed by y/);
+  });
+});
+
 describe('loadRegistry', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'shelf-reg-'));
   const seedFile = path.join(dir, 'demos.json');
@@ -138,7 +157,26 @@ describe('loadRegistry', () => {
       ['privilege-demo', 'D1', 'http://127.0.0.1:4510'],
       ['privilege-map', undefined, 'http://127.0.0.1:5301'],
       ['agent-mcp-door-demo', undefined, 'http://localhost:6850'],
+      ['pingone-signin-lab', 'A11', 'http://127.0.0.1:6171'],
+      ['pingone-lab', 'A29', 'http://127.0.0.1:5500'],
     ]);
+  });
+  it('the committed pingone-signin-lab entry covers A4 and A5 too, with real catalog rows and a portable compose path', () => {
+    const seed = new URL('../../data/demos.json', import.meta.url).pathname;
+    const entry = JSON.parse(fs.readFileSync(seed, 'utf8')).demos.find((d) => d.id === 'pingone-signin-lab');
+    const catalog = JSON.parse(fs.readFileSync(new URL('../../data/catalog.json', import.meta.url), 'utf8'));
+    expect(entry).toMatchObject({ name: 'PingOne Sign-in LAB', kind: 'Demo', catalogId: 'A11', alsoCatalogIds: ['A4', 'A5'], composeFile: 'pingone-signin-LAB/docker-compose.yml', where: 'installed' });
+    expect(entry.tags).toEqual(['pingone', 'sign-in-and-mfa', 'ciba', 'step-up', 'simulated']);
+    for (const id of [entry.catalogId, ...entry.alsoCatalogIds]) expect(catalog.items.find((i) => i.id === id)?.status, id).toBe('active');
+  });
+  it('the committed seed gives no demo a bad alsoCatalogId, and the real shelf lists A4, A5 and A11 as covered, not planned', async () => {
+    const { demos, catalog } = loadAll({ SHELF_DATA_DIR: fs.mkdtempSync(path.join(os.tmpdir(), 'shelf-seed-')) });
+    expect(alsoCatalogProblems(demos, catalog)).toEqual([]);
+    const { createApp } = await import('../src/app.js');
+    const r = await request(createApp({ demos, catalog, fetchFn: async () => { throw new Error('refused'); }, wait: async () => {} })).get('/api/shelf').set('Host', 'localhost:4400');
+    const planned = r.body.planned.map((p) => p.id);
+    for (const id of ['A4', 'A5', 'A11']) expect(planned).not.toContain(id);
+    expect(r.body.demos.find((d) => d.id === 'pingone-signin-lab').alsoCatalogIds).toEqual(['A4', 'A5']);
   });
 });
 

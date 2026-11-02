@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { allowedHostsFromEnv, loadRegistry, RegistryError } from './registry.js';
+import { allowedHostsFromEnv, alsoCatalogProblems, loadRegistry, RegistryError } from './registry.js';
 import { createApp, expandWhere } from './app.js';
 import { loadShelfEnv } from './dotenv.js';
 import { createAgentClient } from './agent-client.js';
@@ -55,6 +55,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const { demos, catalog, tags, catalogTags } = loadAll();
     const { allowStart, refused, inDocker } = resolveAllowStart(process.env, bind);
     if (refused) console.warn('Start/Stop disabled: it is only available when listening on loopback.');
+    for (const m of alsoCatalogProblems(demos, catalog)) console.warn(m);
     if (inDocker && !fs.existsSync('/.dockerenv')) throw new Error('SHELF_IN_DOCKER=1 is only for the container image; on the host run npm start');
     if (inDocker && !(process.env.SHELF_AGENT_URL && process.env.SHELF_AGENT_TOKEN)) throw new Error('SHELF_IN_DOCKER=1 needs SHELF_AGENT_URL and SHELF_AGENT_TOKEN (npm run docker sets them)');
     const agent = inDocker ? createAgentClient({ url: process.env.SHELF_AGENT_URL, token: process.env.SHELF_AGENT_TOKEN }) : null;

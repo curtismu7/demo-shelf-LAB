@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- `alsoCatalogIds` on a demo: extra catalog rows the one card covers (they stop showing as planned, and search finds the card by them). The server warns, and `npm run doctor` fails, on an id that is not a catalog row, repeats the entry's own `catalogId`, or is claimed by another demo.
+- The seed lists pingone-signin-LAB under A11, covering A4 and A5.
+
 ## 1.0.0
 
 - A Start button that cannot be pressed (not installed, no compose file) is drawn muted, not red, so it no longer looks clickable.

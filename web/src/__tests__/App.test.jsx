@@ -433,6 +433,16 @@ describe("tags", () => {
     expect(names()).toEqual(["Demo C", "Demo D"]);
   });
 
+  it("search finds a card by an extra catalog id it covers", async () => {
+    const body = tagShelf();
+    body.demos[0] = { ...body.demos[0], alsoCatalogIds: ["A44"] };
+    mockFetch(body);
+    render(<App />);
+    await screen.findByText("Demo A");
+    fireEvent.change(screen.getByLabelText("Search"), { target: { value: "a44" } });
+    expect(names()).toEqual(["Demo A"]);
+  });
+
   it("Clear tags resets the chips and is only offered when something is picked", async () => {
     mockFetch(tagShelf());
     render(<App />);

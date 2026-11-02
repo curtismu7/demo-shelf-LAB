@@ -42,6 +42,12 @@ describe('GET /api/shelf', () => {
     expect(r.body.demos[0]).toMatchObject({ group: 'C', composeFile: '/tmp/a/c.yml' });
     expect(r.body.demos[0].startCommand).toBe('docker compose -f /tmp/a/c.yml -f /tmp/a/o.yml up -d');
   });
+  it('alsoCatalogIds rows are covered by the one card and are not planned ideas', async () => {
+    const r = await request(mk({ demos: [{ ...demos[0], alsoCatalogIds: ['E2'] }] })).get('/api/shelf').set('Host', 'localhost:4400');
+    expect(r.body.planned.map((p) => p.id)).toEqual(['D1']);
+    expect(r.body.demos).toHaveLength(1);
+    expect(r.body.demos[0].alsoCatalogIds).toEqual(['E2']);
+  });
   it('gives each place a demo lives its own card; mock copies poll mockUrl and never start', async () => {
     const reg = [
       { ...demos[0], where: 'both', mockUrl: 'http://localhost:4500' },

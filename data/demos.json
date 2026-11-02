@@ -133,6 +133,44 @@
       ],
       "where": "installed",
       "repo": "https://github.com/ping-sandbox/agent-mcp-door-demo-LAB"
+    },
+    {
+      "id": "pingone-signin-lab",
+      "name": "PingOne Sign-in LAB",
+      "kind": "Demo",
+      "description": "Sign-in behaviour, mock only: failures, lockout, replay, MFA, step-up (RFC 9470) and CIBA with a mock phone. For real PingOne response shapes and live tenant runs, see the pingone-LAB repo.",
+      "url": "http://127.0.0.1:6171",
+      "healthPath": "/api/health",
+      "composeFile": "pingone-signin-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "catalogId": "A11",
+      "alsoCatalogIds": [
+        "A4",
+        "A5"
+      ],
+      "tags": [
+        "pingone",
+        "sign-in-and-mfa",
+        "ciba",
+        "step-up",
+        "simulated"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/ping-sandbox/pingone-signin-LAB"
+    },
+    {
+      "id": "pingone-lab",
+      "name": "PingOne LAB",
+      "catalogId": "A29",
+      "kind": "Demo",
+      "description": "A card for each thing PingOne advertises in its discovery document: pi.flow sign-in, PKCE, PAR, JAR, client credentials, token lifecycle, Userinfo, device authorization, CIBA, token exchange, plus a playground. Mock PingOne by default, or your own environment.",
+      "url": "http://127.0.0.1:5500",
+      "healthPath": "/api/health",
+      "composeFile": "pingone-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": ["pingone", "oauth", "oidc", "par", "ciba", "token-exchange", "simulated", "real"],
+      "where": "installed",
+      "repo": "https://github.com/ping-sandbox/pingone-LAB"
     }
   ]
 }
