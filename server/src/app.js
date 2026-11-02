@@ -78,7 +78,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
       ...installOf(d, results[d.id], inst.map),
       status: results[d.id] || { state: 'unknown', reason: 'not-polled' },
     }));
-    const have = new Set(demos.map((d) => d.catalogId).filter(Boolean));
+    const have = new Set(demos.flatMap((d) => [d.catalogId, ...(d.alsoCatalogIds ?? [])]).filter(Boolean));
     const planned = catalogItems
       .filter((i) => i.status === 'active' && !have.has(i.id))
       .map(({ id, name, kind, group, wave, seed }) => ({ id, name, kind, group, wave, seed, tags: catalogTags[id] ?? [], status: { state: 'planned' } }));

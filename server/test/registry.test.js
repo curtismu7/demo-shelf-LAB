@@ -13,6 +13,10 @@ describe('validateDemos', () => {
     expect(d.healthPath).toBe('/api/health');
     expect(d.composeOverlays).toEqual([]);
   });
+  it('accepts alsoCatalogIds as a short array of strings and refuses anything else', () => {
+    expect(validateDemos([{ ...ok, alsoCatalogIds: ['A4', 'A5'] }])[0].alsoCatalogIds).toEqual(['A4', 'A5']);
+    for (const bad of ['A4', [4], Array(11).fill('A4'), ['x'.repeat(41)]]) expect(errs({ ...ok, alsoCatalogIds: bad })).toMatch(/alsoCatalogIds must be an array/);
+  });
   it('defaults where to installed and accepts mock and both with a mockUrl', () => {
     expect(validateDemos([ok])[0].where).toBe('installed');
     const mock = { ...ok, where: 'mock', mockUrl: 'http://localhost:4600' };
@@ -138,7 +142,16 @@ describe('loadRegistry', () => {
       ['privilege-demo', 'D1', 'http://127.0.0.1:4510'],
       ['privilege-map', undefined, 'http://127.0.0.1:5301'],
       ['agent-mcp-door-demo', undefined, 'http://localhost:6850'],
+      ['pingone-signin-lab', 'A11', 'http://127.0.0.1:6171'],
     ]);
+  });
+  it('the committed pingone-signin-lab entry covers A4 and A5 too, with real catalog rows and a portable compose path', () => {
+    const seed = new URL('../../data/demos.json', import.meta.url).pathname;
+    const entry = JSON.parse(fs.readFileSync(seed, 'utf8')).demos.find((d) => d.id === 'pingone-signin-lab');
+    const catalog = JSON.parse(fs.readFileSync(new URL('../../data/catalog.json', import.meta.url), 'utf8'));
+    expect(entry).toMatchObject({ name: 'PingOne Sign-in LAB', kind: 'Demo', catalogId: 'A11', alsoCatalogIds: ['A4', 'A5'], composeFile: 'pingone-signin-LAB/docker-compose.yml', where: 'installed' });
+    expect(entry.tags).toEqual(['pingone', 'sign-in-and-mfa', 'ciba', 'step-up', 'simulated']);
+    for (const id of [entry.catalogId, ...entry.alsoCatalogIds]) expect(catalog.items.find((i) => i.id === id)?.status, id).toBe('active');
   });
 });
 

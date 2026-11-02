@@ -133,6 +133,30 @@
       ],
       "where": "installed",
       "repo": "https://github.com/ping-sandbox/agent-mcp-door-demo-LAB"
+    },
+    {
+      "id": "pingone-signin-lab",
+      "name": "PingOne Sign-in LAB",
+      "kind": "Demo",
+      "description": "Sign-in behaviour, mock only: failures, lockout, replay, MFA, step-up (RFC 9470) and CIBA with a mock phone. Real PingOne response shapes and live tenant runs are in pingone-LAB.",
+      "url": "http://127.0.0.1:6171",
+      "healthPath": "/api/health",
+      "composeFile": "pingone-signin-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "catalogId": "A11",
+      "alsoCatalogIds": [
+        "A4",
+        "A5"
+      ],
+      "tags": [
+        "pingone",
+        "sign-in-and-mfa",
+        "ciba",
+        "step-up",
+        "simulated"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/ping-sandbox/pingone-signin-LAB"
     }
   ]
 }

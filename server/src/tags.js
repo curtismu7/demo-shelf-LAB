@@ -93,6 +93,6 @@ export function loadCatalogTags(file, opts) {
 // Planned ideas (active catalog rows with no registered demo) that have no entry in data/catalog-tags.json. Not an error: a freshly
 // regenerated catalog may bring new rows, and the shelf works without their tags. The server prints this list at startup.
 export function untaggedPlanned(catalog, demos, catalogTags) {
-  const have = new Set(demos.map((d) => d.catalogId).filter(Boolean));
+  const have = new Set(demos.flatMap((d) => [d.catalogId, ...(d.alsoCatalogIds ?? [])]).filter(Boolean));
   return (catalog?.items || []).filter((i) => i.status === 'active' && !have.has(i.id) && !catalogTags[i.id]?.length).map((i) => i.id);
 }

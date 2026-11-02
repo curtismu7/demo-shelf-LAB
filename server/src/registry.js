@@ -10,7 +10,7 @@ const LOOPBACK = new Set(['localhost', '127.0.0.1', '[::1]', '::1']);
 // Characters that mean something to a shell. execFile never uses one, but a path holding them is a typo or an attack.
 const SHELL_CHARS = /[;&|$`<>\\"'*?(){}!#\n\r\t\0]/;
 const WHERE = ['installed', 'mock', 'both'];
-const FIELDS = ['id', 'name', 'catalogId', 'kind', 'description', 'url', 'where', 'mockUrl', 'healthPath', 'composeFile', 'composeOverlays', 'notes', 'tags', 'repo'];
+const FIELDS = ['id', 'name', 'catalogId', 'alsoCatalogIds', 'kind', 'description', 'url', 'where', 'mockUrl', 'healthPath', 'composeFile', 'composeOverlays', 'notes', 'tags', 'repo'];
 
 // https://github.com/<org>/<name> only (optional .git). Returns the canonical form without ".git", or null. The web page builds
 // `git clone <repo>.git` from it (so a name that still ends in .git after one is stripped is refused: stripping twice would name another repo), so nothing else may get through: no query, fragment, userinfo, port, spaces or newlines.
@@ -92,6 +92,8 @@ export function validateDemos(demos, { allowedHosts = [], demoRoot, tagIds } = {
     for (const f of ['catalogId', 'kind']) {
       if (d[f] !== undefined && (typeof d[f] !== 'string' || d[f].length > 40)) errors.push(`${at}: ${f} must be a short string`);
     }
+    // Extra catalog rows this one app also covers (the card sits under catalogId; these rows stop showing as planned ideas).
+    if (d.alsoCatalogIds !== undefined && (!Array.isArray(d.alsoCatalogIds) || d.alsoCatalogIds.length > 10 || d.alsoCatalogIds.some((c) => typeof c !== 'string' || c.length > 40))) errors.push(`${at}: alsoCatalogIds must be an array of up to 10 short strings`);
     const where = d.where === undefined ? 'installed' : d.where;
     if (!WHERE.includes(where)) errors.push(`${at}: where must be one of ${WHERE.join(', ')}`);
     // A mock-only demo has no local copy, so url is optional there.
