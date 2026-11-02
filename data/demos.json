@@ -171,6 +171,34 @@
       "tags": ["pingone", "oauth", "oidc", "par", "ciba", "token-exchange", "simulated", "real"],
       "where": "installed",
       "repo": "https://github.com/ping-sandbox/pingone-LAB"
+    },
+    {
+      "id": "pingfederate-lab",
+      "name": "PingFederate LAB",
+      "catalogId": "A28",
+      "kind": "Demo",
+      "description": "A card for each PingFederate feature behind AI agents: pi.flow sign-in, DCR, RAR with PAR, CIBA, DPoP, token exchange, Userinfo, PAR, PKCE and a protocol playground. Built-in mock PingFederate (offline) or your own PingFederate (live).",
+      "url": "http://127.0.0.1:5400",
+      "healthPath": "/api/health",
+      "composeFile": "pingfederate-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": ["pingfederate", "oauth", "oidc", "par", "ciba", "dpop", "token-exchange", "simulated", "real"],
+      "where": "installed",
+      "repo": "https://github.com/ping-sandbox/pingfederate-LAB"
+    },
+    {
+      "id": "customer-agent-lab",
+      "name": "Customer Agent LAB",
+      "catalogId": "D24",
+      "kind": "Demo",
+      "description": "The customer-facing AI agent with all 87 of its use cases in eight tracks: delegation with an act claim, authorize decisions, step-up and human approval, gateway attacks and refusals. A simulation: a mock engine produces every token and hop offline.",
+      "url": "http://127.0.0.1:5600",
+      "healthPath": "/api/health",
+      "composeFile": "customer-agent-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": ["ai-agent-security", "agent-identity", "simulated"],
+      "where": "installed",
+      "repo": "https://github.com/ping-sandbox/customer-agent-LAB"
     }
   ]
 }
