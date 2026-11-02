@@ -17,7 +17,10 @@
     "catalog": "node scripts/build-catalog.mjs",
     "prepare": "git config core.hooksPath .githooks || true",
     "e2e": "node scripts/e2e.mjs",
-    "e2e:refresh-docs": "node scripts/e2e.mjs --refresh-docs"
+    "e2e:refresh-docs": "node scripts/e2e.mjs --refresh-docs",
+    "agent": "node server/src/agent-cli.js",
+    "docker": "node scripts/docker-up.mjs up",
+    "docker:down": "node scripts/docker-up.mjs down"
   },
   "devDependencies": {
     "playwright": "^1.58.2"

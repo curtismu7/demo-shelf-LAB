@@ -17,7 +17,8 @@
         "mcp",
         "real"
       ],
-      "where": "installed"
+      "where": "installed",
+      "repo": "https://github.com/ping-sandbox/ai-gateway-client-LAB"
     },
     {
       "id": "mcp-demo-client-privilege",
@@ -35,7 +36,8 @@
         "oauth",
         "real"
       ],
-      "where": "installed"
+      "where": "installed",
+      "repo": "https://github.com/ping-sandbox/mcp-demo-client-privilege-LAB"
     },
     {
       "id": "privilege-a2a-anthropic-demo",
@@ -52,7 +54,8 @@
         "agent-identity",
         "real"
       ],
-      "where": "installed"
+      "where": "installed",
+      "repo": "https://github.com/ping-sandbox/privilege-a2a-anthropic-demo-LAB"
     },
     {
       "id": "id-jag-standalone",
@@ -73,7 +76,8 @@
         "simulated",
         "real"
       ],
-      "where": "installed"
+      "where": "installed",
+      "repo": "https://github.com/ping-sandbox/id-jag-standalone-LAB"
     },
     {
       "id": "privilege-demo",
@@ -93,7 +97,8 @@
         "mcp",
         "simulated"
       ],
-      "where": "installed"
+      "where": "installed",
+      "repo": "https://github.com/ping-sandbox/privilege-demo-LAB"
     },
     {
       "id": "privilege-map",
@@ -109,7 +114,8 @@
         "authorization-policy",
         "simulated"
       ],
-      "where": "installed"
+      "where": "installed",
+      "repo": "https://github.com/ping-sandbox/privilege-map-LAB"
     },
     {
       "id": "agent-mcp-door-demo",
@@ -125,7 +131,8 @@
         "pingone-privilege",
         "simulated"
       ],
-      "where": "installed"
+      "where": "installed",
+      "repo": "https://github.com/ping-sandbox/agent-mcp-door-demo-LAB"
     }
   ]
 }

@@ -30,14 +30,17 @@ try {
   } catch (e) {
     check('Registry valid', false, e.message);
   }
-  if (process.env.SHELF_ALLOW_START === '1') {
-    let ctx = null;
-    try { ctx = (await run('docker', ['context', 'show'])).stdout.trim(); } catch { /* handled below */ }
-    check('docker CLI runs', ctx !== null, 'Install OrbStack and make sure `docker` is on PATH (open -a OrbStack).');
-    if (ctx !== null) check(`docker context is orbstack (is "${ctx}")`, ctx === 'orbstack', 'Run: docker context use orbstack. Never use Docker Desktop.');
-  } else {
-    check('Start/Stop off (SHELF_ALLOW_START not 1): docker not needed', true);
-  }
+  // Docker on OrbStack is how every demo starts, so it is required, not optional.
+  // A hosted CI runner has Docker but not OrbStack, so there the Docker checks only report.
+  const ci = process.env.CI === 'true';
+  let ctx = null;
+  try { ctx = (await run('docker', ['context', 'show'])).stdout.trim(); } catch { /* reported below */ }
+  check(`docker CLI runs${ci && ctx === null ? ' (not required in CI)' : ''}`, ci || ctx !== null, 'Install OrbStack and make sure `docker` is on PATH (open -a OrbStack).');
+  if (ctx !== null) check(`docker context is orbstack (is "${ctx}")${ci && ctx !== 'orbstack' ? ' (not required in CI)' : ''}`, ci || ctx === 'orbstack', 'Run: docker context use orbstack. Never use Docker Desktop.');
+  // The start agent is only needed by the shelf in a container; report it, do not fail on it.
+  const agentPort = Number(process.env.SHELF_AGENT_PORT || 4405);
+  const agentUp = !(await portFree('127.0.0.1', agentPort));
+  check(`start agent ${agentUp ? `is listening on ${agentPort}` : 'is not running (only the container shelf needs it: npm run agent)'}`, true);
 } catch (e) {
   check('Configuration', false, e.message);
 }

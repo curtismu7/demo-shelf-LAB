@@ -33,11 +33,14 @@ The shelf lists the demos in two files, merged by `id`:
 | `url` | yes (not for `where: "mock"`) | `http` or `https` origin only: no path, query, fragment or credentials. Host must be `localhost`, `127.0.0.1` or `[::1]`, or listed in `SHELF_ALLOWED_HOSTS`. |
 | `where` | no | `installed` (default), `mock` or `both`. Where the demo runs: on this machine, as a mock-only copy hosted, or both. `both` shows two cards, the second with the id `<id>-mock`. |
 | `mockUrl` | when `where` is `mock` or `both` | `http` or `https` origin, optionally with a plain path prefix for a shared SE host (for example `https://mocks.<host>/<mock-name>`); no query, fragment or credentials. The health path is joined under the prefix. A non-loopback host must be in `SHELF_ALLOWED_HOSTS` (or the built-in SE list). The Mock card opens it and its status light polls `healthPath` there. Mock cards have no Start / Stop. |
+| `repo` | no | The demo's GitHub repo, `https://github.com/<org>/<name>` with an optional `.git`. Letters, digits, `.`, `_` and `-` only; no query, fragment, user name, port, spaces or other characters (anything else stops the server and is named in the message). It is stored without `.git`. A card for a demo that is not installed uses it for a Copy button that copies exactly `git clone https://github.com/<org>/<name>.git`. |
 | `catalogId` | no | A row id from `data/catalog.json` (for example `C1`). It places the card in its group and removes the "planned" card for that row. |
 | `kind` | no | `Demo`, `Tester` or `Tool`; defaults to the catalog row's kind. |
 | `tags` | no | Up to 20 tag ids from `data/tags.json` (see Tags below). An id that is not in the taxonomy stops the server and is named in the message. Shown as pills on the card and used by the tag filter. |
 | `healthPath` | no | Plain path starting with `/`. Default `/api/health`. |
-| `composeFile`, `composeOverlays` | no | `.yml` / `.yaml` paths with no shell characters or `..`: absolute, or relative to the demo root. The demo root is `SHELF_DEMO_ROOT`, and defaults to the folder above this shelf (where the demo repos sit). A relative path makes an entry portable across machines, so use it for new entries. Used for Copy start command and, only if enabled, Start / Stop. Overlays need a `composeFile`. |
+| `composeFile`, `composeOverlays` | no | `.yml` / `.yaml` paths with no shell characters or `..`: absolute, or relative to the demo root. The demo root is `SHELF_DEMO_ROOT`, and defaults to the folder above this shelf (where the demo repos sit). A relative path makes an entry portable across machines, so use it for new entries. Used for Copy start command and for Start / Stop (always on). Overlays need a `composeFile`. |
+
+Whether a demo is installed is not a field: the start agent looks for the registered `composeFile` (and overlays) on your machine. See "Installed, stopped, not installed" in the README.
 
 A bad file stops the server and the message names every problem.
 

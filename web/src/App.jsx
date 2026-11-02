@@ -4,6 +4,18 @@ import { LABELS, STATES } from "./status.js";
 
 const REFRESH_MS = 30000;
 
+// What a refused Start / Stop means, in words a person can act on.
+const WHY = {
+  "agent-not-running": "the start agent is not running. In the demo-shelf-LAB folder run: npm run agent",
+  "agent-token-rejected": "the start agent rejected the shelf's token. Restart the shelf with: npm run docker",
+  "compose-file-missing": "its compose file was not found beside the shelf. Check the registered path in Details",
+  "docker-context-not-orbstack": "Docker's context is not OrbStack. Run: docker context use orbstack",
+  "docker-unavailable": "Docker is not running. Start OrbStack",
+  timeout: "Docker took longer than 60 seconds. Check the demo's logs",
+  busy: "another start or stop for this demo is still running",
+  "is-the-shelf": "that entry is the shelf itself, and Stop would take the shelf down. Stop it from a terminal with npm run docker:down",
+};
+
 async function call(path, method = "GET") {
   const res = await fetch(path, { method });
   const body = await res.json().catch(() => ({}));
@@ -98,6 +110,15 @@ export default function App() {
     try { window.localStorage.setItem("shelf-theme", theme); } catch { /* the choice is a convenience */ }
   }, [theme]);
 
+  // The server checks what is installed in the background. Until the first answer is in, look again soon instead of in 30 s.
+  const pendingTries = useRef(0);
+  useEffect(() => {
+    if (!data?.installPending) { pendingTries.current = 0; return undefined; }
+    if (pendingTries.current >= 12) return undefined;
+    const t = setTimeout(() => { pendingTries.current += 1; load(false); }, 2500);
+    return () => clearTimeout(t);
+  }, [data, load]);
+
   useEffect(() => { if (open) closeRef.current?.focus(); }, [open]);
 
   async function act(id, action) {
@@ -107,7 +128,7 @@ export default function App() {
       await call(`/api/demos/${encodeURIComponent(id)}/${action}`, "POST");
       setNote(`${id}: ${action} done`);
     } catch (e) {
-      setNote(`${id}: ${action} refused or failed (${e.message})`);
+      setNote(`${id}: ${action} did not run: ${WHY[e.message] || e.message}`);
     }
     setBusy(false);
     load(true);
@@ -212,6 +233,12 @@ export default function App() {
         <div className="sr" role="status" aria-live="polite">{announce}</div>
         {error && <div className="note" data-state="error" role="alert">Cannot reach the shelf server ({error}). {data ? "Showing the last known state." : "Is it running?"}</div>}
         {note && !present && <div className="note" role="status">{note}</div>}
+        {data?.agent === "token-rejected" && !present && (
+          <div className="note" role="status" data-state="warn">The start agent is running but refused the shelf's token, so Start and Stop cannot work. In the demo-shelf-LAB folder run <code className="mono">npm run docker</code> again to give the shelf the current token.</div>
+        )}
+        {data?.agent === "down" && !present && (
+          <div className="note" role="status" data-state="warn">The start agent is not running, so Start and Stop cannot work. In the demo-shelf-LAB folder run <code className="mono">npm run agent</code> and leave it running.</div>
+        )}
         {data && !present && (
           <p className="howto">Start any demo from its folder and it adds itself to this shelf the first time. Restart the shelf to see the new card.</p>
         )}
@@ -285,7 +312,7 @@ export default function App() {
                 <h2 id={`g-${sec.key}`} className="shelf__title">{sec.title}</h2>
                 <div className="shelf__row">
                   {sec.rows.map((i) => (
-                    <Card key={`${i.planned ? "p" : "r"}-${i.id}`} item={i} present={present} startEnabled={data.startEnabled} busy={busy}
+                    <Card key={`${i.planned ? "p" : "r"}-${i.id}`} item={i} present={present} startEnabled={data.startEnabled} busy={busy || data.agent === "down" || data.agent === "token-rejected"}
                       onAction={act} onCopy={copy} onDetails={showDetails} tagInfo={tagInfo} picked={picked} onTag={toggleTag} />
                   ))}
                 </div>

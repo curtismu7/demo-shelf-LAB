@@ -149,23 +149,16 @@ describe('untaggedPlanned', () => {
   });
 });
 
-describe('online-only mode (the Docker image)', () => {
+describe('where: both', () => {
   const registry = validateDemos([
     demo({ id: 'both-demo', catalogId: 'A1', where: 'both', mockUrl: 'https://mocks.example', tags: ['a', 'real'] }),
     demo({ id: 'local-demo', catalogId: 'A2', url: 'http://localhost:4501', tags: ['a', 'real'] }),
   ], { tagIds: ids, allowedHosts: ['mocks.example'] });
   const catalog = { items: ['A1', 'A2', 'A3'].map((id) => ({ id, name: id, status: 'active' })) };
-  const get = async (onlineOnly) => {
-    const app = createApp({ demos: registry, catalog, tags: validateTaxonomy(tax), onlineOnly, allowStart: false, fetchFn: async () => ({ ok: false, status: 503, json: async () => ({}) }) });
-    return (await request(app).get('/api/shelf').set('Host', '127.0.0.1')).body;
-  };
-  it('lists only hosted copies, and a local-only demo\'s row does not come back as planned', async () => {
-    const b = await get(true);
-    expect(b.demos.map((d) => d.id)).toEqual(['both-demo-mock']);
+  it('lists the installed and the hosted copy of a both-demo, and a registered row does not come back as planned', async () => {
+    const app = createApp({ demos: registry, catalog, tags: validateTaxonomy(tax), allowStart: false, fetchFn: async () => ({ ok: false, status: 503, json: async () => ({}) }) });
+    const b = (await request(app).get('/api/shelf').set('Host', '127.0.0.1')).body;
+    expect(b.demos.map((d) => d.id)).toEqual(['both-demo', 'both-demo-mock', 'local-demo']);
     expect(b.planned.map((p) => p.id)).toEqual(['A3']);
-    expect(b.demos[0].tags).not.toContain('real');
-  });
-  it('off by default: the same registry lists installed and hosted copies', async () => {
-    expect((await get(false)).demos.map((d) => d.id)).toEqual(['both-demo', 'both-demo-mock', 'local-demo']);
   });
 });

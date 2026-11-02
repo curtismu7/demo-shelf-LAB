@@ -141,3 +141,65 @@ describe('loadRegistry', () => {
     ]);
   });
 });
+
+describe('repo field', () => {
+  const repoOf = (repo) => validateDemos([{ ...ok, repo }])[0].repo;
+  it.each([
+    ['https://github.com/ping-sandbox/demo-shelf-LAB', 'https://github.com/ping-sandbox/demo-shelf-LAB'],
+    ['https://github.com/ping-sandbox/demo-shelf-LAB.git', 'https://github.com/ping-sandbox/demo-shelf-LAB'],
+    ['https://github.com/a/b.c_d-e', 'https://github.com/a/b.c_d-e'],
+  ])('accepts %s', (input, want) => expect(repoOf(input)).toBe(want));
+  it('is optional', () => expect(validateDemos([ok])[0]).not.toHaveProperty('repo'));
+  it.each([
+    ['javascript:alert(1)'],
+    ['http://github.com/o/n'],
+    ['HTTPS://github.com/o/n'],
+    ['https://github.com/o/n?x=1'],
+    ['https://github.com/o/n#frag'],
+    ['https://user@github.com/o/n'],
+    ['https://user:pw@github.com/o/n'],
+    ['https://github.com:443/o/n'],
+    ['https://github.com.evil.example/o/n'],
+    ['https://evil.example/github.com/o/n'],
+    ['https://gitlab.com/o/n'],
+    ['https://github.com/o/n/'],
+    ['https://github.com/o/n/extra'],
+    ['https://github.com/o'],
+    ['https://github.com//n'],
+    ['https://github.com/o/'],
+    ['https://github.com/../n'],
+    ['https://github.com/o/..'],
+    ['https://github.com/o/.'],
+    ['https://github.com/o/n .git'],
+    ['https://github.com/o/n.git.git'],
+    ['https://github.com/o/ n'],
+    ['https://github.com/o/n\n'],
+    ['https://github.com/o/n\nrm -rf /'],
+    ['https://github.com/o/n;rm'],
+    ['https://github.com/o/n$(id)'],
+    ['https://github.com/o/`id`'],
+    ['https://github.com/o/n&x'],
+    ['https://github.com/o/n|x'],
+    ["https://github.com/o/n'"],
+    ['https://github.com/o/n\\x'],
+    ['https://github.com/o/n%20x'],
+    [`https://github.com/o/${'n'.repeat(101)}`],
+    [`https://github.com/${'o'.repeat(40)}/n`],
+    [`https://github.com/o/${'n'.repeat(300)}`],
+    ['git@github.com:o/n.git'],
+    [''],
+    [42],
+    [null],
+    [['https://github.com/o/n']],
+  ])('rejects %j', (bad) => expect(errs({ ...ok, repo: bad })).toMatch(/repo must be https:\/\/github\.com/));
+  it('a local override replaces the seed repo, and a bad override stops the server', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'shelf-repo-'));
+    const seedFile = path.join(dir, 'seed.json');
+    const localFile = path.join(dir, 'local.json');
+    fs.writeFileSync(seedFile, JSON.stringify({ demos: [{ ...ok, repo: 'https://github.com/o/seed' }] }));
+    fs.writeFileSync(localFile, JSON.stringify({ demos: [{ id: 'demo-a', repo: 'https://github.com/o/mine.git' }] }));
+    expect(loadRegistry({ seedFile, localFile, demoRoot: dir })[0].repo).toBe('https://github.com/o/mine');
+    fs.writeFileSync(localFile, JSON.stringify({ demos: [{ id: 'demo-a', repo: 'javascript:1' }] }));
+    expect(() => loadRegistry({ seedFile, localFile, demoRoot: dir })).toThrow(/repo must be/);
+  });
+});

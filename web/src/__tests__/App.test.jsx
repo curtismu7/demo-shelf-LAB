@@ -14,6 +14,7 @@ const shelf = (over = {}) => ({
   planned: [{ id: "A3", name: "Passwordless", kind: "Demo", group: "A", wave: 3, status: { state: "planned" } }],
   ...over,
 });
+const cardOf = (name) => within(screen.getByRole("heading", { name }).closest("article"));
 const mockFetch = (body) => { const f = vi.fn(async () => ({ ok: true, json: async () => body })); vi.stubGlobal("fetch", f); return f; };
 afterEach(() => { vi.unstubAllGlobals(); vi.useRealTimers(); Object.defineProperty(document, "hidden", { value: false, configurable: true }); window.history.replaceState(null, "", "/"); }); // the filter lives in the address, so each test starts from a clean one
 
@@ -95,19 +96,119 @@ describe("shelf page", () => {
     fireEvent.click(screen.getByRole("button", { name: "Mock" }));
     expect(screen.getByText("No mock copies yet.")).toBeInTheDocument();
   });
-  it("hides Start/Stop unless the server enables them, and in Present mode", async () => {
+  it("shows both Start and Stop on every installed card, enabling only the one that applies", async () => {
+    const body = shelf({ startEnabled: true, agent: "up" });
+    body.demos[1].canStart = true;
+    mockFetch(body);
+    render(<App />);
+    await screen.findByRole("heading", { name: "Demo A" });
+    const up = cardOf("Demo A");
+    expect(up.getByRole("button", { name: /^Stop/ })).toBeEnabled();
+    expect(up.getByRole("button", { name: /^Stop/ })).toHaveAttribute("title", "Stops only Demo A; the shelf keeps running");
+    expect(up.getByRole("button", { name: /^Start/ })).toBeDisabled();
+    expect(up.getByRole("button", { name: /^Start/ })).toHaveAttribute("title", "Already running");
+    const down = cardOf("Demo B");
+    expect(down.getByRole("button", { name: /^Start/ })).toBeEnabled();
+    expect(down.getByRole("button", { name: /^Stop/ })).toBeDisabled();
+    expect(down.getByRole("button", { name: /^Stop/ })).toHaveAttribute("title", "Not running");
+  });
+  it("disables both, saying why, when the demo has no compose file", async () => {
+    mockFetch(shelf({ startEnabled: true, agent: "up" }));
+    render(<App />);
+    await screen.findByRole("heading", { name: "Demo C" });
+    const c = cardOf("Demo C");
+    for (const name of [/^Start/, /^Stop/]) {
+      expect(c.getByRole("button", { name })).toBeDisabled();
+      expect(c.getByRole("button", { name })).toHaveAttribute("title", "No compose file is registered for this demo");
+    }
+  });
+  it("Stop sends one request, for that demo only", async () => {
+    const body = shelf({ startEnabled: true, agent: "up" });
+    body.demos[1].canStart = true;
+    const f = vi.fn(async (url, init) => ({ ok: true, json: async () => (init?.method === "POST" ? { ok: true } : body) }));
+    vi.stubGlobal("fetch", f);
+    render(<App />);
+    await screen.findByRole("heading", { name: "Demo A" });
+    fireEvent.click(cardOf("Demo A").getByRole("button", { name: /^Stop/ }));
+    expect(await screen.findByText("a: stop done")).toBeInTheDocument();
+    const posts = f.mock.calls.filter(([url, init]) => init?.method === "POST" && url.startsWith("/api/demos/")).map(([url]) => url);
+    expect(posts).toEqual(["/api/demos/a/stop"]); // the follow-up /api/shelf/refresh is the page reloading, not another demo
+  });
+  it("explains is-the-shelf in plain words", async () => {
+    const body = shelf({ startEnabled: true, agent: "up" });
+    vi.stubGlobal("fetch", vi.fn(async (url, init) => (init?.method === "POST" ? { ok: false, json: async () => ({ error: "is-the-shelf" }) } : { ok: true, json: async () => body })));
+    render(<App />);
+    await screen.findByRole("heading", { name: "Demo A" });
+    fireEvent.click(cardOf("Demo A").getByRole("button", { name: /^Stop/ }));
+    expect(await screen.findByText(/that entry is the shelf itself/)).toBeInTheDocument();
+  });
+  it("hides Start and Stop unless the server enables them, on mock cards, and in Present mode", async () => {
     mockFetch(shelf());
     const { unmount } = render(<App />);
     await screen.findByText("Demo A");
-    expect(screen.queryByRole("button", { name: /^Start/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /^(Start|Stop)/ })).toBeNull();
     unmount();
-    mockFetch(shelf({ startEnabled: true }));
+    const body = shelf({ startEnabled: true, agent: "up" });
+    body.demos.push({ id: "m", name: "Demo M", where: "mock", kind: "Demo", group: "C", wave: 0, description: "hosted copy", url: "https://m.example", canStart: false, status: st("ready") });
+    mockFetch(body);
     render(<App />);
-    await screen.findByRole("heading", { name: "Demo A" });
-    expect(screen.getAllByRole("button", { name: /^Start/ })).toHaveLength(1);
+    await screen.findByRole("heading", { name: "Demo M" });
+    expect(cardOf("Demo M").queryByRole("button", { name: /^(Start|Stop)/ })).toBeNull();
+    expect(cardOf("Demo A").getByRole("button", { name: /^Stop/ })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Present" }));
     expect(document.documentElement.dataset.present).toBe("1");
-    expect(screen.queryByRole("button", { name: /^Start/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /^(Start|Stop)/ })).toBeNull();
+  });
+  it("warns when the start agent is down and disables Start", async () => {
+    const body = shelf({ startEnabled: true, agent: "down" });
+    body.demos[1].canStart = true;
+    mockFetch(body);
+    render(<App />);
+    await screen.findByRole("heading", { name: "Demo B" });
+    expect(screen.getByText(/start agent is not running/)).toBeInTheDocument();
+    expect(cardOf("Demo B").getByRole("button", { name: /^Start/ })).toBeDisabled();
+  });
+  it("explains a refused start in plain words", async () => {
+    const body = shelf({ startEnabled: true, agent: "up" });
+    body.demos[1].canStart = true;
+    vi.stubGlobal("fetch", vi.fn(async (url, init) => (init?.method === "POST"
+      ? { ok: false, json: async () => ({ error: "agent-not-running" }) }
+      : { ok: true, json: async () => body })));
+    render(<App />);
+    await screen.findByRole("heading", { name: "Demo B" });
+    fireEvent.click(cardOf("Demo B").getByRole("button", { name: /^Start/ }));
+    expect(await screen.findByText(/did not run: the start agent is not running\. In the demo-shelf-LAB folder run: npm run agent/)).toBeInTheDocument();
+  });
+  it("tells you when the agent refuses the token, and keeps Start disabled", async () => {
+    const body = shelf({ startEnabled: true, agent: "token-rejected" });
+    body.demos[1].canStart = true;
+    mockFetch(body);
+    render(<App />);
+    await screen.findByRole("heading", { name: "Demo B" });
+    expect(screen.getByText(/refused the shelf's token/)).toBeInTheDocument();
+    expect(cardOf("Demo B").getByRole("button", { name: /^Start/ })).toBeDisabled();
+  });
+  it("hides the agent warning in Present mode", async () => {
+    const body = shelf({ startEnabled: true, agent: "down" });
+    body.demos[1].canStart = true;
+    mockFetch(body);
+    render(<App />);
+    await screen.findByText(/start agent is not running/);
+    fireEvent.click(screen.getByRole("button", { name: "Present" }));
+    expect(screen.queryByText(/start agent is not running/)).toBeNull();
+  });
+  it.each([
+    ["docker-context-not-orbstack", /Docker's context is not OrbStack\. Run: docker context use orbstack/],
+    ["compose-file-missing", /its compose file was not found beside the shelf/],
+    ["docker-unavailable", /Docker is not running\. Start OrbStack/],
+  ])("explains %s in plain words", async (code, text) => {
+    const body = shelf({ startEnabled: true, agent: "up" });
+    body.demos[1].canStart = true;
+    vi.stubGlobal("fetch", vi.fn(async (url, init) => (init?.method === "POST" ? { ok: false, json: async () => ({ error: code }) } : { ok: true, json: async () => body })));
+    render(<App />);
+    await screen.findByRole("heading", { name: "Demo B" });
+    fireEvent.click(cardOf("Demo B").getByRole("button", { name: /^Start/ }));
+    expect(await screen.findByText(text)).toBeInTheDocument();
   });
   it("copies the exact start command", async () => {
     mockFetch(shelf());

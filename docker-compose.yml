@@ -1,11 +1,19 @@
-# The shelf as a read-only catalog on this Mac: http://127.0.0.1:4401/  (published on loopback only; Start / Stop is off in the container)
+# The shelf on http://127.0.0.1:4400, published on loopback only. Use `npm run docker`: it creates the agent token and sets the
+# two variables below. Registered demos are polled through host.docker.internal; Start / Stop goes to the start agent (npm run agent).
 services:
   shelf:
     build: .
-    image: demo-shelf:local
-    ports: ["127.0.0.1:4401:4400"]
+    image: demo-shelf-lab:local
+    ports: ["127.0.0.1:${SHELF_HOST_PORT:-4400}:4400"]
+    environment:
+      SHELF_DEMO_ROOT: ${SHELF_DEMO_ROOT:?run npm run docker}
+      SHELF_AGENT_URL: http://host.docker.internal:${SHELF_AGENT_PORT:-4405}
+      SHELF_ALLOWED_HOSTS: ${SHELF_ALLOWED_HOSTS:-}
+      SHELF_AGENT_TOKEN: ${SHELF_AGENT_TOKEN:?run npm run docker}
+    volumes: ["./.data:/data:ro"]
+    init: true
     read_only: true
-    tmpfs: ["/data", "/tmp"]
+    tmpfs: ["/tmp"]
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
     restart: unless-stopped
