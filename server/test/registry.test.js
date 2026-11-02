@@ -149,7 +149,7 @@ describe('loadRegistry', () => {
     // The demo root is the folder above the shelf repo, the same default the server uses.
     const demoRoot = path.resolve(path.dirname(seed), '..', '..');
     const demos = loadRegistry({ seedFile: seed, localFile: path.join(dir, 'absent.json'), allowedHosts: allowedHostsFromEnv({}), demoRoot });
-    expect(demos).toHaveLength(49); // the 9 seed apps (7 -LAB apps, then pingone-signin-LAB and pingone-LAB), then the other standalone apps, then the nine apps added from their repo shelf entries
+    expect(demos).toHaveLength(52); // the 9 seed apps (7 -LAB apps, then pingone-signin-LAB and pingone-LAB), then the other standalone apps, then the nine apps added from their repo shelf entries, then mcp-tools, mcp-scanner and mcp-resource-server
     expect(demos.slice(0, 11).map((d) => [d.id, d.catalogId, d.url])).toEqual([
       ['ai-gateway-client', 'D20', 'http://127.0.0.1:6880'],
       ['mcp-demo-client-privilege', 'D2', 'http://127.0.0.1:6884'],
@@ -163,6 +163,21 @@ describe('loadRegistry', () => {
       ['pingfederate-lab', 'A28', 'http://127.0.0.1:5400'],
       ['customer-agent-lab', 'D24', 'http://127.0.0.1:5600'],
     ]);
+  });
+  it('the committed seed registers the mcp-tools-LAB and mcp-resource-server-LAB entries with portable compose paths and the mcp-server-built tag', () => {
+    const seed = new URL('../../data/demos.json', import.meta.url).pathname;
+    const demos = loadRegistry({ seedFile: seed, localFile: path.join(dir, 'absent.json'), allowedHosts: allowedHostsFromEnv({}), demoRoot: path.resolve(path.dirname(seed), '..', '..') });
+    const pick = (id) => demos.find((d) => d.id === id);
+    expect(pick('mcp-tools')).toMatchObject({ catalogId: 'D3', kind: 'Tester', url: 'http://localhost:4810', repo: 'https://github.com/ping-sandbox/mcp-tools-LAB' });
+    expect(pick('mcp-scanner')).toMatchObject({ catalogId: 'D4', kind: 'Tester', url: 'http://localhost:4810', repo: 'https://github.com/ping-sandbox/mcp-tools-LAB' });
+    expect(pick('mcp-resource-server')).toMatchObject({ catalogId: 'D0', kind: 'Tool', url: 'http://localhost:8081', repo: 'https://github.com/ping-sandbox/mcp-resource-server-LAB' });
+    const raw = JSON.parse(fs.readFileSync(seed, 'utf8')).demos; // the registry resolves composeFile to an absolute path; the seed keeps the portable form
+    expect(Object.fromEntries(['mcp-tools', 'mcp-scanner', 'mcp-resource-server'].map((id) => [id, raw.find((d) => d.id === id).composeFile]))).toEqual({ 'mcp-tools': 'mcp-tools-LAB/docker-compose.yml', 'mcp-scanner': 'mcp-tools-LAB/docker-compose.yml', 'mcp-resource-server': 'mcp-resource-server-LAB/docker-compose.yml' });
+    for (const id of ['mcp-tools', 'mcp-scanner', 'mcp-resource-server']) expect(pick(id).tags, id).toContain('mcp-server-built');
+    // Port 4810 is shared on purpose (one app, two entries); no other port is used twice.
+    const byPort = new Map();
+    for (const d of demos) byPort.set(new URL(d.url).port, [...(byPort.get(new URL(d.url).port) || []), d.id]);
+    expect([...byPort].filter(([, ids]) => ids.length > 1)).toEqual([['4810', ['mcp-tools', 'mcp-scanner']]]);
   });
   it('the committed pingone-signin-lab entry covers A4 and A5 too, with real catalog rows and a portable compose path', () => {
     const seed = new URL('../../data/demos.json', import.meta.url).pathname;

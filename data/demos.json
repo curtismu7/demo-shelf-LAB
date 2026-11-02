@@ -897,6 +897,61 @@
         "simulated",
         "mcp"
       ]
+    },
+    {
+      "id": "mcp-tools",
+      "name": "MCP inspector",
+      "catalogId": "D3",
+      "kind": "Tester",
+      "description": "Connect to an MCP server, list its tools, resources and prompts, scan them, then call tools behind a confirm step. One app with the scanner (D4).",
+      "url": "http://localhost:4810",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-tools-LAB/docker-compose.yml",
+      "tags": [
+        "mcp",
+        "mcp-security",
+        "tool-poisoning",
+        "simulated",
+        "real",
+        "mcp-server-built"
+      ],
+      "repo": "https://github.com/ping-sandbox/mcp-tools-LAB"
+    },
+    {
+      "id": "mcp-scanner",
+      "name": "MCP scanner",
+      "catalogId": "D4",
+      "kind": "Tester",
+      "description": "Scan the metadata an MCP server serves, or a pasted tools/list snapshot, for tool poisoning before an agent reads it. Reports; never blocks. Same app as the inspector (D3).",
+      "url": "http://localhost:4810",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-tools-LAB/docker-compose.yml",
+      "tags": [
+        "mcp",
+        "mcp-security",
+        "tool-poisoning",
+        "simulated",
+        "real",
+        "mcp-server-built"
+      ],
+      "repo": "https://github.com/ping-sandbox/mcp-tools-LAB"
+    },
+    {
+      "id": "mcp-resource-server",
+      "name": "MCP resource server",
+      "catalogId": "D0",
+      "kind": "Tool",
+      "description": "A config-driven MCP resource server: banking and healthcare verticals defined by files, answered from bundled SQLite, token-protected (RFC 9728). Runs offline; loopback only.",
+      "url": "http://localhost:8081",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-resource-server-LAB/docker-compose.yml",
+      "tags": [
+        "mcp",
+        "mcp-server-built",
+        "oauth",
+        "simulated"
+      ],
+      "repo": "https://github.com/ping-sandbox/mcp-resource-server-LAB"
     }
   ]
 }
