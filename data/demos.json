@@ -377,7 +377,8 @@
         "mcp-security",
         "tool-poisoning",
         "mcp",
-        "simulated"
+        "simulated",
+        "mcp-server-built"
       ],
       "repo": "https://github.com/ping-sandbox/hostile-mcp-LAB"
     },
@@ -673,7 +674,8 @@
         "pingone-privilege",
         "mcp-security",
         "mcp",
-        "simulated"
+        "simulated",
+        "mcp-server-built"
       ],
       "repo": "https://github.com/ping-sandbox/mcp-surface-LAB"
     },

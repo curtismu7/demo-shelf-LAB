@@ -77,8 +77,14 @@ describe('GET /api/shelf', () => {
 describe('the committed seed', () => {
   const { demos, tags } = loadAll({ ...process.env, SHELF_DATA_DIR: fs.mkdtempSync(path.join(os.tmpdir(), 'seed-')) });
   const known = tagIdSet(tags);
-  it('has the four starter groups', () => {
-    expect(tags.groups.map((g) => g.label)).toEqual(['Ping products', 'Use cases', 'Simulated or real', 'Standards and protocols']);
+  it('has the five starter groups', () => {
+    expect(tags.groups.map((g) => g.label)).toEqual(['Ping products', 'Use cases', 'Simulated or real', 'Standards and protocols', 'What we built']);
+  });
+  // "An MCP server we built": a curated list, so a new entry gets the tag on purpose. Clients, testers and inspectors never carry it.
+  it('mcp-server-built is in the taxonomy and sits on exactly the entries the owner named', () => {
+    expect(known.has('mcp-server-built')).toBe(true);
+    expect(demos.filter((d) => d.tags.includes('mcp-server-built')).map((d) => d.id).sort()).toEqual(['hostile-mcp', 'mcp-surface-lab']);
+    for (const d of demos.filter((x) => x.tags.includes('mcp-server-built'))) expect(d.kind, d.id).toBe('Demo');
   });
   it('every entry is tagged, every tag exists, and every entry says simulated and/or real', () => {
     for (const d of demos) {
