@@ -131,7 +131,7 @@ describe('the committed planned-idea tags', () => {
   const known = tagIdSet(tags);
   const planned = catalog.items.filter((i) => i.status === 'active' && !demos.some((d) => d.catalogId === i.id || d.alsoCatalogIds?.includes(i.id)));
   it('every planned idea is tagged, with no mode tag (nothing is built yet)', () => {
-    expect(planned.length).toBeGreaterThan(0);
+    expect(planned.length).toBeGreaterThanOrEqual(0); // zero once every active idea has an app
     for (const i of planned) {
       expect(catalogTags[i.id]?.length, `${i.id} has no tags`).toBeGreaterThan(0);
       for (const t of catalogTags[i.id]) expect(known.has(t), `${i.id}: ${t}`).toBe(true);

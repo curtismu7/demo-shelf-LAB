@@ -727,6 +727,174 @@
         "simulated"
       ],
       "repo": "https://github.com/ping-sandbox/ai-policies-LAB"
+    },
+    {
+      "id": "p1az-inspector",
+      "name": "P1AZ Inspector LAB",
+      "kind": "Tester",
+      "description": "Send decisions to PingOne Authorize and see the verdict, statements and the exact call. One UI runs the offline Mock engine or, owner-run, your own PingOne environment or on-prem PingAuthorize (Live).",
+      "url": "http://localhost:4840",
+      "healthPath": "/api/health",
+      "composeFile": "p1az-inspector-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "catalogId": "B2",
+      "notes": "Host-run: npm start (port 4840). Docker: docker compose up --build -d (publishes 127.0.0.1:4840 only). Catalog B2 is a stand-in (the nearest row, Authorize policy playground): the catalog has no exact row. Mock needs no setup. Live is owner-run and is set up on the Settings page; request and response shapes are UNVERIFIED.",
+      "tags": [
+        "pingone-authorize",
+        "authorization-policy",
+        "simulated",
+        "real",
+        "oauth"
+      ]
+    },
+    {
+      "id": "agent-gateway-inspector",
+      "name": "Agent Gateway Inspector LAB",
+      "catalogId": "D54",
+      "kind": "Tester",
+      "description": "Inspector for an AI/agent gateway (PingOne Privilege) that allows, denies or holds agent tool calls for a human, with a decision buffer and a verifiable audit trail. Driven by an in-process stub gateway; nothing real is touched. Mock only: Live is refused.",
+      "url": "http://localhost:5850",
+      "healthPath": "/api/health",
+      "composeFile": "agent-gateway-inspector-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: npm ci && npm run build && npm start (port 5850; npm run doctor checks it). Or: HOST_PORT=5850 docker compose up --build -d (published on 127.0.0.1 only). Mock mode only, loopback-only, zero outbound calls; the Live toggle is refused. The composeFile is relative to the folder the demo repos sit in.",
+      "tags": [
+        "pingone-privilege",
+        "agent-gateway",
+        "agent-controls",
+        "human-in-the-loop",
+        "simulated",
+        "real",
+        "mcp"
+      ]
+    },
+    {
+      "id": "pingone-mcp-inspector",
+      "name": "PingOne MCP Inspector LAB",
+      "catalogId": "D3",
+      "kind": "Tester",
+      "description": "Connect to PingOne's hosted MCP server (worker or interactive admin sign-in) or any MCP server, list its tools with a safety class, and call them read-only by default. Mock by default; Live is owner-run.",
+      "url": "http://localhost:5201",
+      "healthPath": "/api/health",
+      "composeFile": "pingone-mcp-inspector-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: npm ci && npm run build && npm start (port 5201; npm run doctor checks it). Or: HOST_PORT=5201 docker compose up --build -d (published on 127.0.0.1 only). Mock mode needs no setup; Live is refused until the owner sets PINGONE_MCP_INSPECTOR_MODE=live. Not tested against a real tenant. The composeFile is relative to the folder the demo repos sit in.",
+      "tags": [
+        "pingone-mcp",
+        "mcp-security",
+        "simulated",
+        "real",
+        "mcp"
+      ]
+    },
+    {
+      "id": "agent-audit-trail-lab",
+      "name": "Agent Audit Trail LAB",
+      "kind": "Demo",
+      "description": "Who did what through which agent: seeded synthetic events from six sources, a read-only audit tool surface, and a correlation join into one timeline per action, with a tamper-evident hash chain. Fully mock; Live is refused.",
+      "url": "http://localhost:6600",
+      "healthPath": "/api/health",
+      "composeFile": "agent-audit-trail-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "catalogId": "D17",
+      "notes": "Host-run: npm ci && npm run build && npm start (port 6600; npm run doctor checks it). Or: docker compose up --build -d (publishes 127.0.0.1:6600 only; HOST_PORT changes it, and the shelf's Start button does not set HOST_PORT). Mock only: the Live toggle explains why it is not available.",
+      "tags": [
+        "pingone-privilege",
+        "audit-observability",
+        "agent-identity",
+        "simulated"
+      ]
+    },
+    {
+      "id": "progressive-trust-ladder",
+      "name": "Progressive trust ladder LAB",
+      "catalogId": "D29",
+      "kind": "Demo",
+      "description": "A personal agent climbs four rungs of trust as risk and amount rise: sign-in, step-up, then a CIBA approval on a mock phone. Mock only, simulated, no tenant. Live is refused: the lab has no live provider.",
+      "url": "http://127.0.0.1:6211",
+      "healthPath": "/api/health",
+      "composeFile": "progressive-trust-ladder-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: npm ci, npm run build, npm start (port 6211, PTL_PORT to change within 6200-6249). Docker: docker compose up --build -d (published on 127.0.0.1:6211 only). Mock only: no tenant, no credentials, no outbound network. composeFile is relative to the shelf's demo root (the folder that holds the demo repos).",
+      "tags": [
+        "agent-controls",
+        "sign-in-and-mfa",
+        "simulated",
+        "ciba",
+        "step-up"
+      ]
+    },
+    {
+      "id": "chatgpt-mcp-flow",
+      "name": "AI assistant to MCP authorization flow LAB",
+      "catalogId": "D25",
+      "kind": "Demo",
+      "description": "How a remote MCP server behind an enterprise front door is authorized when a public AI assistant calls it for a signed-in user: connector catalog, PKCE, resource indicators, IdP hand-off, RFC 8693 exchange. 20 messages backed by real mock exchanges. Mock only; product claims UNVERIFIED.",
+      "url": "http://localhost:6650",
+      "healthPath": "/api/health",
+      "composeFile": "chatgpt-mcp-flow-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: npm ci && npm run build && npm start (port 6650; mock actors on 6651-6655, MCP_FLOW_STUB_BASE moves them; npm run doctor checks it). Docker: HOST_PORT=6650 docker compose up --build -d (published on 127.0.0.1 only). Mock only; Live is refused. Catalog id D25 is carried over from the old repo and is still a placeholder (to confirm).",
+      "tags": [
+        "pingone",
+        "mcp-security",
+        "real",
+        "oauth",
+        "mcp"
+      ]
+    },
+    {
+      "id": "mock-authorize",
+      "name": "Mock Authorize LAB",
+      "catalogId": "G4",
+      "kind": "Tester",
+      "description": "A local stand-in for PingOne Authorize: editable rules, a Try page, a decision log, and a PingOne-shaped token, decision and recent-decisions API that clients like the P1AZ Inspector can call. Simulated.",
+      "url": "http://localhost:4850",
+      "healthPath": "/api/health",
+      "composeFile": "mock-authorize-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: npm start (port 4850). Docker: HOST_PORT=4850 docker compose up --build -d (published on 127.0.0.1 only). Mock is the only mode; there is no live mode. Point the P1AZ Inspector's Live mode at http://127.0.0.1:4850/pingone (see Connect).",
+      "tags": [
+        "pingone-authorize",
+        "authorization-policy",
+        "simulated",
+        "oauth"
+      ]
+    },
+    {
+      "id": "stolen-token-lab",
+      "name": "Stolen-token LAB",
+      "catalogId": "C22",
+      "kind": "Tester",
+      "description": "Replay a captured access token through a mock gateway and see what stops it: nothing (bearer), audience binding, DPoP (RFC 9449), or mTLS certificate binding (RFC 8705, simulated). Mock mode only; Live is refused.",
+      "url": "http://localhost:4950",
+      "healthPath": "/api/health",
+      "composeFile": "stolen-token-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: ./scripts/run.sh (port 4950). Mock only: no tenant, no credentials. Docker: HOST_PORT=4950 docker compose up --build -d (published on 127.0.0.1 only). composeFile is relative to the demo root (the folder above this checkout).",
+      "tags": [
+        "token-security",
+        "simulated",
+        "dpop",
+        "mtls"
+      ]
+    },
+    {
+      "id": "mcp-elicitation-lab",
+      "name": "MCP Elicitation LAB",
+      "catalogId": "D37",
+      "kind": "Tester",
+      "description": "An MCP server mid-tool-call asks the person for more: form mode and URL mode, accept / decline / cancel, -32042, and the spec's safety rules, with findings when a server breaks them. Mock server and mock client; nothing is fetched.",
+      "url": "http://localhost:6800",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-elicitation-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: npm start (port 6800). Docker: HOST_PORT=6800 docker compose up --build -d (published on 127.0.0.1 only). Mock only: no tenant, no credentials, no outbound call. composeFile is relative to the folder that holds the clone (a placeholder the shelf resolves). Targets MCP spec 2025-11-25; the draft differs (see the page's Spec basis).",
+      "tags": [
+        "mcp-security",
+        "simulated",
+        "mcp"
+      ]
     }
   ]
 }
