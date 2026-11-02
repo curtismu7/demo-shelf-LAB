@@ -1,8 +1,10 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import request from 'supertest';
 import { describe, expect, it } from 'vitest';
-import { allowedHostsFromEnv, loadRegistry, RegistryError, validateDemos } from '../src/registry.js';
+import { loadAll } from '../src/index.js';
+import { allowedHostsFromEnv, alsoCatalogProblems, loadRegistry, RegistryError, validateDemos } from '../src/registry.js';
 
 const ok = { id: 'demo-a', name: 'A', description: 'd', url: 'http://localhost:4500', composeFile: '/tmp/a/docker-compose.yml' };
 const errs = (d, opts) => { try { validateDemos([d], opts); } catch (e) { return e.errors.join('\n'); } return ''; };
@@ -105,6 +107,19 @@ describe('validateDemos', () => {
   });
 });
 
+describe('alsoCatalogProblems', () => {
+  const cat = { items: [{ id: 'A4' }, { id: 'A5' }, { id: 'A11' }] };
+  it('is quiet when every extra id is a catalog row nobody else claims', () => {
+    expect(alsoCatalogProblems([{ id: 'x', catalogId: 'A11', alsoCatalogIds: ['A4', 'A5'] }], cat)).toEqual([]);
+  });
+  it('names a typo, the entry\'s own catalogId, and a row another demo claims', () => {
+    const out = alsoCatalogProblems([{ id: 'x', catalogId: 'A11', alsoCatalogIds: ['A44', 'A11', 'A5'] }, { id: 'y', catalogId: 'A5' }], cat).join('\n');
+    expect(out).toMatch(/x.*A44.*not a catalog row/);
+    expect(out).toMatch(/x.*A11.*its own catalogId/);
+    expect(out).toMatch(/x.*A5.*also claimed by y/);
+  });
+});
+
 describe('loadRegistry', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'shelf-reg-'));
   const seedFile = path.join(dir, 'demos.json');
@@ -152,6 +167,15 @@ describe('loadRegistry', () => {
     expect(entry).toMatchObject({ name: 'PingOne Sign-in LAB', kind: 'Demo', catalogId: 'A11', alsoCatalogIds: ['A4', 'A5'], composeFile: 'pingone-signin-LAB/docker-compose.yml', where: 'installed' });
     expect(entry.tags).toEqual(['pingone', 'sign-in-and-mfa', 'ciba', 'step-up', 'simulated']);
     for (const id of [entry.catalogId, ...entry.alsoCatalogIds]) expect(catalog.items.find((i) => i.id === id)?.status, id).toBe('active');
+  });
+  it('the committed seed gives no demo a bad alsoCatalogId, and the real shelf lists A4, A5 and A11 as covered, not planned', async () => {
+    const { demos, catalog } = loadAll({ SHELF_DATA_DIR: fs.mkdtempSync(path.join(os.tmpdir(), 'shelf-seed-')) });
+    expect(alsoCatalogProblems(demos, catalog)).toEqual([]);
+    const { createApp } = await import('../src/app.js');
+    const r = await request(createApp({ demos, catalog, fetchFn: async () => { throw new Error('refused'); }, wait: async () => {} })).get('/api/shelf').set('Host', 'localhost:4400');
+    const planned = r.body.planned.map((p) => p.id);
+    for (const id of ['A4', 'A5', 'A11']) expect(planned).not.toContain(id);
+    expect(r.body.demos.find((d) => d.id === 'pingone-signin-lab').alsoCatalogIds).toEqual(['A4', 'A5']);
   });
 });
 

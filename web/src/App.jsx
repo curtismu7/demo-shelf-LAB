@@ -180,7 +180,7 @@ export default function App() {
     return (where === "all" || i.where === where) &&
       (kind === "all" || (kind === "unclassified" ? !i.kind : kindOf(i).includes(kind))) &&
       (status === "all" || i.status.state === status) &&
-      (!q || [i.name, i.catalogId, i.description, ...(i.tags || []).flatMap((t) => [t, tagInfo.get(t)?.label])].some((f) => (f || "").toLowerCase().includes(q)));
+      (!q || [i.name, i.catalogId, ...(i.alsoCatalogIds || []), i.description, ...(i.tags || []).flatMap((t) => [t, tagInfo.get(t)?.label])].some((f) => (f || "").toLowerCase().includes(q)));
   };
   const passesTags = (i, skip) => tagGroups.every((g) => {
     if (g.id === skip) return true;

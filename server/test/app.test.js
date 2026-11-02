@@ -46,6 +46,7 @@ describe('GET /api/shelf', () => {
     const r = await request(mk({ demos: [{ ...demos[0], alsoCatalogIds: ['E2'] }] })).get('/api/shelf').set('Host', 'localhost:4400');
     expect(r.body.planned.map((p) => p.id)).toEqual(['D1']);
     expect(r.body.demos).toHaveLength(1);
+    expect(r.body.demos[0].alsoCatalogIds).toEqual(['E2']);
   });
   it('gives each place a demo lives its own card; mock copies poll mockUrl and never start', async () => {
     const reg = [

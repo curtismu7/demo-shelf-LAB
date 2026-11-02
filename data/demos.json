@@ -138,7 +138,7 @@
       "id": "pingone-signin-lab",
       "name": "PingOne Sign-in LAB",
       "kind": "Demo",
-      "description": "Sign-in behaviour, mock only: failures, lockout, replay, MFA, step-up (RFC 9470) and CIBA with a mock phone. Real PingOne response shapes and live tenant runs are in pingone-LAB.",
+      "description": "Sign-in behaviour, mock only: failures, lockout, replay, MFA, step-up (RFC 9470) and CIBA with a mock phone. For real PingOne response shapes and live tenant runs, see the pingone-LAB repo.",
       "url": "http://127.0.0.1:6171",
       "healthPath": "/api/health",
       "composeFile": "pingone-signin-LAB/docker-compose.yml",

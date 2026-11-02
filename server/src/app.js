@@ -64,6 +64,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
       id: d.id,
       name: d.name,
       catalogId: d.catalogId ?? null,
+      alsoCatalogIds: d.alsoCatalogIds ?? [],
       kind: d.kind ?? byCatalogId.get(d.catalogId)?.kind ?? null,
       group: byCatalogId.get(d.catalogId)?.group ?? null,
       composeFile: d.composeFile ?? null,

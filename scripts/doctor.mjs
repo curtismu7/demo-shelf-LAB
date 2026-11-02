@@ -3,6 +3,7 @@
 import { execFile } from 'node:child_process';
 import net from 'node:net';
 import { promisify } from 'node:util';
+import { alsoCatalogProblems } from '../server/src/registry.js';
 import { loadAll, resolveBind, resolvePort } from '../server/src/index.js';
 
 const run = promisify(execFile);
@@ -26,6 +27,8 @@ try {
   try {
     const { demos, catalog } = loadAll();
     check(`Registry valid (${demos.length} demos)`, true);
+    const bad = alsoCatalogProblems(demos, catalog);
+    check('alsoCatalogIds all name free catalog rows', !bad.length, bad.join('; '));
     check(`Catalog present (${catalog.items?.length ?? 0} items)`, (catalog.items?.length ?? 0) > 0, 'Run: npm run catalog -- <path to standalone-demo-family-plan.md>');
   } catch (e) {
     check('Registry valid', false, e.message);

@@ -165,3 +165,21 @@ export function loadRegistry({ seedFile, localFile, allowedHosts = [], demoRoot,
   }
   return validateDemos([...byId.values()], { allowedHosts, demoRoot, tagIds });
 }
+
+// Problems with alsoCatalogIds across the cleaned demos: an id that is not a catalog row (a typo leaves the planned card showing), the
+// entry's own catalogId, or a row another demo already claims. Returns messages; the server prints them and the doctor fails on them.
+export function alsoCatalogProblems(demos, catalog) {
+  const rows = new Set((catalog?.items || []).map((i) => i.id));
+  const out = [];
+  for (const d of demos) {
+    for (const c of d.alsoCatalogIds ?? []) {
+      if (!rows.has(c)) out.push(`${d.id}: alsoCatalogIds "${c}" is not a catalog row`);
+      else if (c === d.catalogId) out.push(`${d.id}: alsoCatalogIds "${c}" is its own catalogId`);
+      else {
+        const other = demos.find((o) => o !== d && (o.catalogId === c || o.alsoCatalogIds?.includes(c)));
+        if (other) out.push(`${d.id}: alsoCatalogIds "${c}" is also claimed by ${other.id}`);
+      }
+    }
+  }
+  return out;
+}
