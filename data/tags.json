@@ -180,8 +180,8 @@
       "tags": [
         {
           "id": "mcp-server-built",
-          "label": "MCP server we built",
-          "hint": "An MCP server or MCP surface we built ourselves."
+          "label": "MCP tool we built",
+          "hint": "An MCP server, client or tool we built ourselves."
         }
       ]
     }
