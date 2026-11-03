@@ -77,8 +77,8 @@ describe('GET /api/shelf', () => {
 describe('the committed seed', () => {
   const { demos, tags } = loadAll({ ...process.env, SHELF_DATA_DIR: fs.mkdtempSync(path.join(os.tmpdir(), 'seed-')) });
   const known = tagIdSet(tags);
-  it('has the five starter groups', () => {
-    expect(tags.groups.map((g) => g.label)).toEqual(['Ping products', 'Use cases', 'Simulated or real', 'Standards and protocols', 'What we built']);
+  it('has the starter groups', () => {
+    expect(tags.groups.map((g) => g.label)).toEqual(['Ping products', 'Use cases', 'Diagram packs', 'Simulated or real', 'Standards and protocols', 'What we built']);
   });
   // "An MCP tool we built" (servers, clients and tools): a curated list, so a new entry gets the tag on purpose.
   it('mcp-server-built is in the taxonomy and sits on exactly the entries the owner named', () => {
