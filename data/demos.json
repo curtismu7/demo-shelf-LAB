@@ -364,7 +364,8 @@
       "composeFile": "diagram-studio-LAB/docker-compose.yml",
       "tags": [
         "learning",
-        "simulated"
+        "simulated",
+        "poc-patterns"
       ],
       "repo": "https://github.com/ping-sandbox/diagram-studio-LAB"
     },
