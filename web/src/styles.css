@@ -330,6 +330,14 @@ html[data-present] {
   text-decoration: none;
 }
 
+/* The URL next to Open, so the user always sees where the button goes, even if the browser step fails. */
+.box__url {
+  align-self: center;
+  color: var(--muted);
+  font-size: 0.72rem;
+  word-break: break-all;
+}
+
 /* Status light: the dot carries the state, the words repeat it. */
 .light {
   --light: var(--muted);

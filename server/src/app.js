@@ -8,9 +8,31 @@ import { hostedTags } from './tags.js';
 
 const VERSION = JSON.parse(fs.readFileSync(new URL('../../package.json', import.meta.url), 'utf8')).version;
 
-// Shell-safe display form of what Start runs, for the Copy button: change into the compose file's folder first, as Start does.
+// Shell-safe display form of what Start runs, for the Copy button: change into the compose file's folder first, as Start does,
+// then bring the app up, wait for its health endpoint (curl, bounded ~2 min), echo the URL so it stays on screen, and open the browser.
+// The URL is printed BEFORE the open so a failed `open` still leaves it visible. `open` is macOS; elsewhere the user sees the URL.
 const q = (a) => (/^[\w@%+=:,./-]+$/.test(a) ? a : `'${a.replace(/'/g, `'\\''`)}'`);
-export const startCommand = (d) => (d.composeFile ? `cd ${q(path.dirname(d.composeFile))} && ${['docker', ...composeArgs({ composeOverlays: [], ...d }, 'start')].map(q).join(' ')}` : null);
+
+export function startScript({ composeFile, composeOverlays = [], url, healthPath = '/api/health' }) {
+  if (!composeFile) return null;
+  const cmd = [
+    `cd ${q(path.dirname(composeFile))}`,
+    `docker compose ${[composeFile, ...composeOverlays].flatMap((f) => ['-f', q(f)]).join(' ')} up -d`,
+  ];
+  if (url) {
+    const safe = (s) => s.replace(/'/g, `'\\''`);
+    const u = q(url);
+    const health = q(url.replace(/\/$/, '') + (healthPath || '/api/health'));
+    cmd.push(
+      `echo "When it is up, the app is at: ${safe(url)}"`,
+      `i=0; until curl -sfso /dev/null ${health} || [ $i -ge 24 ]; do i=$((i+1)); sleep 5; done`,
+      `open ${u} 2>/dev/null || echo "Could not open the browser automatically. Open: ${safe(url)}"`,
+    );
+  }
+  return cmd.join('\n  && ');
+}
+
+export const startCommand = (d) => startScript(d);
 
 // One registry entry becomes one card per place it lives. A mock copy is polled and linked at mockUrl and
 // has no compose file, so Start / Stop never applies to it. A "both" demo gets a second, "-mock" card.

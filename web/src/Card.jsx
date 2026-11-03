@@ -127,7 +127,12 @@ export function Card({ item, startEnabled, present, busy, onAction, onCopy, onDe
             </>
           );
         })()}
-        {isUp(s.state) && <a className="box__open" href={item.url} target="_blank" rel="noopener noreferrer">Open<span className="sr"> {label} in a new tab</span></a>}
+        {isUp(s.state) && (
+          <>
+            <a className="box__open" href={item.url} target="_blank" rel="noopener noreferrer">Open<span className="sr"> {label} in a new tab</span></a>
+            <span className="box__url mono" title="The URL Open goes to">{item.url}</span>
+          </>
+        )}
         {clone && <CloneCopy name={label} command={clone} />}
         {item.startCommand && <StartCopy item={item} label={label} onCopy={onCopy} />}
         <button type="button" onClick={() => onDetails(item)}>Details<span className="sr"> for {label}</span></button>
@@ -154,6 +159,7 @@ export function Drawer({ item, present, onClose, closeRef, tagGroups = [] }) {
         {s.reason && (<><dt>Reason reported</dt><dd>{s.reason}</dd></>)}
         {s.demo?.version && (<><dt>Version</dt><dd>{s.demo.version}</dd></>)}
         {!item.planned && (<><dt>Registered URL</dt><dd className="mono">{item.url}</dd></>)}
+        {!item.planned && item.repo && (<><dt>Repo</dt><dd className="mono">{item.repo}</dd></>)}
         {!present && item.install && item.install !== "unknown" && !item.planned && (<><dt>On this machine</dt><dd>{item.install === "not-installed" ? "Not installed" : item.imagesBuilt === false ? NOT_BUILT : "Installed"}</dd></>)}
         {!present && item.install === "not-installed" && cloneCommand(item.repo) && (<><dt>Clone command</dt><dd className="mono">{cloneCommand(item.repo)}</dd></>)}
         {!present && item.composeFile && (<><dt>Compose file</dt><dd className="mono">{item.composeFile}</dd></>)}
