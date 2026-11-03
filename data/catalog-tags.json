@@ -242,6 +242,18 @@
       "pingone-privilege",
       "authorization-policy",
       "human-in-the-loop"
+    ],
+    "D110": [
+      "a2a",
+      "token-exchange",
+      "pingone-privilege",
+      "mcp"
     ]
-  }
+  },
+  "D110": [
+    "a2a",
+    "token-exchange",
+    "pingone-privilege",
+    "mcp"
+  ]
 }

@@ -442,6 +442,15 @@
       "seed": "built",
       "wave": null,
       "status": "active"
+    },
+    {
+      "id": "D110",
+      "name": "Meridian Pay A2A hop lab",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
     }
   ]
 }
