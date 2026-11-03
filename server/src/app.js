@@ -29,7 +29,7 @@ export function startScript({ composeFile, composeOverlays = [], url, healthPath
       `open ${u} 2>/dev/null || echo "Could not open the browser automatically. Open: ${safe(url)}"`,
     );
   }
-  return cmd.join('\n  && ');
+  return cmd.join(' && ');
 }
 
 export const startCommand = (d) => startScript(d);

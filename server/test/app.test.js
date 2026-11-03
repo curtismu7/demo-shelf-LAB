@@ -41,10 +41,10 @@ describe('GET /api/shelf', () => {
     expect(r.body.planned.map((p) => [p.id, p.status.state])).toEqual([['E2', 'planned']]);
     expect(r.body.demos[0]).toMatchObject({ group: 'C', composeFile: '/tmp/a/c.yml' });
     expect(r.body.demos[0].startCommand).toBe(
-      "cd /tmp/a\n  && docker compose -f /tmp/a/c.yml -f /tmp/a/o.yml up -d\n" +
-      '  && echo "When it is up, the app is at: http://localhost:4500"\n' +
-      '  && i=0; until curl -sfso /dev/null http://localhost:4500/api/health || [ $i -ge 24 ]; do i=$((i+1)); sleep 5; done\n' +
-      '  && open http://localhost:4500 2>/dev/null || echo "Could not open the browser automatically. Open: http://localhost:4500"',
+      'cd /tmp/a && docker compose -f /tmp/a/c.yml -f /tmp/a/o.yml up -d && ' +
+      'echo "When it is up, the app is at: http://localhost:4500" && ' +
+      'i=0; until curl -sfso /dev/null http://localhost:4500/api/health || [ $i -ge 24 ]; do i=$((i+1)); sleep 5; done && ' +
+      'open http://localhost:4500 2>/dev/null || echo "Could not open the browser automatically. Open: http://localhost:4500"',
     );
   });
   it('alsoCatalogIds rows are covered by the one card and are not planned ideas', async () => {
