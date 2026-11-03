@@ -40,7 +40,12 @@ describe('GET /api/shelf', () => {
     expect(r.body.demos[0]).toMatchObject({ catalogId: 'C1', kind: 'Demo', wave: 0, canStart: false });
     expect(r.body.planned.map((p) => [p.id, p.status.state])).toEqual([['E2', 'planned']]);
     expect(r.body.demos[0]).toMatchObject({ group: 'C', composeFile: '/tmp/a/c.yml' });
-    expect(r.body.demos[0].startCommand).toBe('cd /tmp/a && docker compose -f /tmp/a/c.yml -f /tmp/a/o.yml up -d');
+    expect(r.body.demos[0].startCommand).toBe(
+      "cd /tmp/a\n  && docker compose -f /tmp/a/c.yml -f /tmp/a/o.yml up -d\n" +
+      '  && echo "When it is up, the app is at: http://localhost:4500"\n' +
+      '  && i=0; until curl -sfso /dev/null http://localhost:4500/api/health || [ $i -ge 24 ]; do i=$((i+1)); sleep 5; done\n' +
+      '  && open http://localhost:4500 2>/dev/null || echo "Could not open the browser automatically. Open: http://localhost:4500"',
+    );
   });
   it('alsoCatalogIds rows are covered by the one card and are not planned ideas', async () => {
     const r = await request(mk({ demos: [{ ...demos[0], alsoCatalogIds: ['E2'] }] })).get('/api/shelf').set('Host', 'localhost:4400');

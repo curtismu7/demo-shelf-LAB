@@ -43,6 +43,27 @@ describe("shelf page", () => {
     expect(within(screen.getByText("Demo A").closest("article")).getByRole("link", { name: /Open/ })).toHaveAttribute("target", "_blank");
     expect(within(screen.getByText("Demo B").closest("article")).queryByRole("link")).toBeNull();
   });
+  it("shows the app URL next to Open so the user knows where it goes", async () => {
+    mockFetch(shelf());
+    render(<App />);
+    await screen.findByText("Demo A");
+    const a = screen.getByText("Demo A").closest("article");
+    expect(within(a).getByText("http://localhost:4500")).toBeInTheDocument();
+  });
+  it("Details shows the repo URL when the registry has one, and nothing extra when it does not", async () => {
+    mockFetch(shelf({ demos: [{ ...shelf().demos[0], repo: "https://github.com/ping-sandbox/id-jag-standalone-LAB" }, ...shelf().demos.slice(1)] }));
+    render(<App />);
+    await screen.findByText("Demo A");
+    fireEvent.click(within(screen.getByText("Demo A").closest("article")).getByRole("button", { name: /Details/ }));
+    const drawer = screen.getByRole("dialog", { name: "Demo A details" });
+    expect(within(drawer).getByText("Repo")).toBeInTheDocument();
+    expect(within(drawer).getByText("https://github.com/ping-sandbox/id-jag-standalone-LAB")).toBeInTheDocument();
+    fireEvent.click(within(drawer).getByRole("button", { name: "Close" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    fireEvent.click(within(screen.getByText("Demo B").closest("article")).getByRole("button", { name: /Details/ }));
+    const drawerB = screen.getByRole("dialog", { name: "Demo B details" });
+    expect(within(drawerB).queryByText("Repo")).toBeNull();
+  });
   it("filters by text, kind and status", async () => {
     mockFetch(shelf());
     render(<App />);
