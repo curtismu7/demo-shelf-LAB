@@ -184,7 +184,7 @@ describe('loadRegistry', () => {
     const entry = JSON.parse(fs.readFileSync(seed, 'utf8')).demos.find((d) => d.id === 'pingone-signin-lab');
     const catalog = JSON.parse(fs.readFileSync(new URL('../../data/catalog.json', import.meta.url), 'utf8'));
     expect(entry).toMatchObject({ name: 'PingOne Sign-in LAB', kind: 'Demo', catalogId: 'A11', alsoCatalogIds: ['A4', 'A5'], composeFile: 'pingone-signin-LAB/docker-compose.yml', where: 'installed' });
-    expect(entry.tags).toEqual(['pingone', 'sign-in-and-mfa', 'ciba', 'step-up', 'simulated']);
+    expect(entry.tags).toEqual(['pingone', 'sign-in-and-mfa', 'ciba', 'step-up', 'simulated', 'pingid']);
     for (const id of [entry.catalogId, ...entry.alsoCatalogIds]) expect(catalog.items.find((i) => i.id === id)?.status, id).toBe('active');
   });
   it('the committed seed gives no demo a bad alsoCatalogId, and the real shelf lists A4, A5 and A11 as covered, not planned', async () => {
