@@ -34,17 +34,18 @@ export function resolvePort(env = process.env) {
 export function loadAll(env = process.env) {
   const tags = loadTaxonomy(env.SHELF_TAGS_FILE ? path.resolve(env.SHELF_TAGS_FILE) : path.join(root, 'data', 'tags.json'));
   const dataDir = path.resolve(env.SHELF_DATA_DIR || path.join(root, '.data'));
+  const demoRoot = env.SHELF_DEMO_ROOT ? path.resolve(env.SHELF_DEMO_ROOT) : path.dirname(root);
   const demos = loadRegistry({
     seedFile: env.SHELF_SEED_FILE ? path.resolve(env.SHELF_SEED_FILE) : path.join(root, 'data', 'demos.json'),
     localFile: path.join(dataDir, 'demos.local.json'),
     allowedHosts: allowedHostsFromEnv(env),
-    demoRoot: env.SHELF_DEMO_ROOT ? path.resolve(env.SHELF_DEMO_ROOT) : path.dirname(root),
+    demoRoot,
     tagIds: tagIdSet(tags),
   });
   let catalog = { items: [] };
   try { catalog = JSON.parse(fs.readFileSync(path.join(root, 'data', 'catalog.json'), 'utf8')); } catch { /* shelf still works without it */ }
   const catalogTags = loadCatalogTags(env.SHELF_CATALOG_TAGS_FILE ? path.resolve(env.SHELF_CATALOG_TAGS_FILE) : path.join(root, 'data', 'catalog-tags.json'), { tagIds: tagIdSet(tags), catalogIds: new Set((catalog.items || []).map((i) => i.id)) });
-  return { demos, catalog, tags, catalogTags };
+  return { demos, catalog, tags, catalogTags, demoRoot };
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
@@ -52,7 +53,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     loadShelfEnv(root);
     const bind = resolveBind();
     const port = resolvePort();
-    const { demos, catalog, tags, catalogTags } = loadAll();
+    const { demos, catalog, tags, catalogTags, demoRoot } = loadAll();
     const { allowStart, refused, inDocker } = resolveAllowStart(process.env, bind);
     if (refused) console.warn('Start/Stop disabled: it is only available when listening on loopback.');
     for (const m of alsoCatalogProblems(demos, catalog)) console.warn(m);
