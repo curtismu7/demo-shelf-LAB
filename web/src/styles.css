@@ -299,9 +299,31 @@ html[data-present] {
 .box__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  align-items: center;
+  gap: 10px;
   margin-top: auto;
   padding-top: 6px;
+}
+
+/* Spinner ring shown inside Start/Stop/Deploy while that action waits on the server. */
+.spin {
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
+  margin-right: 6px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: -0.1em;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spin { animation-duration: 1.6s; }
 }
 
 .box__actions button,
