@@ -451,6 +451,33 @@
       "seed": "built",
       "wave": null,
       "status": "active"
+    },
+    {
+      "id": "D111",
+      "name": "OBO Delegation inspector lab",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D112",
+      "name": "JIT ephemeral credentials lab",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D113",
+      "name": "JEV decision model lab",
+      "kind": "Tester",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
     }
   ]
 }
