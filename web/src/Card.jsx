@@ -79,6 +79,38 @@ function StartCopy({ item, label, onCopy }) {
   );
 }
 
+const PING_LABELS = {
+  pingfederate: "PingFederate",
+  pinggateway: "PingGateway",
+  "privilege-gateway": "Privilege Agent Gateway",
+  pingone: "PingOne",
+  "pingone-privilege": "PingOne Privilege",
+};
+
+// Rule 20: shared Ping products this demo needs, and whether each is shared-and-healthy.
+// Only shown when something is not ready: a row of green pills is noise.
+function PingProducts({ products, live }) {
+  const problems = products.filter((p) => p.state !== "ready");
+  if (!problems.length) return null;
+  const say = (p) => {
+    const name = PING_LABELS[p.product] || p.product;
+    if (p.state === "not-configured") return `${name}: not configured in the shared env file`;
+    if (p.state === "down") return `${name}: no shared instance running`;
+    if (p.state === "unhealthy") return `${name}: shared instance is up but not healthy`;
+    return `${name}: state unknown`;
+  };
+  return (
+    <p className="box__install box__ping" data-state="warn">
+      <span className="box__tag">Needs shared Ping</span>{" "}
+      <ul className="box__pinglist">
+        {problems.map((p) => (
+          <li key={p.product}>{say(p)}{live ? "" : " (the app is down anyway)"}</li>
+        ))}
+      </ul>
+    </p>
+  );
+}
+
 export function Card({ item, startEnabled, present, busy, activeAction, onAction, onCopy, onDetails, tagInfo, picked, onTag }) {
   const s = item.status;
   if (item.planned) {
@@ -116,6 +148,7 @@ export function Card({ item, startEnabled, present, busy, activeAction, onAction
       {inst === "not-installed" && <p className="box__install"><span className="box__tag">Not installed</span> {NOT_INSTALLED_HINT}</p>}
       {inst === "not-built" && <p className="box__install">{NOT_BUILT}.</p>}
       {inst === "stopped" && <p className="box__install">Installed, not answering.</p>}
+      {(item.pingProducts || []).length > 0 && <PingProducts products={item.pingProducts} live={item.status?.state !== "down"} />}
       <div className="box__actions">
         {!present && startEnabled && item.where !== "mock" && (() => {
           const up = isUp(s.state);

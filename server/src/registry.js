@@ -10,7 +10,7 @@ const LOOPBACK = new Set(['localhost', '127.0.0.1', '[::1]', '::1']);
 // Characters that mean something to a shell. execFile never uses one, but a path holding them is a typo or an attack.
 const SHELL_CHARS = /[;&|$`<>\\"'*?(){}!#\n\r\t\0]/;
 const WHERE = ['installed', 'mock', 'both'];
-const FIELDS = ['id', 'name', 'catalogId', 'alsoCatalogIds', 'kind', 'description', 'url', 'where', 'mockUrl', 'healthPath', 'composeFile', 'composeOverlays', 'notes', 'tags', 'repo'];
+const FIELDS = ['id', 'name', 'catalogId', 'alsoCatalogIds', 'kind', 'description', 'url', 'where', 'mockUrl', 'healthPath', 'composeFile', 'composeOverlays', 'notes', 'tags', 'repo', 'pingProducts'];
 
 // https://github.com/<org>/<name> only (optional .git). Returns the canonical form without ".git", or null. The web page builds
 // `git clone <repo>.git` from it (so a name that still ends in .git after one is stripped is refused: stripping twice would name another repo), so nothing else may get through: no query, fragment, userinfo, port, spaces or newlines.
@@ -121,10 +121,18 @@ export function validateDemos(demos, { allowedHosts = [], demoRoot, tagIds } = {
         else tags = [...new Set(d.tags)];
       }
     }
+    let pingProducts;
+    if (d.pingProducts !== undefined) {
+      const KNOWN = new Set(['pingfederate', 'pinggateway', 'privilege-gateway', 'pingone', 'pingone-privilege']);
+      if (!Array.isArray(d.pingProducts) || d.pingProducts.length > 5 || d.pingProducts.some((p) => !KNOWN.has(p))) {
+        errors.push(`${at}: pingProducts must be an array of known product names (${[...KNOWN].join(', ')})`);
+      } else pingProducts = [...new Set(d.pingProducts)];
+    }
     const out = {};
     for (const f of FIELDS) if (d[f] !== undefined) out[f] = d[f];
     if (tags) out.tags = tags;
     if (repo) out.repo = repo;
+    if (pingProducts) out.pingProducts = pingProducts;
     out.where = where;
     out.healthPath = hp;
     if (d.composeFile !== undefined) out.composeFile = resolvePath(d.composeFile, demoRoot);

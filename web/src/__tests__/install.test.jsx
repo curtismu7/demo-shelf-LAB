@@ -161,3 +161,24 @@ describe("first load while the install check is pending", () => {
     expect(f).toHaveBeenCalledTimes(2); // no more quick looks once nothing is pending
   }, 20000);
 });
+
+describe("shared Ping products warning (rule 20)", () => {
+  it("no pingProducts: no warning row", async () => {
+    await render1([card("p0", "Plain P")], "Plain P");
+    expect(cardOf("Plain P").queryByText(/Needs shared Ping/)).toBeNull();
+  });
+  it("all products ready: no warning row", async () => {
+    await render1([card("p1", "Green P", { pingProducts: [{ product: "pingfederate", state: "ready", url: "x" }] })], "Green P");
+    expect(cardOf("Green P").queryByText(/Needs shared Ping/)).toBeNull();
+  });
+  it("a down product warns with a human name", async () => {
+    await render1([card("p2", "Warn P", { pingProducts: [{ product: "pingfederate", state: "down" }, { product: "pingone", state: "ready" }] })], "Warn P");
+    const w = cardOf("Warn P").getByText(/Needs shared Ping/).closest("p");
+    expect(w.textContent).toMatch(/PingFederate: no shared instance running/);
+    expect(w.textContent).not.toMatch(/PingOne/); // ready products are not listed
+  });
+  it("not-configured says where to fix it", async () => {
+    await render1([card("p3", "Cfg P", { pingProducts: [{ product: "pingone", state: "not-configured" }] })], "Cfg P");
+    expect(cardOf("Cfg P").getByText(/not configured in the shared env file/)).toBeInTheDocument();
+  });
+});
