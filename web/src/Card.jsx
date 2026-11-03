@@ -111,7 +111,7 @@ function PingProducts({ products, live }) {
   );
 }
 
-export function Card({ item, startEnabled, present, busy, onAction, onCopy, onDetails, tagInfo, picked, onTag }) {
+export function Card({ item, startEnabled, present, busy, activeAction, onAction, onCopy, onDetails, tagInfo, picked, onTag }) {
   const s = item.status;
   if (item.planned) {
     return (
@@ -155,9 +155,9 @@ export function Card({ item, startEnabled, present, busy, onAction, onCopy, onDe
           const noCompose = "No compose file is registered for this demo";
           return (
             <>
-              <button type="button" className={up ? undefined : "primary"} disabled={busy || !item.canStart || up || inst === "not-installed"} title={!item.canStart ? noCompose : up ? "Already running" : inst === "not-installed" ? NOT_INSTALLED_HINT : inst === "not-built" ? NOT_BUILT : undefined} onClick={() => onAction(item.id, "start")}>Start<span className="sr"> {label}</span></button>
-              <button type="button" disabled={busy || !item.canStart || !up} title={!item.canStart ? noCompose : up ? `Stops only ${item.name}; the shelf keeps running` : "Not running"} onClick={() => onAction(item.id, "stop")}>Stop<span className="sr"> {label}</span></button>
-              {item.repo && !up && <button type="button" className={up ? undefined : "primary"} disabled={busy} title={inst === "not-installed" ? "Clones the repo, then starts the app" : "Updates the repo (fast-forward only), then starts the app"} onClick={() => onAction(item.id, "deploy")}>Deploy<span className="sr"> {label}</span></button>}
+              <button type="button" className={up ? undefined : "primary"} aria-busy={activeAction === "start" || undefined} disabled={busy || !item.canStart || up || inst === "not-installed"} title={!item.canStart ? noCompose : up ? "Already running" : inst === "not-installed" ? NOT_INSTALLED_HINT : inst === "not-built" ? NOT_BUILT : undefined} onClick={() => onAction(item.id, "start")}>{activeAction === "start" && <span className="spin" aria-hidden="true" />}Start<span className="sr"> {label}</span></button>
+              <button type="button" aria-busy={activeAction === "stop" || undefined} disabled={busy || !item.canStart || !up} title={!item.canStart ? noCompose : up ? `Stops only ${item.name}; the shelf keeps running` : "Not running"} onClick={() => onAction(item.id, "stop")}>{activeAction === "stop" && <span className="spin" aria-hidden="true" />}Stop<span className="sr"> {label}</span></button>
+              {item.repo && !up && <button type="button" className={up ? undefined : "primary"} aria-busy={activeAction === "deploy" || undefined} disabled={busy} title={inst === "not-installed" ? "Clones the repo, then starts the app" : "Updates the repo (fast-forward only), then starts the app"} onClick={() => onAction(item.id, "deploy")}>{activeAction === "deploy" && <span className="spin" aria-hidden="true" />}Deploy<span className="sr"> {label}</span></button>}
             </>
           );
         })()}
