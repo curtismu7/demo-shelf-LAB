@@ -64,6 +64,18 @@ describe("shelf page", () => {
     const drawerB = screen.getByRole("dialog", { name: "Demo B details" });
     expect(within(drawerB).queryByText("Repo")).toBeNull();
   });
+  it("offers Deploy when the app is not running and a repo is registered; not when running or repo-less", async () => {
+    mockFetch(shelf({ startEnabled: true, demos: [{ ...shelf().demos[1], canStart: true, composeFile: "/x/c.yml", repo: "https://github.com/ping-sandbox/agent-kill-switch-LAB" }, ...shelf().demos.filter((d) => d.id !== "b")] }));
+    render(<App />);
+    await screen.findByText("Demo B");
+    const b = screen.getByText("Demo B").closest("article");
+    expect(within(b).getByRole("button", { name: /Deploy/ })).toBeInTheDocument();
+    // running demo a: no Deploy
+    expect(within(screen.getByText("Demo A").closest("article")).queryByRole("button", { name: /Deploy/ })).toBeNull();
+    fireEvent.click(within(b).getByRole("button", { name: /Deploy/ }));
+    await waitFor(() => expect(document.querySelector(".note")).not.toBeNull());
+    expect(document.querySelector(".note").textContent).toMatch(/deploy done/i);
+  });
   it("filters by text, kind and status", async () => {
     mockFetch(shelf());
     render(<App />);

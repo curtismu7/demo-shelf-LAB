@@ -124,6 +124,7 @@ export function Card({ item, startEnabled, present, busy, onAction, onCopy, onDe
             <>
               <button type="button" className={up ? undefined : "primary"} disabled={busy || !item.canStart || up || inst === "not-installed"} title={!item.canStart ? noCompose : up ? "Already running" : inst === "not-installed" ? NOT_INSTALLED_HINT : inst === "not-built" ? NOT_BUILT : undefined} onClick={() => onAction(item.id, "start")}>Start<span className="sr"> {label}</span></button>
               <button type="button" disabled={busy || !item.canStart || !up} title={!item.canStart ? noCompose : up ? `Stops only ${item.name}; the shelf keeps running` : "Not running"} onClick={() => onAction(item.id, "stop")}>Stop<span className="sr"> {label}</span></button>
+              {item.repo && !up && <button type="button" className={up ? undefined : "primary"} disabled={busy} title={inst === "not-installed" ? "Clones the repo, then starts the app" : "Updates the repo (fast-forward only), then starts the app"} onClick={() => onAction(item.id, "deploy")}>Deploy<span className="sr"> {label}</span></button>}
             </>
           );
         })()}

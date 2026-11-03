@@ -61,7 +61,7 @@ export function installOf(d, status, map) {
 const LOOPBACK_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
 
 // `loopbackOnly` guards against DNS rebinding: a loopback-bound shelf only answers to loopback Host names.
-export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, installSource = null, refreshWaitMs = 4000, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait }) {
+export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, installSource = null, demoRoot = null, refreshWaitMs = 4000, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait }) {
   const demos = expandWhere(registry);
   const app = express();
   app.disable('x-powered-by');
@@ -125,7 +125,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     } catch (e) { next(e); }
   });
 
-  if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: (id) => { poller.invalidate(); install.invalidate(id); }, exec, fileExists, agent, inDocker, shelfDir }));
+  if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: (id) => { poller.invalidate(); install.invalidate(id); }, exec, fileExists, agent, inDocker, shelfDir, demoRoot }));
   app.use('/api', (req, res) => res.status(404).json({ error: 'not-found' }));
 
   if (webDist && fs.existsSync(path.join(webDist, 'index.html'))) {

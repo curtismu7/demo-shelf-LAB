@@ -3,6 +3,7 @@
 import { execFile } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { ensureRepo } from './deploy.js';
 
 export const EXEC_TIMEOUT_MS = 60_000;
 // The first Start builds the image, which takes minutes; killing it at 60 s made every first Start fail and look like nothing happened.
@@ -82,11 +83,11 @@ export async function runCompose(demo, action, { exec = defaultExec, fileExists 
 // Express middleware factory. With `agent` (the shelf in a container) the compose call is handed to the host-side start agent;
 // without it the shelf runs Docker itself. `inDocker` skips the remote-address check, because inside a container every request
 // arrives from the Docker network: the compose file publishes the port on 127.0.0.1 only, and the Host and Origin checks still apply.
-export function createControlRouter({ express, getDemos, onChange, exec = defaultExec, fileExists = fs.existsSync, agent = null, inDocker = false, shelfDir = null }) {
+export function createControlRouter({ express, getDemos, onChange, exec = defaultExec, fileExists = fs.existsSync, agent = null, inDocker = false, shelfDir = null, demoRoot = null }) {
   const router = express.Router({ caseSensitive: true });
   const busy = new Set();
 
-  router.post('/demos/:id/:action(start|stop)', async (req, res) => {
+  router.post('/demos/:id/:action(start|stop|deploy)', async (req, res) => {
     const fail = (code, error) => res.status(code).json({ ok: false, error });
     if (!inDocker && !isLoopbackAddr(req.socket.remoteAddress)) return fail(403, 'loopback-only');
     // Same-origin: a browser POST always carries Origin. A missing or foreign one is refused.
@@ -97,6 +98,17 @@ export function createControlRouter({ express, getDemos, onChange, exec = defaul
     if (busy.has(demo.id)) return fail(409, 'busy');
     busy.add(demo.id);
     try {
+      if (req.params.action === 'deploy') {
+        // Host-run only: the start agent protocol does not carry git, and the container has no demo folder.
+        if (agent) return fail(409, 'deploy-needs-host-shelf');
+        if (!demo.repo) return fail(400, 'no-repo');
+        if (!demoRoot) return fail(409, 'no-demo-root');
+        const g = await ensureRepo(demo, demoRoot, { exec });
+        if (!g.ok) return res.status(409).json({ ok: false, error: g.error, output: redact(g.output || '') });
+        const r = await runCompose(demo, 'start', { exec, fileExists, shelfDir });
+        if (r.status === 200) onChange?.(demo.id);
+        return res.status(r.status).json({ ...r.body, deploy: g.how, dir: g.dir });
+      }
       const r = agent ? await agent.run(demo.id, req.params.action) : await runCompose(demo, req.params.action, { exec, fileExists, shelfDir });
       if (r.status === 200) onChange?.(demo.id);
       return res.status(r.status).json(r.body);
