@@ -4,6 +4,7 @@ import express from 'express';
 import { composeArgs, createControlRouter } from './control.js';
 import { createInstallState } from './install.js';
 import { createPoller } from './poller.js';
+import { createPingProducts } from './pingProducts.js';
 import { hostedTags } from './tags.js';
 
 const VERSION = JSON.parse(fs.readFileSync(new URL('../../package.json', import.meta.url), 'utf8')).version;
@@ -61,7 +62,7 @@ export function installOf(d, status, map) {
 const LOOPBACK_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
 
 // `loopbackOnly` guards against DNS rebinding: a loopback-bound shelf only answers to loopback Host names.
-export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, installSource = null, demoRoot = null, refreshWaitMs = 4000, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait }) {
+export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, installSource = null, demoRoot = null, refreshWaitMs = 4000, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait, pingProductsCheck }) {
   const demos = expandWhere(registry);
   const app = express();
   app.disable('x-powered-by');
@@ -77,11 +78,16 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
 
   const poller = createPoller({ getDemos: () => demos, fetchFn, now, random, wait });
   const install = createInstallState({ source: installSource, now });
+  // Rule 20: which shared Ping products each demo needs, and whether they are shared-and-healthy.
+  const checkPing = pingProductsCheck || createPingProducts({ now, exec });
   const catalogItems = catalog?.items || [];
   const byCatalogId = new Map(catalogItems.map((i) => [i.id, i]));
 
   async function shelf(results) {
     const inst = install.snapshot(); // cached; a stale one is refreshed in the background, never awaited here
+    const pingNeeded = [...new Set(demos.flatMap((d) => d.pingProducts || []))];
+    const pingStatuses = pingNeeded.length ? await checkPing(pingNeeded) : [];
+    const pingMap = new Map(pingStatuses.map((p) => [p.product, p]));
     const registered = demos.map((d) => ({
       id: d.id,
       name: d.name,
@@ -98,6 +104,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
       wave: byCatalogId.get(d.catalogId)?.wave ?? null,
       canStart: allowStart && Boolean(d.composeFile),
       repo: d.repo ?? null,
+      pingProducts: d.pingProducts ? (d.pingProducts.map((p) => pingMap.get(p) || { product: p, state: 'unknown' })) : [],
       ...installOf(d, results[d.id], inst.map),
       status: results[d.id] || { state: 'unknown', reason: 'not-polled' },
     }));
