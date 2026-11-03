@@ -18,7 +18,10 @@
         "real"
       ],
       "where": "installed",
-      "repo": "https://github.com/ping-sandbox/ai-gateway-client-LAB"
+      "repo": "https://github.com/ping-sandbox/ai-gateway-client-LAB",
+      "pingProducts": [
+        "privilege-gateway"
+      ]
     },
     {
       "id": "mcp-demo-client-privilege",
@@ -37,7 +40,10 @@
         "real"
       ],
       "where": "installed",
-      "repo": "https://github.com/ping-sandbox/mcp-demo-client-privilege-LAB"
+      "repo": "https://github.com/ping-sandbox/mcp-demo-client-privilege-LAB",
+      "pingProducts": [
+        "privilege-gateway"
+      ]
     },
     {
       "id": "privilege-a2a-anthropic-demo",
@@ -55,7 +61,11 @@
         "real"
       ],
       "where": "installed",
-      "repo": "https://github.com/ping-sandbox/privilege-a2a-anthropic-demo-LAB"
+      "repo": "https://github.com/ping-sandbox/privilege-a2a-anthropic-demo-LAB",
+      "pingProducts": [
+        "privilege-gateway",
+        "pingone"
+      ]
     },
     {
       "id": "id-jag-standalone",
@@ -77,7 +87,10 @@
         "real"
       ],
       "where": "installed",
-      "repo": "https://github.com/ping-sandbox/id-jag-standalone-LAB"
+      "repo": "https://github.com/ping-sandbox/id-jag-standalone-LAB",
+      "pingProducts": [
+        "pingfederate"
+      ]
     },
     {
       "id": "privilege-demo",
@@ -91,14 +104,19 @@
       "port": 4510,
       "catalogId": "D1",
       "tags": [
-        "pingone-privilege",
         "authorization-policy",
         "cedar",
         "mcp",
+        "pingone-privilege",
+        "real",
         "simulated"
       ],
       "where": "installed",
-      "repo": "https://github.com/ping-sandbox/privilege-demo-LAB"
+      "repo": "https://github.com/ping-sandbox/privilege-demo-LAB",
+      "pingProducts": [
+        "pingfederate",
+        "pingone"
+      ]
     },
     {
       "id": "privilege-map",
@@ -115,7 +133,10 @@
         "simulated"
       ],
       "where": "installed",
-      "repo": "https://github.com/ping-sandbox/privilege-map-LAB"
+      "repo": "https://github.com/ping-sandbox/privilege-map-LAB",
+      "pingProducts": [
+        "pingone-privilege"
+      ]
     },
     {
       "id": "agent-mcp-door-demo",
@@ -132,7 +153,11 @@
         "simulated"
       ],
       "where": "installed",
-      "repo": "https://github.com/ping-sandbox/agent-mcp-door-demo-LAB"
+      "repo": "https://github.com/ping-sandbox/agent-mcp-door-demo-LAB",
+      "pingProducts": [
+        "privilege-gateway",
+        "pingone"
+      ]
     },
     {
       "id": "pingone-signin-lab",
@@ -157,7 +182,10 @@
         "pingid"
       ],
       "where": "installed",
-      "repo": "https://github.com/ping-sandbox/pingone-signin-LAB"
+      "repo": "https://github.com/ping-sandbox/pingone-signin-LAB",
+      "pingProducts": [
+        "pingone"
+      ]
     },
     {
       "id": "pingone-lab",
@@ -180,7 +208,10 @@
         "real"
       ],
       "where": "installed",
-      "repo": "https://github.com/ping-sandbox/pingone-LAB"
+      "repo": "https://github.com/ping-sandbox/pingone-LAB",
+      "pingProducts": [
+        "pingone"
+      ]
     },
     {
       "id": "pingfederate-lab",
@@ -204,7 +235,10 @@
         "real"
       ],
       "where": "installed",
-      "repo": "https://github.com/ping-sandbox/pingfederate-LAB"
+      "repo": "https://github.com/ping-sandbox/pingfederate-LAB",
+      "pingProducts": [
+        "pingfederate"
+      ]
     },
     {
       "id": "customer-agent-lab",
@@ -246,17 +280,21 @@
       "name": "Agent Registry Lifecycle",
       "catalogId": "D11",
       "kind": "Demo",
-      "description": "Register an AI agent as a non-human identity, grant it to a tool, rotate it by replacement, retire it, and watch the gateway refuse it (401/403/429). Mock only.",
+      "description": "Register an AI agent as a non-human identity, grant it to a tool, rotate it by replacement, retire it, and watch the gateway refuse it (401/403/429). Mock only. Optional owner-run live checks compare with a real Privilege console.",
       "url": "http://localhost:5010",
       "healthPath": "/api/health",
       "composeFile": "agent-registry-demo-LAB/docker-compose.yml",
       "tags": [
-        "pingone-privilege",
         "agent-identity",
         "ai-agent-security",
+        "pingone-privilege",
+        "real",
         "simulated"
       ],
-      "repo": "https://github.com/ping-sandbox/agent-registry-demo-LAB"
+      "repo": "https://github.com/ping-sandbox/agent-registry-demo-LAB",
+      "pingProducts": [
+        "pingone-privilege"
+      ]
     },
     {
       "id": "ai-guard-sidecar",
@@ -310,7 +348,10 @@
         "simulated",
         "real"
       ],
-      "repo": "https://github.com/ping-sandbox/cimd-LAB"
+      "repo": "https://github.com/ping-sandbox/cimd-LAB",
+      "pingProducts": [
+        "pingfederate"
+      ]
     },
     {
       "id": "diagram-studio",
@@ -345,7 +386,11 @@
         "token-exchange",
         "simulated"
       ],
-      "repo": "https://github.com/ping-sandbox/gateway-claims-LAB"
+      "repo": "https://github.com/ping-sandbox/gateway-claims-LAB",
+      "pingProducts": [
+        "pinggateway",
+        "pingfederate"
+      ]
     },
     {
       "id": "hostile-a2a",
@@ -405,15 +450,16 @@
       "name": "MCP Discovery",
       "catalogId": "D5",
       "kind": "Tester",
-      "description": "Read-only MCP discovery: finds MCP servers, probes tool metadata, flags poisoned or changed metadata (rug-pull). Demo mode: fixtures and stubs only. Plus simulated Ping H2 2026 claims (private network, slide 44 personal agents), UNVERIFIED on our tenant.",
+      "description": "Read-only MCP discovery: finds MCP servers, probes tool metadata, flags poisoned or changed metadata (rug-pull). Demo mode: fixtures and stubs only; live mode points at a server you name. Plus simulated Ping H2 2026 claims (private network, slide 44 personal agents), UNVERIFIED on our tenant.",
       "url": "http://localhost:5310",
       "healthPath": "/api/health",
       "composeFile": "mcp-discovery-LAB/docker-compose.yml",
       "tags": [
-        "mcp-security",
-        "tool-poisoning",
         "mcp",
-        "simulated"
+        "mcp-security",
+        "real",
+        "simulated",
+        "tool-poisoning"
       ],
       "repo": "https://github.com/ping-sandbox/mcp-discovery-LAB"
     },
@@ -448,7 +494,10 @@
         "oauth",
         "simulated"
       ],
-      "repo": "https://github.com/ping-sandbox/p1-third-party-exchange-LAB"
+      "repo": "https://github.com/ping-sandbox/p1-third-party-exchange-LAB",
+      "pingProducts": [
+        "pingone"
+      ]
     },
     {
       "id": "personal-agent-demo",
@@ -468,7 +517,10 @@
         "mcp",
         "simulated"
       ],
-      "repo": "https://github.com/ping-sandbox/personal-agent-demo-LAB"
+      "repo": "https://github.com/ping-sandbox/personal-agent-demo-LAB",
+      "pingProducts": [
+        "pingfederate"
+      ]
     },
     {
       "id": "ping-gateway-route-lab",
@@ -487,7 +539,11 @@
         "oauth",
         "simulated"
       ],
-      "repo": "https://github.com/ping-sandbox/ping-gateway-route-LAB"
+      "repo": "https://github.com/ping-sandbox/ping-gateway-route-LAB",
+      "pingProducts": [
+        "pinggateway",
+        "pingfederate"
+      ]
     },
     {
       "id": "token-workbench",
@@ -505,7 +561,11 @@
         "fapi",
         "simulated"
       ],
-      "repo": "https://github.com/ping-sandbox/token-workbench-LAB"
+      "repo": "https://github.com/ping-sandbox/token-workbench-LAB",
+      "pingProducts": [
+        "pingone",
+        "pingfederate"
+      ]
     },
     {
       "id": "worker-demo",
@@ -540,7 +600,10 @@
         "simulated",
         "pingid"
       ],
-      "repo": "https://github.com/ping-sandbox/session-LAB"
+      "repo": "https://github.com/ping-sandbox/session-LAB",
+      "pingProducts": [
+        "pingone"
+      ]
     },
     {
       "id": "intent-par-inspector",
@@ -557,7 +620,10 @@
         "authorization-policy",
         "simulated"
       ],
-      "repo": "https://github.com/ping-sandbox/intent-par-inspector-LAB"
+      "repo": "https://github.com/ping-sandbox/intent-par-inspector-LAB",
+      "pingProducts": [
+        "pingfederate"
+      ]
     },
     {
       "id": "poppy-agent-tester",
@@ -827,6 +893,9 @@
         "ciba",
         "step-up",
         "pingid"
+      ],
+      "pingProducts": [
+        "pingone"
       ]
     },
     {
@@ -846,6 +915,9 @@
         "real",
         "oauth",
         "mcp"
+      ],
+      "pingProducts": [
+        "pingone"
       ]
     },
     {
@@ -882,6 +954,9 @@
         "simulated",
         "dpop",
         "mtls"
+      ],
+      "pingProducts": [
+        "pingfederate"
       ]
     },
     {
