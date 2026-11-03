@@ -26,6 +26,24 @@ export async function ensureRepo(demo, demoRoot, { exec, timeoutMs = DEPLOY_TIME
   catch { st = null; }
   if (st && st.stdout.trim() !== 'true') return { ok: false, error: 'deploy-dir-not-a-repo', dir };
   if (st && st.stdout.trim() === 'true') {
+    // A detached HEAD is normal for a submodule-style checkout. If it already matches origin/main it is
+    // up to date; if not, refuse with a fix instead of moving the user's checkout silently.
+    let branch;
+    try { branch = (await exec('git', ['-C', dir, 'branch', '--show-current'], { timeoutMs: 15_000 })).stdout.trim(); }
+    catch { branch = null; }
+    if (branch === '') {
+      try {
+        await exec('git', ['-C', dir, 'fetch', 'origin', 'main'], { timeoutMs });
+        const [head, main] = await Promise.all([
+          exec('git', ['-C', dir, 'rev-parse', 'HEAD'], { timeoutMs: 15_000 }),
+          exec('git', ['-C', dir, 'rev-parse', 'origin/main'], { timeoutMs: 15_000 }),
+        ]);
+        if (head.stdout.trim() === main.stdout.trim()) return { ok: true, dir, how: 'up-to-date' };
+        return { ok: false, error: 'detached-head', dir };
+      } catch (e) {
+        return { ok: false, error: 'git-fetch-failed', output: `${e.stdout || ''}\n${e.stderr || ''}` };
+      }
+    }
     try {
       const fw = await exec('git', ['-C', dir, 'pull', '--ff-only'], { timeoutMs });
       return { ok: true, dir, how: /Already up to date/i.test(`${fw.stdout}${fw.stderr}`) ? 'up-to-date' : 'fast-forwarded' };

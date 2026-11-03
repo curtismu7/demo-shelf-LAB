@@ -18,6 +18,8 @@ const WHY = {
   "no-demo-root": "no demo root folder is set (SHELF_DEMO_ROOT); the shelf does not know where to clone",
   "git-clone-failed": "cloning the repo failed. Check the repo URL in Details and your network",
   "git-pull-failed": "updating the repo failed (it may have local changes). Update it from a terminal, then press Start",
+  "detached-head": "the repo folder is on a detached HEAD that is behind main. In that folder run: git checkout main  (then press Deploy again)",
+  "git-fetch-failed": "could not fetch the repo (network?). Try again, or update the folder from a terminal",
   "deploy-dir-not-a-repo": "the deploy folder exists but is not a git clone. Remove or rename it, then press Deploy again",
   "deploy-needs-host-shelf": "Deploy works when the shelf runs on the host (npm start), not in the container",
 };

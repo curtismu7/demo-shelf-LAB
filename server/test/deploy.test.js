@@ -55,6 +55,28 @@ describe('ensureRepo', () => {
     const r = await ensureRepo(demo(), '/demo-root', { exec });
     expect(r).toMatchObject({ ok: false, error: 'git-pull-failed' });
   });
+  it('a detached checkout already at origin/main is up to date, no pull', async () => {
+    const { exec, calls } = fakeExec([
+      ['rev-parse --is-inside-work-tree', { stdout: 'true\n' }],
+      ['branch --show-current', { stdout: '' }],
+      ['fetch origin main', { stdout: '' }],
+      ['rev-parse HEAD', { stdout: 'bf9fc42' }],
+      ['rev-parse origin/main', { stdout: 'bf9fc42' }],
+    ]);
+    const r = await ensureRepo(demo(), '/demo-root', { exec });
+    expect(r).toMatchObject({ ok: true, how: 'up-to-date' });
+    expect(calls.some((c) => c.includes('pull'))).toBe(false);
+  });
+  it('a detached checkout behind origin/main is refused with detached-head', async () => {
+    const { exec } = fakeExec([
+      ['rev-parse --is-inside-work-tree', { stdout: 'true\n' }],
+      ['branch --show-current', { stdout: '' }],
+      ['fetch origin main', { stdout: '' }],
+      ['rev-parse HEAD', { stdout: 'aaa' }],
+      ['rev-parse origin/main', { stdout: 'bbb' }],
+    ]);
+    await expect(ensureRepo(demo(), '/demo-root', { exec })).resolves.toMatchObject({ ok: false, error: 'detached-head' });
+  });
   it('never clones without a validated repo or a root', async () => {
     const { exec } = fakeExec([]);
     await expect(ensureRepo(demo({ repo: undefined }), '/demo-root', { exec })).resolves.toMatchObject({ ok: false, error: 'no-repo' });
