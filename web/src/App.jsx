@@ -14,6 +14,12 @@ const WHY = {
   timeout: "Docker took too long (the first Start builds the image and may need a few minutes). Check the demo's logs",
   busy: "another start or stop for this demo is still running",
   "is-the-shelf": "that entry is the shelf itself, and Stop would take the shelf down. Stop it from a terminal with npm run docker:down",
+  "no-repo": "no GitHub repo is registered for this demo. Use Start",
+  "no-demo-root": "no demo root folder is set (SHELF_DEMO_ROOT); the shelf does not know where to clone",
+  "git-clone-failed": "cloning the repo failed. Check the repo URL in Details and your network",
+  "git-pull-failed": "updating the repo failed (it may have local changes). Update it from a terminal, then press Start",
+  "deploy-dir-not-a-repo": "the deploy folder exists but is not a git clone. Remove or rename it, then press Deploy again",
+  "deploy-needs-host-shelf": "Deploy works when the shelf runs on the host (npm start), not in the container",
 };
 
 async function call(path, method = "GET") {
