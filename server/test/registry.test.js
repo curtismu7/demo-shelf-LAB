@@ -149,7 +149,7 @@ describe('loadRegistry', () => {
     // The demo root is the folder above the shelf repo, the same default the server uses.
     const demoRoot = path.resolve(path.dirname(seed), '..', '..');
     const demos = loadRegistry({ seedFile: seed, localFile: path.join(dir, 'absent.json'), allowedHosts: allowedHostsFromEnv({}), demoRoot });
-    expect(demos).toHaveLength(52); // the 9 seed apps (7 -LAB apps, then pingone-signin-LAB and pingone-LAB), then the other standalone apps, then the nine apps added from their repo shelf entries, then mcp-tools, mcp-scanner and mcp-resource-server
+    expect(demos).toHaveLength(53); // as before, plus deploy-test-LAB (the throwaway app that exercises the Deploy button)
     expect(demos.slice(0, 11).map((d) => [d.id, d.catalogId, d.url])).toEqual([
       ['ai-gateway-client', 'D20', 'http://127.0.0.1:6880'],
       ['mcp-demo-client-privilege', 'D2', 'http://127.0.0.1:6884'],

@@ -955,6 +955,20 @@
         "simulated"
       ],
       "repo": "https://github.com/ping-sandbox/mcp-resource-server-LAB"
+    },
+    {
+      "id": "deploy-test-lab",
+      "name": "Deploy Test LAB",
+      "kind": "Tool",
+      "description": "Throwaway app that exists to exercise the shelf's one-click Deploy: clone, build, run. One page and a demo-health/1 endpoint. Not part of any demo story.",
+      "url": "http://localhost:5590",
+      "healthPath": "/api/health",
+      "composeFile": "deploy-test-LAB/docker-compose.yml",
+      "repo": "https://github.com/ping-sandbox/deploy-test-LAB",
+      "where": "installed",
+      "tags": [
+        "simulated"
+      ]
     }
   ]
 }
