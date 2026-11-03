@@ -1044,6 +1044,74 @@
       "tags": [
         "simulated"
       ]
+    },
+    {
+      "id": "jev-lab",
+      "name": "JEV Decision Model LAB",
+      "catalogId": "D113",
+      "kind": "Tester",
+      "description": "Judge an agent's decisions against a policy: attack/innocent/intent corpora, bake-offs between models, a threshold-policy slider. Mock engine or your own model endpoint.",
+      "url": "http://127.0.0.1:7550",
+      "healthPath": "/api/health",
+      "composeFile": "jev-lab-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "ai-agent-security",
+        "agent-identity",
+        "authorization-policy",
+        "oauth",
+        "learning",
+        "simulated",
+        "real"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/ping-sandbox/jev-lab"
+    },
+    {
+      "id": "obo-lab",
+      "name": "OBO Delegation Inspector LAB",
+      "catalogId": "D111",
+      "kind": "Demo",
+      "description": "Seven steps of RFC 8693 on-behalf-of delegation: sub kept, act added, aud+scope narrowed; downstream accepts the delegated token and refuses the person's own. Mock engine or your PingOne tenant.",
+      "url": "http://127.0.0.1:7560",
+      "healthPath": "/api/health",
+      "composeFile": "obo-lab-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "token-exchange",
+        "agent-identity",
+        "token-security",
+        "oauth",
+        "ai-agent-security",
+        "pingone",
+        "simulated",
+        "real"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/ping-sandbox/obo-lab"
+    },
+    {
+      "id": "jit-lab",
+      "name": "JIT Ephemeral Credentials LAB",
+      "catalogId": "D112",
+      "kind": "Demo",
+      "description": "Standing (30 d) vs just-in-time (300 s, tool-bound) agent credentials; replay the captured copy and watch one stay accepted and the other die; tool revocation. Mock or Real via the shared local PingFederate (rule 20) or your PingOne tenant.",
+      "url": "http://127.0.0.1:7570",
+      "healthPath": "/api/health",
+      "composeFile": "jit-lab-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "token-security",
+        "agent-identity",
+        "token-exchange",
+        "oauth",
+        "pingfederate",
+        "ai-agent-security",
+        "simulated",
+        "real"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/ping-sandbox/jit-lab"
     }
   ]
 }
