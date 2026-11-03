@@ -72,6 +72,8 @@ export default function App() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
+  // Which card action is in flight, as "id/action", so that card can show a spinner while it waits.
+  const [activeAction, setActiveAction] = useState(null);
   const [note, setNote] = useState(null);
   const [announce, setAnnounce] = useState("");
   const [where, setWhere] = useState("all");
@@ -139,6 +141,7 @@ export default function App() {
 
   async function act(id, action) {
     setBusy(true);
+    setActiveAction(`${id}/${action}`);
     setNote(`${action} ${id}...`);
     try {
       await call(`/api/demos/${encodeURIComponent(id)}/${action}`, "POST");
@@ -147,6 +150,7 @@ export default function App() {
       setNote(`${id}: ${action} did not run: ${WHY[e.message] || e.message}`);
     }
     setBusy(false);
+    setActiveAction(null);
     load(true);
   }
 
@@ -332,6 +336,7 @@ export default function App() {
                 <div className="shelf__row">
                   {sec.rows.map((i) => (
                     <Card key={`${i.planned ? "p" : "r"}-${i.id}`} item={i} present={present} startEnabled={data.startEnabled} busy={busy || data.agent === "down" || data.agent === "token-rejected"}
+                      activeAction={activeAction === `${i.id}/start` ? "start" : activeAction === `${i.id}/stop` ? "stop" : activeAction === `${i.id}/deploy` ? "deploy" : null}
                       onAction={act} onCopy={copy} onDetails={showDetails} tagInfo={tagInfo} picked={picked} onTag={toggleTag} />
                   ))}
                 </div>
