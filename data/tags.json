@@ -97,6 +97,17 @@
       ]
     },
     {
+      "id": "content",
+      "label": "Diagram packs",
+      "tags": [
+        {
+          "id": "poc-patterns",
+          "label": "Customer POC patterns",
+          "hint": "Diagrams of proposed customer patterns, for review"
+        }
+      ]
+    },
+    {
       "id": "mode",
       "label": "Simulated or real",
       "tags": [
