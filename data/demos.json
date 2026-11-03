@@ -91,10 +91,11 @@
       "port": 4510,
       "catalogId": "D1",
       "tags": [
-        "pingone-privilege",
         "authorization-policy",
         "cedar",
         "mcp",
+        "pingone-privilege",
+        "real",
         "simulated"
       ],
       "where": "installed",
@@ -246,14 +247,15 @@
       "name": "Agent Registry Lifecycle",
       "catalogId": "D11",
       "kind": "Demo",
-      "description": "Register an AI agent as a non-human identity, grant it to a tool, rotate it by replacement, retire it, and watch the gateway refuse it (401/403/429). Mock only.",
+      "description": "Register an AI agent as a non-human identity, grant it to a tool, rotate it by replacement, retire it, and watch the gateway refuse it (401/403/429). Mock only. Optional owner-run live checks compare with a real Privilege console.",
       "url": "http://localhost:5010",
       "healthPath": "/api/health",
       "composeFile": "agent-registry-demo-LAB/docker-compose.yml",
       "tags": [
-        "pingone-privilege",
         "agent-identity",
         "ai-agent-security",
+        "pingone-privilege",
+        "real",
         "simulated"
       ],
       "repo": "https://github.com/ping-sandbox/agent-registry-demo-LAB"
@@ -405,15 +407,16 @@
       "name": "MCP Discovery",
       "catalogId": "D5",
       "kind": "Tester",
-      "description": "Read-only MCP discovery: finds MCP servers, probes tool metadata, flags poisoned or changed metadata (rug-pull). Demo mode: fixtures and stubs only. Plus simulated Ping H2 2026 claims (private network, slide 44 personal agents), UNVERIFIED on our tenant.",
+      "description": "Read-only MCP discovery: finds MCP servers, probes tool metadata, flags poisoned or changed metadata (rug-pull). Demo mode: fixtures and stubs only; live mode points at a server you name. Plus simulated Ping H2 2026 claims (private network, slide 44 personal agents), UNVERIFIED on our tenant.",
       "url": "http://localhost:5310",
       "healthPath": "/api/health",
       "composeFile": "mcp-discovery-LAB/docker-compose.yml",
       "tags": [
-        "mcp-security",
-        "tool-poisoning",
         "mcp",
-        "simulated"
+        "mcp-security",
+        "real",
+        "simulated",
+        "tool-poisoning"
       ],
       "repo": "https://github.com/ping-sandbox/mcp-discovery-LAB"
     },
