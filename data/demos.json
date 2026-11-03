@@ -153,7 +153,8 @@
         "sign-in-and-mfa",
         "ciba",
         "step-up",
-        "simulated"
+        "simulated",
+        "pingid"
       ],
       "where": "installed",
       "repo": "https://github.com/ping-sandbox/pingone-signin-LAB"
@@ -536,7 +537,8 @@
         "pingone",
         "pingone-davinci",
         "sign-in-and-mfa",
-        "simulated"
+        "simulated",
+        "pingid"
       ],
       "repo": "https://github.com/ping-sandbox/session-LAB"
     },
@@ -823,7 +825,8 @@
         "sign-in-and-mfa",
         "simulated",
         "ciba",
-        "step-up"
+        "step-up",
+        "pingid"
       ]
     },
     {
