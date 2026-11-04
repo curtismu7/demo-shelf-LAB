@@ -1,7 +1,7 @@
 // Parses the standalone-demo-family plan's tables into catalog items. Pure and deterministic:
 // same text in, same items out. Sections it reads: "Catalog" (active, by "### X." group),
 // "Suggested order (waves)", "Backlog", "Retired ids".
-const ID_ROW = /^\|\s*([A-H]\d{1,2})\s*\|/;
+const ID_ROW = /^\|\s*([A-H]\d{1,3})\s*\|/;
 const SEEDS = [['✅', 'built'], ['🟡', 'partial'], ['❌', 'none']];
 
 const clean = (s) => s.replace(/\*\*/g, '').replace(/`/g, '').trim();
@@ -35,7 +35,7 @@ export function parseCatalog(markdown) {
       const m = line.match(/^\|\s*(\d+|Backlog)\s*\|(.*)\|\s*$/);
       if (!m) continue;
       const wave = m[1] === 'Backlog' ? 'backlog' : Number(m[1]);
-      for (const id of m[2].match(/\b[A-H]\d{1,2}\b/g) || []) if (!waveOf.has(id)) waveOf.set(id, wave);
+      for (const id of m[2].match(/\b[A-H]\d{1,3}\b/g) || []) if (!waveOf.has(id)) waveOf.set(id, wave);
       continue;
     }
 
