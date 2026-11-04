@@ -12,17 +12,17 @@ const CACHE_MS = 30_000;
 const HEALTH = {
   pingfederate: {
     container: 'ai-demo-pingfederate',
-    url: 'https://127.0.0.1:9031/pf/heartbeat.ping',
+    url: 'https://local.ping-devops.com:9031/pf/heartbeat.ping',
     ok: [200],
   },
   pinggateway: {
     container: 'ai-demo-ping-gateway',
-    url: 'https://127.0.0.1:3036/mcp',
+    url: 'https://local.ping-devops.com:3036/mcp',
     ok: [200, 401, 405], // 401 = the enforcement point is up and asking for auth
   },
   'privilege-gateway': {
     container: 'ai-demo-ping-mcpgw',
-    url: 'http://127.0.0.1:8623/',
+    url: 'http://local.ping-devops.com:8623/',
     ok: [200],
   },
   pingone: {
@@ -74,7 +74,10 @@ function containerUp(container, exec = execFileSync) {
   try {
     const st = exec('docker', ['--context', 'orbstack', 'ps', '-a', '--filter', `name=^${container}$`, '--format', '{{.Status}}'], { encoding: 'utf8' }).trim();
     return st.startsWith('Up');
-  } catch { return false; }
+  } catch {
+    // No docker CLI (the containerised shelf): the endpoint probe decides on its own.
+    return true;
+  }
 }
 
 export function createPingProducts({ envFile, now = Date.now, exec = execFileSync } = {}) {
