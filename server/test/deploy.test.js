@@ -105,14 +105,15 @@ describe('POST /api/demos/:id/deploy', () => {
     const r2 = await post(mk({ demoRoot: '/x' }), '/api/demos/nope/deploy');
     expect(r2.status).toBe(404);
   });
-  it('refuses without a repo, without a demo root, and under the start agent', async () => {
+  it('refuses without a repo and without a demo root; under the start agent it delegates (one-click deploy in the containerised shelf)', async () => {
     const noRepo = await post(mk({ demoRoot: '/x', demos: [demo({ repo: undefined })] }), '/api/demos/a/deploy');
     expect(noRepo.status).toBe(400);
     const noRoot = await post(mk({}), '/api/demos/a/deploy');
     expect(noRoot.status).toBe(409);
-    const withAgent = await post(mk({ demoRoot: '/x', agent: { ping: async () => 'up', run: async () => ({ status: 200, body: { ok: true } }) } }), '/api/demos/a/deploy');
-    expect(withAgent.status).toBe(409);
-    expect(withAgent.body.error).toBe('deploy-needs-host-shelf');
+    let ran = null;
+    const withAgent = await post(mk({ demoRoot: '/x', agent: { ping: async () => 'up', run: async (id, action) => { ran = { id, action }; return { status: 200, body: { ok: true, deploy: 'cloned' } }; } } }), '/api/demos/a/deploy');
+    expect(withAgent.status).toBe(200);
+    expect(ran).toEqual({ id: 'a', action: 'deploy' });
   });
   it('does not start when the git step fails', async () => {
     const exec = vi.fn(async (file, args) => {

@@ -164,6 +164,7 @@ export function Card({ item, startEnabled, present, busy, activeAction, onAction
         {isUp(s.state) && (
           <>
             <a className="box__open" href={item.url} target="_blank" rel="noopener noreferrer">Open<span className="sr"> {label} in a new tab</span></a>
+            {item.repo && <a className="box__open box__repo" href={item.repo} target="_blank" rel="noopener noreferrer" title="The app's source on GitHub">Repo<span className="sr"> {label} on GitHub</span></a>}
             <span className="box__url mono" title="The URL Open goes to">{item.url}</span>
           </>
         )}

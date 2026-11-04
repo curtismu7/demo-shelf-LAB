@@ -99,9 +99,15 @@ export function createControlRouter({ express, getDemos, onChange, exec = defaul
     busy.add(demo.id);
     try {
       if (req.params.action === 'deploy') {
-        // Host-run only: the start agent protocol does not carry git, and the container has no demo folder.
-        if (agent) return fail(409, 'deploy-needs-host-shelf');
         if (!demo.repo) return fail(400, 'no-repo');
+        if (agent) {
+          // Containerised shelf: the host-side start agent owns the demo root and git. It
+          // clones/fast-forwards the registry-validated repo, then runs compose start.
+          if (!demoRoot) return fail(409, 'no-demo-root');
+          const r = await agent.run(demo.id, 'deploy');
+          if (r.status === 200) onChange?.(demo.id);
+          return res.status(r.status).json(r.body);
+        }
         if (!demoRoot) return fail(409, 'no-demo-root');
         const g = await ensureRepo(demo, demoRoot, { exec });
         if (!g.ok) return res.status(409).json({ ok: false, error: g.error, output: redact(g.output || '') });

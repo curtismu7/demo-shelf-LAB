@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import express from 'express';
 import { isLoopbackAddr, runCompose } from './control.js';
+import { ensureRepo } from './deploy.js';
 import { createInstallChecker } from './install.js';
 
 export const AGENT_PORT_DEFAULT = 4405;
@@ -29,7 +30,7 @@ const digest = (s) => crypto.createHash('sha256').update(String(s)).digest();
 export const sameToken = (a, b) => crypto.timingSafeEqual(digest(a), digest(b));
 
 // `getDemos()` returns the host's registered installed demos; it may throw if the registry is invalid.
-export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir = null, installOptions = {} }) {
+export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir = null, demoRoot = null, installOptions = {} }) {
   const hosts = new Set([`127.0.0.1:${port}`, `localhost:${port}`, `[::1]:${port}`, `host.docker.internal:${port}`]);
   const busy = new Set();
   const installs = createInstallChecker({ getDemos, exec, fileExists, shelfDir, ...installOptions });
@@ -58,7 +59,7 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
     }
   });
 
-  app.post('/v1/demos/:id/:action(start|stop)', async (req, res) => {
+  app.post('/v1/demos/:id/:action(start|stop|deploy)', async (req, res) => {
     let demo;
     try { demo = getDemos().find((d) => d.id === req.params.id); } catch { return res.status(500).json({ ok: false, error: 'registry-invalid' }); }
     if (!demo) return res.status(404).json({ ok: false, error: 'unknown-demo' });
@@ -66,6 +67,14 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
     if (busy.has(demo.id)) return res.status(409).json({ ok: false, error: 'busy' });
     busy.add(demo.id);
     try {
+      if (req.params.action === 'deploy') {
+        if (!demo.repo) return res.status(400).json({ ok: false, error: 'no-repo' });
+        if (!demoRoot) return res.status(409).json({ ok: false, error: 'no-demo-root' });
+        const g = await ensureRepo(demo, demoRoot, { exec });
+        if (!g.ok) return res.status(409).json({ ok: false, error: g.error, output: g.output || '' });
+        const r = await runCompose(demo, 'start', { exec, fileExists, shelfDir });
+        return res.status(r.status).json({ ...r.body, deploy: g.how, dir: g.dir });
+      }
       const r = await runCompose(demo, req.params.action, { exec, fileExists, shelfDir });
       res.status(r.status).json(r.body);
     } catch {

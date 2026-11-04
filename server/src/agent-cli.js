@@ -18,7 +18,8 @@ if (!Number.isInteger(port) || port < 1 || port > 65535) {
 }
 const dataDir = path.resolve(process.env.SHELF_DATA_DIR || path.join(root, '.data'));
 const token = ensureToken(dataDir);
-const agent = createAgent({ getDemos: () => expandWhere(loadAll().demos).filter((d) => d.where === 'installed'), token, port, shelfDir: root });
+const demoRoot = path.resolve(process.env.SHELF_DEMO_ROOT || path.join(root, '..'));
+const agent = createAgent({ getDemos: () => expandWhere(loadAll().demos).filter((d) => d.where === 'installed'), token, port, shelfDir: root, demoRoot });
 agent.listen(port, '127.0.0.1', () => {
   console.log(`start agent on http://127.0.0.1:${port} (token in ${path.join(dataDir, 'agent-token')}). Ctrl-C to stop.`);
   if (process.env.CI || process.env.SHELF_AUTOSTART === '0' || process.env.SHELF_DATA_DIR) return;
