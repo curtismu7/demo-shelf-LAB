@@ -164,10 +164,11 @@ export function Card({ item, startEnabled, present, busy, activeAction, onAction
         {isUp(s.state) && (
           <>
             <a className="box__open" href={item.url} target="_blank" rel="noopener noreferrer">Open<span className="sr"> {label} in a new tab</span></a>
-            {item.repo && <a className="box__open box__repo" href={item.repo} target="_blank" rel="noopener noreferrer" title="The app's source on GitHub">Repo<span className="sr"> {label} on GitHub</span></a>}
             <span className="box__url mono" title="The URL Open goes to">{item.url}</span>
           </>
         )}
+        {/* Rule 20 UX: read the source before deploying — the Repo link renders whenever a repo is registered, up or not. */}
+        {item.repo && <a className="box__open box__repo" href={item.repo} target="_blank" rel="noopener noreferrer" title="The app's source on GitHub">Repo<span className="sr"> {label} on GitHub</span></a>}
         {clone && <CloneCopy name={label} command={clone} />}
         {item.startCommand && <StartCopy item={item} label={label} onCopy={onCopy} />}
         <button type="button" onClick={() => onDetails(item)}>Details<span className="sr"> for {label}</span></button>
