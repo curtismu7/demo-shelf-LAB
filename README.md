@@ -119,6 +119,40 @@ Every -LAB app ships `docs/shelf-entry.json` and a `scripts/shelf-register.mjs`.
 - [docs/security.md](docs/security.md): loopback, no secrets, the Start / Stop allowlist, the read-only install check, the SSRF stance.
 - [CHANGELOG.md](CHANGELOG.md).
 
+## Gateway Suite LAB (D115): useful commands
+
+The newest lab on the shelf, catalog D115. Repo: https://github.com/ping-sandbox/gateway-suite-lab
+
+```bash
+# Open it
+open https://local.ping-devops.com:8443/gateway-suite/   # through the lab-proxy (one domain)
+open http://127.0.0.1:5750/                              # direct loopback
+
+# Container state / logs / restart
+docker ps --filter name=gateway-suite-lab
+docker logs -f gateway-suite-lab
+docker stop gateway-suite-lab && docker start gateway-suite-lab
+
+# Rebuild from scratch
+cd ~/Development/_archived-working-copies/gateway-suite-LAB
+docker --context orbstack compose up --build -d
+
+# Health + mode checks
+curl -s http://127.0.0.1:5750/api/health
+curl -s http://127.0.0.1:5750/api/info
+curl -s -X POST -H 'Content-Type: application/json' -H 'Origin: http://127.0.0.1:5750' \
+  -d '{"source":"real"}' http://127.0.0.1:5750/api/mode   # expect 409 until .env has CENTRAL_AGENT_A2A_URL
+
+# Tests
+cd ~/Development/_archived-working-copies/gateway-suite-LAB
+npm test    # server 25 + web 8
+
+# CI
+gh run list --repo ping-sandbox/gateway-suite-lab --limit 3
+```
+
+Real mode (owner-run): add `CENTRAL_AGENT_A2A_URL` + `CENTRAL_AGENT_A2A_BEARER` to `~/Development/.env`, then `docker restart gateway-suite-lab`; the Real button lights up.
+
 ## Registry and catalog
 
 `data/demos.json` is the committed seed: the -LAB apps. Put your own entries or overrides in `.data/demos.local.json`, merged over the seed by `id`. Details in [docs/registry.md](docs/registry.md).
