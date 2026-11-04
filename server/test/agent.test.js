@@ -10,7 +10,7 @@ import { createAgentClient } from '../src/agent-client.js';
 const TOKEN = 'a'.repeat(64);
 const PORT = 4405;
 const demos = [
-  { id: 'a', composeFile: '/x/a/docker-compose.yml', composeOverlays: [], where: 'installed' },
+  { id: 'a', composeFile: '/x/a/docker-compose.yml', composeOverlays: [], where: 'installed', repo: 'https://github.com/ping-sandbox/a' },
   { id: 'nocompose', composeOverlays: [], where: 'installed' },
 ];
 const okExec = () => vi.fn(async (file, args) => ({ stdout: args[0] === 'context' ? 'orbstack\n' : 'started\n', stderr: '' }));
@@ -21,6 +21,21 @@ const call = (app, method, url, { host = `127.0.0.1:${PORT}`, token = TOKEN } = 
 };
 
 describe('start agent', () => {
+  it('deploy: clones the registry-validated repo into the demo root, then runs compose start; refuses without a demo root', async () => {
+    const exec = vi.fn(async (file, args) => {
+      if (file === 'git' && args.includes('rev-parse')) throw Object.assign(new Error('not a repo'), { stdout: '', stderr: '' });
+      return { stdout: file === 'docker' && args[0] === 'context' ? 'orbstack\n' : 'ok\n', stderr: '' };
+    });
+    const r = await call(mk({ exec, demoRoot: '/x' }), 'post', '/v1/demos/a/deploy');
+    expect(r.status).toBe(200);
+    expect(r.body).toMatchObject({ ok: true, deploy: 'cloned' });
+    expect(exec.mock.calls.some((c) => c[1][0] === 'clone' && String(c[1][1]).endsWith('/a.git'))).toBe(true);
+    expect(exec).toHaveBeenLastCalledWith('docker', ['compose', '-f', '/x/a/docker-compose.yml', 'up', '-d'], { cwd: '/x/a', timeoutMs: 600000 });
+    const noRoot = await call(mk({ exec, demoRoot: null }), 'post', '/v1/demos/a/deploy');
+    expect(noRoot.status).toBe(409);
+    expect(noRoot.body.error).toBe('no-demo-root');
+  });
+
   it('starts a registered demo with the token and runs exactly docker compose up -d', async () => {
     const exec = okExec();
     const r = await call(mk({ exec }), 'post', '/v1/demos/a/start');
