@@ -64,6 +64,18 @@ describe("shelf page", () => {
     const drawerB = screen.getByRole("dialog", { name: "Demo B details" });
     expect(within(drawerB).queryByText("Repo")).toBeNull();
   });
+  it("offers a Repo link on the card for demos with a repo; the link opens the repo URL", async () => {
+    mockFetch(shelf({ startEnabled: true, demos: [{ ...shelf().demos[1], canStart: true, composeFile: "/x/c.yml", repo: "https://github.com/ping-sandbox/agent-kill-switch-LAB" }, ...shelf().demos.filter((d) => d.id !== "b")] }));
+    render(<App />);
+    await screen.findByText("Demo B");
+    const b = screen.getByText("Demo B").closest("article");
+    if (within(b).queryByRole("link", { name: /on GitHub/ }) === null) console.log('DEBUG card html:', b.innerHTML.slice(0, 600));
+    const repo = within(b).getByRole("link", { name: /Repo Demo B \(Installed\) on GitHub/ });
+    expect(repo).toHaveAttribute("href", "https://github.com/ping-sandbox/agent-kill-switch-LAB");
+    expect(repo).toHaveAttribute("target", "_blank");
+    // repo-less demo a: no Repo link on the card
+    expect(within(screen.getByText("Demo A").closest("article")).queryByRole("link", { name: /on GitHub/ })).toBeNull();
+  });
   it("offers Deploy when the app is not running and a repo is registered; not when running or repo-less", async () => {
     mockFetch(shelf({ startEnabled: true, demos: [{ ...shelf().demos[1], canStart: true, composeFile: "/x/c.yml", repo: "https://github.com/ping-sandbox/agent-kill-switch-LAB" }, ...shelf().demos.filter((d) => d.id !== "b")] }));
     render(<App />);
