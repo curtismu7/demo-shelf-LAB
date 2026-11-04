@@ -79,6 +79,31 @@ function StartCopy({ item, label, onCopy }) {
   );
 }
 
+// Copy the app's URL, offered when the app is down (Open only renders when up).
+function UrlCopy({ item, label }) {
+  const [state, setState] = useState(null); // null | "copied" | "blocked"
+  useEffect(() => {
+    if (!state) return undefined;
+    const t = setTimeout(() => setState(null), 2500);
+    return () => clearTimeout(t);
+  }, [state]);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(item.url);
+      setState("copied");
+    } catch {
+      setState("blocked");
+    }
+  };
+  return (
+    <>
+      <button type="button" onClick={copy}>Copy URL<span className="sr"> for {label}</span></button>
+      <span className="box__copied" aria-hidden="true" data-state={state || undefined}>{state === "copied" ? "\u2713 Copied" : state === "blocked" ? "Blocked" : ""}</span>
+      {state === "blocked" && <code className="box__clone mono" title="The URL Open goes to">{item.url}</code>}
+    </>
+  );
+}
+
 const PING_LABELS = {
   pingfederate: "PingFederate",
   pinggateway: "PingGateway",
@@ -171,6 +196,7 @@ export function Card({ item, startEnabled, present, busy, activeAction, onAction
         {item.repo && <a className="box__open box__repo" href={item.repo} target="_blank" rel="noopener noreferrer" title="The app's source on GitHub">Repo<span className="sr"> {label} on GitHub</span></a>}
         {clone && <CloneCopy name={label} command={clone} />}
         {item.startCommand && <StartCopy item={item} label={label} onCopy={onCopy} />}
+        {!isUp(s.state) && item.url && <UrlCopy item={item} label={label} />}
         <button type="button" onClick={() => onDetails(item)}>Details<span className="sr"> for {label}</span></button>
       </div>
     </article>
