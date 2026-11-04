@@ -248,6 +248,35 @@
       "token-exchange",
       "pingone-privilege",
       "mcp"
+    ],
+    "D111": [
+      "token-exchange",
+      "agent-identity",
+      "token-security",
+      "oauth",
+      "ai-agent-security",
+      "pingone",
+      "simulated",
+      "real"
+    ],
+    "D112": [
+      "token-security",
+      "agent-identity",
+      "token-exchange",
+      "oauth",
+      "pingfederate",
+      "ai-agent-security",
+      "simulated",
+      "real"
+    ],
+    "D113": [
+      "ai-agent-security",
+      "agent-identity",
+      "authorization-policy",
+      "oauth",
+      "learning",
+      "simulated",
+      "real"
     ]
   },
   "D110": [
