@@ -380,12 +380,15 @@
    "composeFile": "gateway-claims-LAB/docker-compose.yml",
    "tags": [
     "agent-gateway",
-    "pingone-privilege",
-    "authorization-policy",
     "agent-identity",
+    "authorization-policy",
+    "aws",
+    "aws-agentcore",
+    "aws-bedrock",
     "oauth",
-    "token-exchange",
-    "simulated"
+    "pingone-privilege",
+    "simulated",
+    "token-exchange"
    ],
    "repo": "https://github.com/ping-sandbox/gateway-claims-LAB",
    "pingProducts": [
