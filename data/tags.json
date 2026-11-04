@@ -199,6 +199,24 @@
           "hint": "An MCP server, client or tool we built ourselves."
         }
       ]
+    },
+    {
+      "id": "aws",
+      "label": "AWS",
+      "tags": [
+        {
+          "id": "aws",
+          "label": "AWS"
+        },
+        {
+          "id": "aws-agentcore",
+          "label": "Amazon Bedrock AgentCore"
+        },
+        {
+          "id": "aws-bedrock",
+          "label": "Amazon Bedrock"
+        }
+      ]
     }
   ]
 }
