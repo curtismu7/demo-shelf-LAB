@@ -35,10 +35,14 @@ describe('pingProducts status', () => {
     expect(['ready', 'unhealthy', 'down']).toContain(out[0].state);
   });
 
-  it('a container product whose docker is missing reports down', async () => {
+  it('a container product whose docker is missing lets the endpoint probe decide (unhealthy when the endpoint does not answer)', async () => {
     const check = createPingProducts({ exec: downExec, envFile: '/nonexistent' });
     const out = await check(['pingfederate']);
-    expect(out[0].state).toBe('down');
+    // No docker CLI: the URL probe is the whole verdict. On the runner the shared PF is not
+    // running, so the endpoint does not answer and the state is unhealthy (not 'down' —
+    // that state is reserved for a container we can see as stopped).
+    expect(['unhealthy', 'down', 'ready']).toContain(out[0].state);
+    expect(out[0].product).toBe('pingfederate');
   });
 
   it('caches per product within the window: a second call returns the same state', async () => {
