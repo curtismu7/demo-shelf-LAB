@@ -1066,7 +1066,10 @@
         "real"
       ],
       "where": "installed",
-      "repo": "https://github.com/ping-sandbox/jev-lab"
+      "repo": "https://github.com/ping-sandbox/jev-lab",
+      "pingProducts": [
+        "pingone"
+      ]
     },
     {
       "id": "obo-lab",
@@ -1089,7 +1092,10 @@
         "real"
       ],
       "where": "installed",
-      "repo": "https://github.com/ping-sandbox/obo-lab"
+      "repo": "https://github.com/ping-sandbox/obo-lab",
+      "pingProducts": [
+        "pingone"
+      ]
     },
     {
       "id": "jit-lab",
@@ -1112,7 +1118,10 @@
         "real"
       ],
       "where": "installed",
-      "repo": "https://github.com/ping-sandbox/jit-lab"
+      "repo": "https://github.com/ping-sandbox/jit-lab",
+      "pingProducts": [
+        "pingfederate"
+      ]
     }
   ]
 }
