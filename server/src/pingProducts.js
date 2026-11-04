@@ -9,20 +9,24 @@ import http from 'node:http';
 
 const CACHE_MS = 30_000;
 
+// Shared products publish on the host's loopback. Inside the containerised shelf that host
+// is host.docker.internal (SHELF_PING_HOST overrides); a host-run shelf probes 127.0.0.1.
+const PING_HOST = process.env.SHELF_PING_HOST || (process.env.SHELF_IN_DOCKER ? 'host.docker.internal' : '127.0.0.1');
+
 const HEALTH = {
   pingfederate: {
     container: 'ai-demo-pingfederate',
-    url: 'https://local.ping-devops.com:9031/pf/heartbeat.ping',
+    url: `https://${PING_HOST}:9031/pf/heartbeat.ping`,
     ok: [200],
   },
   pinggateway: {
     container: 'ai-demo-ping-gateway',
-    url: 'https://local.ping-devops.com:3036/mcp',
+    url: `https://${PING_HOST}:3036/mcp`,
     ok: [200, 401, 405], // 401 = the enforcement point is up and asking for auth
   },
   'privilege-gateway': {
     container: 'ai-demo-ping-mcpgw',
-    url: 'http://local.ping-devops.com:8623/',
+    url: `http://${PING_HOST}:8623/`,
     ok: [200],
   },
   pingone: {
