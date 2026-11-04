@@ -19,7 +19,7 @@ git clone https://github.com/ping-sandbox/demo-shelf-LAB.git
 cd demo-shelf-LAB
 npm install
 npm run doctor          # Node, registry, Docker context
-npm run agent           # starts the start agent, builds and starts the shelf container, opens http://127.0.0.1:4400 in your browser
+npm run agent           # starts the start agent, builds and starts the shelf container, opens https://local.ping-devops.com:8443 (the lab-proxy; direct: http://127.0.0.1:4400) in your browser
 ```
 
 Leave that terminal open: it is the start agent.
@@ -38,7 +38,7 @@ How it is detected: the shelf in Docker cannot see your files, so the start agen
 
 Keep this folder next to the demo folders (all under one parent, for example `~/Development`). The shelf finds demos, and demos find the shelf, by sitting side by side.
 
-**Without the container:** `npm run build && npm start` runs the shelf directly on your machine at http://127.0.0.1:4400. It runs Docker itself, so no agent is needed. Use one or the other: both want port 4400.
+**Without the container:** `npm run build && npm start` runs the shelf directly on your machine at https://local.ping-devops.com:8443 (the lab-proxy; direct: http://127.0.0.1:4400). It runs Docker itself, so no agent is needed. Use one or the other: both want port 4400.
 
 ## Settings file
 
@@ -80,7 +80,7 @@ Not applicable: this is a Tool, with nothing to simulate.
 ## Docker
 
 ```
-npm run agent      # leave it running: starts the agent and the container, http://127.0.0.1:4400
+npm run agent      # leave it running: starts the agent and the container, https://local.ping-devops.com:8443 (the lab-proxy; direct: http://127.0.0.1:4400)
 npm run docker     # the container alone (the agent must already be running)
 ```
 
