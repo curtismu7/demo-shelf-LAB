@@ -488,6 +488,16 @@
    "wave": null,
    "status": "active",
    "summary": "One stub exercising every shared Ping service the family deploys (rule 20): shared local PingFederate, PingGateway, Privilege Agent Gateway, PingOne SaaS, PingOne Privilege console, SE-K8s PingFederate. One real, read-only call per service; Mock/Real toggle; proves wiring after setup, provisions nothing."
+  },
+  {
+   "id": "D115",
+   "name": "Demo field guide",
+   "kind": "Tool",
+   "group": "E",
+   "seed": "built",
+   "wave": null,
+   "status": "active",
+   "summary": "JSON-driven card-deck handoff page: each deployment edits data/cards.json (title, base URL, sections, cards) and the page renders it. No baked-in routes, hosts, or credentials; the build refuses credential-shaped card text. Tool tier, port 7590."
   }
  ]
 }
