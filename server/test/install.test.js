@@ -275,8 +275,8 @@ describe('shelf side: /api/shelf never waits for the install check', () => {
     expect(r.body.planned[0]).not.toHaveProperty('install');
   });
   it('carries the validated repo through', async () => {
-    const r = await get(mk(null, { demos: [{ ...demoB, repo: 'https://github.com/ping-sandbox/b-LAB' }, demoA] }));
-    expect(r.body.demos.map((d) => d.repo)).toEqual(['https://github.com/ping-sandbox/b-LAB', null]);
+    const r = await get(mk(null, { demos: [{ ...demoB, repo: 'https://github.com/curtismu7/b-LAB' }, demoA] }));
+    expect(r.body.demos.map((d) => d.repo)).toEqual(['https://github.com/curtismu7/b-LAB', null]);
   });
   it('Start / Stop invalidates that demo\'s install state (and passes the id to the source)', async () => {
     const invalidate = vi.fn();

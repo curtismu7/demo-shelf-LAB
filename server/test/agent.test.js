@@ -10,7 +10,7 @@ import { createAgentClient } from '../src/agent-client.js';
 const TOKEN = 'a'.repeat(64);
 const PORT = 4405;
 const demos = [
-  { id: 'a', composeFile: '/x/a/docker-compose.yml', composeOverlays: [], where: 'installed', repo: 'https://github.com/ping-sandbox/a' },
+  { id: 'a', composeFile: '/x/a/docker-compose.yml', composeOverlays: [], where: 'installed', repo: 'https://github.com/curtismu7/a' },
   { id: 'nocompose', composeOverlays: [], where: 'installed' },
 ];
 const okExec = () => vi.fn(async (file, args) => ({ stdout: args[0] === 'context' ? 'orbstack\n' : 'started\n', stderr: '' }));

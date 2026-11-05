@@ -168,9 +168,9 @@ describe('loadRegistry', () => {
     const seed = new URL('../../data/demos.json', import.meta.url).pathname;
     const demos = loadRegistry({ seedFile: seed, localFile: path.join(dir, 'absent.json'), allowedHosts: allowedHostsFromEnv({}), demoRoot: path.resolve(path.dirname(seed), '..', '..') });
     const pick = (id) => demos.find((d) => d.id === id);
-    expect(pick('mcp-tools')).toMatchObject({ catalogId: 'D3', kind: 'Tester', url: 'http://localhost:4810', repo: 'https://github.com/ping-sandbox/mcp-tools-LAB' });
-    expect(pick('mcp-scanner')).toMatchObject({ catalogId: 'D4', kind: 'Tester', url: 'http://localhost:4810', repo: 'https://github.com/ping-sandbox/mcp-tools-LAB' });
-    expect(pick('mcp-resource-server')).toMatchObject({ catalogId: 'D0', kind: 'Tool', url: 'http://localhost:8081', repo: 'https://github.com/ping-sandbox/mcp-resource-server-LAB' });
+    expect(pick('mcp-tools')).toMatchObject({ catalogId: 'D3', kind: 'Tester', url: 'http://localhost:4810', repo: 'https://github.com/curtismu7/mcp-tools-LAB' });
+    expect(pick('mcp-scanner')).toMatchObject({ catalogId: 'D4', kind: 'Tester', url: 'http://localhost:4810', repo: 'https://github.com/curtismu7/mcp-tools-LAB' });
+    expect(pick('mcp-resource-server')).toMatchObject({ catalogId: 'D0', kind: 'Tool', url: 'http://localhost:8081', repo: 'https://github.com/curtismu7/mcp-resource-server-LAB' });
     const raw = JSON.parse(fs.readFileSync(seed, 'utf8')).demos; // the registry resolves composeFile to an absolute path; the seed keeps the portable form
     expect(Object.fromEntries(['mcp-tools', 'mcp-scanner', 'mcp-resource-server'].map((id) => [id, raw.find((d) => d.id === id).composeFile]))).toEqual({ 'mcp-tools': 'mcp-tools-LAB/docker-compose.yml', 'mcp-scanner': 'mcp-tools-LAB/docker-compose.yml', 'mcp-resource-server': 'mcp-resource-server-LAB/docker-compose.yml' });
     for (const id of ['mcp-tools', 'mcp-scanner', 'mcp-resource-server']) expect(pick(id).tags, id).toContain('mcp-server-built');
@@ -201,8 +201,8 @@ describe('loadRegistry', () => {
 describe('repo field', () => {
   const repoOf = (repo) => validateDemos([{ ...ok, repo }])[0].repo;
   it.each([
-    ['https://github.com/ping-sandbox/demo-shelf-LAB', 'https://github.com/ping-sandbox/demo-shelf-LAB'],
-    ['https://github.com/ping-sandbox/demo-shelf-LAB.git', 'https://github.com/ping-sandbox/demo-shelf-LAB'],
+    ['https://github.com/curtismu7/demo-shelf-LAB', 'https://github.com/curtismu7/demo-shelf-LAB'],
+    ['https://github.com/curtismu7/demo-shelf-LAB.git', 'https://github.com/curtismu7/demo-shelf-LAB'],
     ['https://github.com/a/b.c_d-e', 'https://github.com/a/b.c_d-e'],
   ])('accepts %s', (input, want) => expect(repoOf(input)).toBe(want));
   it('is optional', () => expect(validateDemos([ok])[0]).not.toHaveProperty('repo'));

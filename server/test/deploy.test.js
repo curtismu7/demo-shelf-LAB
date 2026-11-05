@@ -5,14 +5,14 @@ import { deployFolderOf, ensureRepo } from '../src/deploy.js';
 
 const good = { schema: 'demo-health/1', at: '2026-10-21T10:00:00Z', state: 'ready', runtime: 'live', demo: { id: 'a', name: 'A', version: '1' } };
 const fetchFn = vi.fn(async () => new Response(JSON.stringify(good)));
-const demo = (over = {}) => ({ id: 'a', name: 'A', description: 'x', url: 'http://localhost:4500', healthPath: '/api/health', composeFile: '/tmp/a/c.yml', composeOverlays: [], repo: 'https://github.com/ping-sandbox/id-jag-standalone-LAB', ...over });
+const demo = (over = {}) => ({ id: 'a', name: 'A', description: 'x', url: 'http://localhost:4500', healthPath: '/api/health', composeFile: '/tmp/a/c.yml', composeOverlays: [], repo: 'https://github.com/curtismu7/id-jag-standalone-LAB', ...over });
 const mk = (over = {}) => createApp({ demos: [demo()], fetchFn, allowStart: true, ...over });
 const post = (app, p) => request(app).post(p).set('Host', 'localhost:4400').set('Origin', 'http://localhost:4400');
 
 describe('deployFolderOf', () => {
   it('takes the name from a registry-shaped URL only', () => {
-    expect(deployFolderOf('https://github.com/ping-sandbox/id-jag-standalone-LAB')).toBe('id-jag-standalone-LAB');
-    expect(deployFolderOf('https://github.com/ping-sandbox/x.git')).toBeNull(); // .git still on the name
+    expect(deployFolderOf('https://github.com/curtismu7/id-jag-standalone-LAB')).toBe('id-jag-standalone-LAB');
+    expect(deployFolderOf('https://github.com/curtismu7/x.git')).toBeNull(); // .git still on the name
     expect(deployFolderOf('https://github.com/../etc')).toBeNull();
     expect(deployFolderOf('https://evil.example/ping-sandbox/x')).toBeNull();
     expect(deployFolderOf('')).toBeNull();
@@ -37,7 +37,7 @@ describe('ensureRepo', () => {
     const { exec, calls } = fakeExec([['rev-parse', () => { throw Object.assign(new Error('absent'), { stdout: '', stderr: 'No such directory' }); }]]);
     const r = await ensureRepo(demo(), '/demo-root', { exec });
     expect(r).toMatchObject({ ok: true, how: 'cloned', dir: '/demo-root/id-jag-standalone-LAB' });
-    expect(calls.some((c) => c[1] === 'clone' && c[2] === 'https://github.com/ping-sandbox/id-jag-standalone-LAB.git' && c[3] === '/demo-root/id-jag-standalone-LAB')).toBe(true);
+    expect(calls.some((c) => c[1] === 'clone' && c[2] === 'https://github.com/curtismu7/id-jag-standalone-LAB.git' && c[3] === '/demo-root/id-jag-standalone-LAB')).toBe(true);
   });
   it('fast-forwards an existing clone and reports up-to-date when git says so', async () => {
     const { exec } = fakeExec([['rev-parse', { stdout: 'true\n' }], ['pull --ff-only', { stdout: 'Already up to date.\n' }]]);
