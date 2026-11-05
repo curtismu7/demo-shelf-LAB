@@ -121,7 +121,7 @@ Every -LAB app ships `docs/shelf-entry.json` and a `scripts/shelf-register.mjs`.
 
 ## Gateway Suite LAB (D115): useful commands
 
-The newest lab on the shelf, catalog D115. Repo: https://github.com/ping-sandbox/gateway-suite-lab
+The newest lab on the shelf, catalog D115. Repo: https://github.com/curtismu7/gateway-suite-LAB
 
 ```bash
 # Open it
@@ -148,7 +148,7 @@ cd ~/Development/_archived-working-copies/gateway-suite-LAB
 npm test    # server 25 + web 8
 
 # CI
-gh run list --repo ping-sandbox/gateway-suite-lab --limit 3
+gh run list --repo curtismu7/gateway-suite-LAB --limit 3
 ```
 
 Real mode (owner-run): add `CENTRAL_AGENT_A2A_URL` + `CENTRAL_AGENT_A2A_BEARER` to `~/Development/.env`, then `docker restart gateway-suite-lab`; the Real button lights up.
