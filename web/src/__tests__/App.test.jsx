@@ -149,14 +149,14 @@ describe("shelf page", () => {
     render(<App />);
     await screen.findByRole("heading", { name: "Demo A" });
     const up = cardOf("Demo A");
-    expect(up.getByRole("button", { name: /^Stop/ })).toBeEnabled();
-    expect(up.getByRole("button", { name: /^Stop/ })).toHaveAttribute("title", "Stops only Demo A; the shelf keeps running");
+    expect(up.getByRole("button", { name: /^Stop (?!all)/ })).toBeEnabled();
+    expect(up.getByRole("button", { name: /^Stop (?!all)/ })).toHaveAttribute("title", "Stops only Demo A; the shelf keeps running");
     expect(up.getByRole("button", { name: /^Start/ })).toBeDisabled();
     expect(up.getByRole("button", { name: /^Start/ })).toHaveAttribute("title", "Already running");
     const down = cardOf("Demo B");
     expect(down.getByRole("button", { name: /^Start/ })).toBeEnabled();
-    expect(down.getByRole("button", { name: /^Stop/ })).toBeDisabled();
-    expect(down.getByRole("button", { name: /^Stop/ })).toHaveAttribute("title", "Not running");
+    expect(down.getByRole("button", { name: /^Stop (?!all)/ })).toBeDisabled();
+    expect(down.getByRole("button", { name: /^Stop (?!all)/ })).toHaveAttribute("title", "Not running");
   });
   it("disables both, saying why, when the demo has no compose file", async () => {
     mockFetch(shelf({ startEnabled: true, agent: "up" }));
@@ -175,7 +175,7 @@ describe("shelf page", () => {
     vi.stubGlobal("fetch", f);
     render(<App />);
     await screen.findByRole("heading", { name: "Demo A" });
-    fireEvent.click(cardOf("Demo A").getByRole("button", { name: /^Stop/ }));
+    fireEvent.click(cardOf("Demo A").getByRole("button", { name: /^Stop (?!all)/ }));
     expect(await screen.findByText("a: stop done")).toBeInTheDocument();
     const posts = f.mock.calls.filter(([url, init]) => init?.method === "POST" && url.startsWith("/api/demos/")).map(([url]) => url);
     expect(posts).toEqual(["/api/demos/a/stop"]); // the follow-up /api/shelf/refresh is the page reloading, not another demo
@@ -185,25 +185,25 @@ describe("shelf page", () => {
     vi.stubGlobal("fetch", vi.fn(async (url, init) => (init?.method === "POST" ? { ok: false, json: async () => ({ error: "is-the-shelf" }) } : { ok: true, json: async () => body })));
     render(<App />);
     await screen.findByRole("heading", { name: "Demo A" });
-    fireEvent.click(cardOf("Demo A").getByRole("button", { name: /^Stop/ }));
+    fireEvent.click(cardOf("Demo A").getByRole("button", { name: /^Stop (?!all)/ }));
     expect(await screen.findByText(/that entry is the shelf itself/)).toBeInTheDocument();
   });
   it("hides Start and Stop unless the server enables them, on mock cards, and in Present mode", async () => {
     mockFetch(shelf());
     const { unmount } = render(<App />);
     await screen.findByText("Demo A");
-    expect(screen.queryByRole("button", { name: /^(Start|Stop)/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /^(Start|Stop) (?!all)/ })).toBeNull();
     unmount();
     const body = shelf({ startEnabled: true, agent: "up" });
     body.demos.push({ id: "m", name: "Demo M", where: "mock", kind: "Demo", group: "C", wave: 0, description: "hosted copy", url: "https://m.example", canStart: false, status: st("ready") });
     mockFetch(body);
     render(<App />);
     await screen.findByRole("heading", { name: "Demo M" });
-    expect(cardOf("Demo M").queryByRole("button", { name: /^(Start|Stop)/ })).toBeNull();
-    expect(cardOf("Demo A").getByRole("button", { name: /^Stop/ })).toBeInTheDocument();
+    expect(cardOf("Demo M").queryByRole("button", { name: /^(Start|Stop) (?!all)/ })).toBeNull();
+    expect(cardOf("Demo A").getByRole("button", { name: /^Stop (?!all)/ })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Present" }));
     expect(document.documentElement.dataset.present).toBe("1");
-    expect(screen.queryByRole("button", { name: /^(Start|Stop)/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /^(Start|Stop) (?!all)/ })).toBeNull();
   });
   it("warns when the start agent is down and disables Start", async () => {
     const body = shelf({ startEnabled: true, agent: "down" });

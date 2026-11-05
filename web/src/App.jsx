@@ -238,6 +238,33 @@ export default function App() {
     load(true);
   }
 
+  // Stop all: stop every up demo, serially. Skips the shelf itself (stopping the
+  // shelf from the shelf would take the page down mid-run).
+  const [stopAllRunning, setStopAllRunning] = useState(false);
+  async function stopAll() {
+    if (!data || stopAllRunning) return;
+    const targets = data.demos.filter((d) => !d.isShelf && d.status?.state === "up" && d.canStart);
+    if (!targets.length) { setAnnounce("Nothing is running"); setNote("Nothing to stop — no demos are up."); return; }
+    setStopAllRunning(true);
+    let okCount = 0; const failed = [];
+    for (const d of targets) {
+      setNote(`stop-all: ${d.name} (${okCount}/${targets.length} done)...`);
+      try {
+        await call(`/api/demos/${encodeURIComponent(d.id)}/stop`, "POST");
+        okCount += 1;
+      } catch (e) {
+        failed.push(d.name);
+        setNote(`stop-all: ${d.name} failed — continuing (${WHY[e.message] || e.message})`);
+      }
+    }
+    setStopAllRunning(false);
+    setAnnounce(`Stop all finished: ${okCount} stopped, ${failed.length} failed`);
+    setNote(failed.length
+      ? `Stop all: ${okCount} stopped, ${failed.length} failed (${failed.join(", ")}).`
+      : `Stop all: all ${okCount} demos stopped. The shelf stays up.`);
+    load(true);
+  }
+
   function showDetails(item) {
     opener.current = document.activeElement;
     setOpen({ planned: item.planned, id: item.id });
@@ -328,7 +355,10 @@ export default function App() {
             ))}
           </div>
           <button type="button" aria-pressed={present} onClick={() => setPresent((p) => !p)}>Present</button>
-          <button type="button" onClick={deployAll} disabled={busy || deployAllRunning} aria-busy={deployAllRunning || undefined}>
+          <button type="button" onClick={stopAll} disabled={busy || stopAllRunning || deployAllRunning} aria-busy={stopAllRunning || undefined} title="Stops every running demo; the shelf stays up">
+            {stopAllRunning && <span className="spin" aria-hidden="true" />}Stop all
+          </button>
+          <button type="button" onClick={deployAll} disabled={busy || deployAllRunning || stopAllRunning} aria-busy={deployAllRunning || undefined}>
             {deployAllRunning && <span className="spin" aria-hidden="true" />}Deploy all
           </button>
           <button type="button" onClick={() => load(true)}>Refresh</button>
