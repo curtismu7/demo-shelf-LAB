@@ -46,6 +46,30 @@
   gap: 4px;
 }
 
+/* Ping UI standard: secondary/utility actions are outlined, pill-shaped, 600 weight,
+   Montserrat (the family font). Primary keeps the red gradient (standalone-ui.css). */
+.top__tools button,
+.note button {
+  border-radius: 999px;
+  font-weight: 600;
+  font-family: var(--font-primary);
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.top__tools button:hover,
+.note button:hover {
+  border-color: var(--accent);
+}
+
+.top__tools button[aria-pressed="true"] {
+  background: var(--accent-gradient);
+  color: var(--on-accent);
+  border-color: var(--primary-edge);
+}
+
 .room {
   display: grid;
   gap: 20px;
