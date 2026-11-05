@@ -188,8 +188,10 @@ export function Card({ item, startEnabled, present, busy, activeAction, onAction
         })()}
         {isUp(s.state) && (
           <>
-            <a className="box__open" href={item.url} target="_blank" rel="noopener noreferrer">Open<span className="sr"> {label} in a new tab</span></a>
-            <span className="box__url mono" title="The URL Open goes to">{item.url}</span>
+            {/* Owner rule: users always get the lab-proxy domain, never a loopback URL.
+                Labs without a proxy route fall back to their direct URL. */}
+            <a className="box__open" href={item.proxyUrl || item.url} target="_blank" rel="noopener noreferrer" title={item.proxyUrl ? "Opens through the lab-proxy (local.ping-devops.com)" : undefined}>Open<span className="sr"> {label} in a new tab</span></a>
+            <span className="box__url mono" title="The URL Open goes to">{item.proxyUrl || item.url}</span>
           </>
         )}
         {/* Rule 20 UX: read the source before deploying — the Repo link renders whenever a repo is registered, up or not. */}

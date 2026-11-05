@@ -158,6 +158,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
       description: d.description,
       tags: d.tags ?? [],
       url: d.url,
+      proxyUrl: PROXY_PATHS[d.id] ? `https://local.ping-devops.com:8443${PROXY_PATHS[d.id]}` : null,
       where: d.where,
       wave: byCatalogId.get(d.catalogId)?.wave ?? null,
       canStart: allowStart && Boolean(d.composeFile),
@@ -175,6 +176,27 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     return { schema: 'demo-shelf/1', generatedAt: new Date().toISOString(), installPending: inst.pending, startEnabled: allowStart, agent: agentState, groups: catalog?.groups || {}, tagGroups: tags?.groups || [], demos: registered, planned };
   }
 
+  // Labs reachable through the lab-proxy (https://local.ping-devops.com:8443/<path>/).
+  // Keyed by shelf id; keep in sync with shared/lab-proxy/nginx.conf routes.
+  const PROXY_PATHS = {
+    'ai-gateway-client': '/ai-gateway-client/',
+    'ai-guard-sidecar': '/ai-guard-sidecar/',
+    'agentcore-pingone-demo': '/agentcore-pingone/',
+    'ciba-hitl-lab': '/ciba-hitl-lab/',
+    'cimd-lab': '/cimd-lab/',
+    'customer-agent': '/customer-agent/',
+    'gateway-claims': '/gateway-claims/',
+    'gateway-suite-lab': '/gateway-suite/',
+    'hostile-mcp': '/hostile-mcp/',
+    'meridian-a2a-hop': '/meridian-a2a-hop/',
+    'no-tool-no-promise': '/no-tool-no-promise/',
+    'pingfederate-lab': '/pingfederate-lab/',
+    'pingone-lab': '/pingone-lab/',
+    'privilege-demo': '/privilege-demo/',
+    'token-workbench': '/token-workbench/',
+    'agent-kill-switch': '/agent-kill-switch/',
+    'agent-registry-demo': '/agent-registry-demo/',
+  };
   app.get('/api/shelf', async (req, res, next) => {
     try { res.set('Cache-Control', 'no-store').json(await shelf(await poller.get())); } catch (e) { next(e); }
   });

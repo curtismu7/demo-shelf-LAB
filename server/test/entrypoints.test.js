@@ -51,22 +51,24 @@ describe('entry points', () => {
     }
   });
 
-  it('npm run docker refuses when Docker is not OrbStack, and otherwise hands compose the token only through the environment', () => {
+  it('npm run docker works with any running Docker engine (desktop-linux or orbstack) and hands compose the token only through the environment', () => {
     const bin = fs.mkdtempSync(path.join(os.tmpdir(), 'shelf-fakebin-'));
     const log = path.join(bin, 'log.txt');
-    const fake = (ctx) => fs.writeFileSync(path.join(bin, 'docker'), `#!/bin/sh\nif [ "$1" = context ]; then echo ${ctx}; exit 0; fi\nprintf '%s ' "$@" >> "${log}"\nprintf 'TOKEN_SET=%s\\n' "\${SHELF_AGENT_TOKEN:+yes}" >> "${log}"\n`, { mode: 0o755 });
-    const run = () => spawnSync('node', ['scripts/docker-up.mjs', 'up'], { cwd: repo, env: clean({ PATH: `${bin}:${process.env.PATH}`, SHELF_OPEN: '0' }), encoding: 'utf8', timeout: 20000 });
+    // fake docker: `info` must succeed for the engine check; context is informational only
+    const fake = (ctx, infoOk = true) => fs.writeFileSync(path.join(bin, 'docker'), `#!/bin/sh\nif [ "$1" = info ]; then [ "\${FAKE_INFO_OK:-1}" = 1 ] && exit 0 || exit 1; fi\nprintf '%s ' "$@" >> "${log}"\nprintf 'TOKEN_SET=%s\\n' "\${SHELF_AGENT_TOKEN:+yes}" >> "${log}"\n`, { mode: 0o755 });
+    const run = (infoOk = 1) => spawnSync('node', ['scripts/docker-up.mjs', 'up'], { cwd: repo, env: clean({ PATH: `${bin}:${process.env.PATH}`, SHELF_OPEN: '0', FAKE_INFO_OK: String(infoOk) }), encoding: 'utf8', timeout: 20000 });
+    // engine answers (desktop-linux context): proceeds to compose
     fake('desktop-linux');
-    const bad = run();
-    expect(bad.status).toBe(1);
-    expect(bad.stderr).toMatch(/not orbstack/);
-    expect(fs.existsSync(log)).toBe(false);
-    fake('orbstack');
     const good = run();
     expect(good.status).toBe(0);
     expect(fs.readFileSync(log, 'utf8')).toBe('compose up -d --build TOKEN_SET=yes\n');
     const token = fs.readFileSync(path.join(repo, '.data', 'agent-token'), 'utf8').trim();
     expect(good.stdout + good.stderr).not.toContain(token);
+    // engine does not answer: exits 1 with a clear message
+    fake('orbstack');
+    const bad = run(0);
+    expect(bad.status).toBe(1);
+    expect(bad.stderr).toMatch(/Docker is not running/);
   });
   describe('npm run docker opens the browser', { timeout: 60000 }, () => {
     const setup = () => {
