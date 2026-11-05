@@ -121,7 +121,7 @@ Every -LAB app ships `docs/shelf-entry.json` and a `scripts/shelf-register.mjs`.
 
 ## Gateway Suite LAB (D115): useful commands
 
-The newest lab on the shelf, catalog D115. Repo: https://github.com/ping-sandbox/gateway-suite-lab
+The newest lab on the shelf, catalog D115. Repo: https://github.com/curtismu7/gateway-suite-LAB
 
 ```bash
 # Open it
