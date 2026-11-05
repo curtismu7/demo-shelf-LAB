@@ -3,7 +3,7 @@
 The launcher for every Ping demo on your machine: one page, one card per demo, a status light on each, and a Start or Stop button that works through Docker.
 
 Tier: Tool
-Repo: https://github.com/ping-sandbox/demo-shelf-LAB
+Repo: https://github.com/curtismu7/demo-shelf-LAB
 Catalog: E2
 
 ## What is simulated
@@ -15,7 +15,7 @@ Nothing. The shelf shows the real state of the demos running on your machine. Th
 Needs Node 26 and OrbStack (Docker). Never Docker Desktop. Two processes, both on your machine:
 
 ```
-git clone https://github.com/ping-sandbox/demo-shelf-LAB.git
+git clone https://github.com/curtismu7/demo-shelf-LAB.git
 cd demo-shelf-LAB
 npm install
 npm run doctor          # Node, registry, Docker context
@@ -106,7 +106,7 @@ On Node 26: 289 server tests and 77 web tests pass. `npm run e2e` drives a real 
 
 ## Ownership
 
-Owner: the Ping AI demo family maintainers. Licence: MIT ([LICENSE](LICENSE)). Report problems as an issue on https://github.com/ping-sandbox/demo-shelf-LAB.
+Owner: the Ping AI demo family maintainers. Licence: MIT ([LICENSE](LICENSE)). Report problems as an issue on https://github.com/curtismu7/demo-shelf-LAB.
 
 ## How demos get on the shelf
 
