@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Card, Drawer } from "./Card.jsx";
 import { LABELS, STATES } from "./status.js";
+import ShelfLink from "./components/ShelfLink.jsx";
 
 const REFRESH_MS = 30000;
 
@@ -243,6 +244,7 @@ export default function App() {
           <p className="top__sub">Every Ping demo you can run on your laptop. Green is up. Grey is waiting for you to start it.</p>
         </div>
         <div className="top__tools">
+            <ShelfLink />
           <div role="group" aria-label="Theme" className="seg">
             {THEMES.map(([v, label]) => (
               <button key={v} type="button" aria-pressed={theme === v} onClick={() => setTheme(v)}>{label}</button>
