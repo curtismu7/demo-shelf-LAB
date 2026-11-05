@@ -1053,7 +1053,7 @@
    "id": "jev-lab",
    "name": "JEV Decision Model LAB",
    "catalogId": "D113",
-   "kind": "Tester",
+   "kind": "Demo",
    "description": "Judge an agent's decisions against a policy: attack/innocent/intent corpora, bake-offs between models, a threshold-policy slider. Mock engine or your own model endpoint.",
    "url": "http://127.0.0.1:7550",
    "healthPath": "/api/health",

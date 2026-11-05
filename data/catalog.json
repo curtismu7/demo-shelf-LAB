@@ -41,7 +41,7 @@
   {
    "id": "A19",
    "name": "PingGateway route lab",
-   "kind": "Demo/Tester",
+   "kind": "Demo",
    "group": "A",
    "seed": "built",
    "wave": 3,
@@ -473,7 +473,7 @@
   {
    "id": "D113",
    "name": "JEV decision model lab",
-   "kind": "Tester",
+   "kind": "Demo",
    "group": "D",
    "seed": "built",
    "wave": null,
