@@ -133,6 +133,18 @@ describe('start/stop', () => {
     expect([r.status, r.body.error]).toEqual([403, 'bad-origin']);
     expect(exec).not.toHaveBeenCalled();
   });
+  it('behind the lab-proxy: Origin matching X-Forwarded-Host is accepted', async () => {
+    const exec = okExec();
+    const r = await post(app(exec), '/api/demos/a/start', { Origin: 'https://local.ping-devops.com:8443', 'X-Forwarded-Host': 'local.ping-devops.com:8443' });
+    expect(r.status).toBe(200);
+    expect(r.body).toMatchObject({ ok: true, action: 'start' });
+  });
+  it('behind the lab-proxy: a foreign Origin is still refused even with X-Forwarded-Host', async () => {
+    const exec = okExec();
+    const r = await post(app(exec), '/api/demos/a/start', { Origin: 'http://evil.example', 'X-Forwarded-Host': 'local.ping-devops.com:8443' });
+    expect([r.status, r.body.error]).toEqual([403, 'bad-origin']);
+    expect(exec).not.toHaveBeenCalled();
+  });
   it('refuses a non-loopback peer', async () => {
     const exec = okExec();
     const a = app(exec);
