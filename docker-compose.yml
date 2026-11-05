@@ -6,6 +6,7 @@ services:
     image: demo-shelf-lab:local
     ports: ["127.0.0.1:${SHELF_HOST_PORT:-4400}:4400"]
     environment:
+      SHELF_URL: ${SHELF_URL:-}
       SHELF_DEMO_ROOT: ${SHELF_DEMO_ROOT:?run npm run docker}
       SHELF_AGENT_URL: http://host.docker.internal:${SHELF_AGENT_PORT:-4405}
       SHELF_ALLOWED_HOSTS: ${SHELF_ALLOWED_HOSTS:-}
