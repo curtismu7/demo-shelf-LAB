@@ -14,10 +14,11 @@ loadShelfEnv(root);
 const action = process.argv[2] === 'down' ? 'down' : 'up';
 
 try {
-  const ctx = execFileSync('docker', ['context', 'show'], { encoding: 'utf8' }).trim();
-  if (ctx !== 'orbstack') throw new Error(`Docker's context is "${ctx}", not orbstack. Run: docker context use orbstack`);
+  // Any working Docker engine is fine (OrbStack preferred, Docker Desktop works).
+  // Only fail when docker itself is missing or the daemon does not answer.
+  execFileSync('docker', ['info'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
 } catch (e) {
-  console.error(e.code === 'ENOENT' ? 'docker not found. Install OrbStack (open -a OrbStack).' : e.message);
+  console.error(e.code === 'ENOENT' ? 'docker not found. Install OrbStack (open -a OrbStack).' : 'Docker is not running (docker info failed). Start OrbStack and re-run.');
   process.exit(1);
 }
 
