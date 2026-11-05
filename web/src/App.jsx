@@ -76,6 +76,8 @@ export default function App() {
   // Which card action is in flight, as "id/action", so that card can show a spinner while it waits.
   const [activeAction, setActiveAction] = useState(null);
   const [note, setNote] = useState(null);
+  // Update notice from the family's UPDATES.md: { notice, updateCommand } or null.
+  const [updateNotice, setUpdateNotice] = useState(null);
   const [announce, setAnnounce] = useState("");
   const [where, setWhere] = useState("all");
   const [kind, setKind] = useState("all");
@@ -116,6 +118,13 @@ export default function App() {
     document.addEventListener("visibilitychange", tick);
     return () => { clearInterval(t); document.removeEventListener("visibilitychange", tick); };
   }, [load]);
+
+  // Update notice: fetched once per page load; the server caches upstream for 5 min.
+  useEffect(() => {
+    fetch("/api/notice").then((r) => r.json()).then((b) => {
+      if (b && b.notice) setUpdateNotice(b);
+    }).catch(() => { /* no notice is fine */ });
+  }, []);
 
   useEffect(() => {
     if (present) document.documentElement.dataset.present = "1";
@@ -256,6 +265,16 @@ export default function App() {
       </header>
       <main className="room">
         <div className="sr" role="status" aria-live="polite">{announce}</div>
+        {updateNotice && (
+          <div className="note" data-state="warn" role="status">
+            <strong>Updates available.</strong> {updateNotice.notice}
+            <div style={{ marginTop: 8, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+              <code style={{ fontSize: "0.85em", wordBreak: "break-all" }}>{updateNotice.updateCommand}</code>
+              <button type="button" onClick={() => { copyText(updateNotice.updateCommand); setAnnounce("Update command copied"); }}>Copy</button>
+            </div>
+            <p style={{ marginTop: 6, marginBottom: 0 }}>Run it in a terminal — it updates the demos and keeps everything else. Safe to re-run.</p>
+          </div>
+        )}
         {error && <div className="note" data-state="error" role="alert">Cannot reach the shelf server ({error}). {data ? "Showing the last known state." : "Is it running?"}</div>}
         {note && !present && <div className="note" role="status">{note}</div>}
         {data?.agent === "token-rejected" && !present && (

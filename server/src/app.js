@@ -76,6 +76,29 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
   // demo-health/1 (docs/health-contract.md): public, GET only, no detail.
   app.get('/api/health', (req, res) => res.json({ schema: 'demo-health/1', at: new Date().toISOString(), state: 'ready', runtime: 'offline', demo: { id: 'demo-shelf-LAB', name: 'Demo Shelf LAB', version: VERSION } }));
 
+  // Update notice from the meta-repo's UPDATES.md (owner-edited, fetched from
+  // GitHub). Cached for 5 minutes; empty/failed fetch = no banner. The user's
+  // update action is always the same: re-run the install command.
+  const noticeUrl = process.env.SHELF_NOTICE_URL
+    || 'https://raw.githubusercontent.com/curtismu7/AI-DEMO-Standalone/main/UPDATES.md';
+  let noticeCache = { at: 0, body: null };
+  app.get('/api/notice', async (req, res) => {
+    const nowMs = Date.now();
+    if (nowMs - noticeCache.at > 5 * 60 * 1000) {
+      try {
+        const r = await (fetchFn || fetch)(noticeUrl, { signal: AbortSignal.timeout(8000) });
+        const text = r.ok ? await r.text() : '';
+        const marker = '<!-- SHELF NOTICE BELOW — text after this marker is shown to users -->';
+        const idx = text.indexOf(marker);
+        noticeCache = { at: nowMs, body: idx >= 0 ? text.slice(idx + marker.length).trim() : '' };
+      } catch {
+        noticeCache = { at: nowMs, body: noticeCache.body ?? '' };
+      }
+    }
+    res.set('Cache-Control', 'no-store');
+    res.json({ notice: noticeCache.body || null, updateCommand: 'curl -fsSL https://raw.githubusercontent.com/curtismu7/AI-DEMO-Standalone/main/scripts/install.sh | bash' });
+  });
+
   const poller = createPoller({ getDemos: () => demos, fetchFn, now, random, wait });
   const install = createInstallState({ source: installSource, now });
   // Rule 20: which shared Ping products each demo needs, and whether they are shared-and-healthy.

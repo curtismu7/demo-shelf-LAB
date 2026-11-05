@@ -321,15 +321,19 @@ describe("shelf page", () => {
     const f = mockFetch(shelf());
     render(<App />);
     await screen.findByText("Demo A");
-    expect(f).toHaveBeenCalledTimes(1);
+    await act(async () => {}); // flush the one-shot mounts (/api/notice, shelf link)
+    // Mount-time calls are: the shelf + whatever one-shot services fetch (notice,
+    // shelf link). The refresh schedule is what this test proves: exactly ONE more
+    // fetch per visible 30 s tick, none while hidden.
+    const base = f.mock.calls.length;
     await act(async () => { vi.advanceTimersByTime(30000); });
-    expect(f).toHaveBeenCalledTimes(2);
+    expect(f.mock.calls.length).toBe(base + 1);
     Object.defineProperty(document, "hidden", { value: true, configurable: true });
     await act(async () => { vi.advanceTimersByTime(90000); });
-    expect(f).toHaveBeenCalledTimes(2);
+    expect(f.mock.calls.length).toBe(base + 1);
     Object.defineProperty(document, "hidden", { value: false, configurable: true });
     await act(async () => { document.dispatchEvent(new Event("visibilitychange")); });
-    expect(f).toHaveBeenCalledTimes(3);
+    expect(f.mock.calls.length).toBe(base + 2);
   });
   it("manual Refresh posts to the refresh endpoint", async () => {
     const f = mockFetch(shelf());
