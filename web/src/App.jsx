@@ -211,6 +211,33 @@ export default function App() {
     return ok;
   }
 
+  // Deploy-all: bring every down/not-installed demo up, one at a time (the start
+  // agent is serial anyway). Progress lands in the note line as each finishes.
+  const [deployAllRunning, setDeployAllRunning] = useState(false);
+  async function deployAll() {
+    if (!data || deployAllRunning) return;
+    const targets = data.demos.filter((d) => !d.isShelf && ["down", "not-installed", "broken"].includes(d.status?.state));
+    if (!targets.length) { setAnnounce("Everything is already up"); setNote("Nothing to deploy — every demo is up."); return; }
+    setDeployAllRunning(true);
+    let okCount = 0; const failed = [];
+    for (const d of targets) {
+      setNote(`deploy-all: ${d.name} (${okCount}/${targets.length} done)...`);
+      try {
+        await call(`/api/demos/${encodeURIComponent(d.id)}/deploy`, "POST");
+        okCount += 1;
+      } catch (e) {
+        failed.push(d.name);
+        setNote(`deploy-all: ${d.name} failed — continuing (${WHY[e.message] || e.message})`);
+      }
+    }
+    setDeployAllRunning(false);
+    setAnnounce(`Deploy all finished: ${okCount} up, ${failed.length} failed`);
+    setNote(failed.length
+      ? `Deploy all: ${okCount} up, ${failed.length} failed (${failed.join(", ")}). Check the failed demo's Details for the reason.`
+      : `Deploy all: all ${okCount} demos are up.`);
+    load(true);
+  }
+
   function showDetails(item) {
     opener.current = document.activeElement;
     setOpen({ planned: item.planned, id: item.id });
@@ -301,6 +328,9 @@ export default function App() {
             ))}
           </div>
           <button type="button" aria-pressed={present} onClick={() => setPresent((p) => !p)}>Present</button>
+          <button type="button" onClick={deployAll} disabled={busy || deployAllRunning} aria-busy={deployAllRunning || undefined}>
+            {deployAllRunning && <span className="spin" aria-hidden="true" />}Deploy all
+          </button>
           <button type="button" onClick={() => load(true)}>Refresh</button>
         </div>
       </header>
