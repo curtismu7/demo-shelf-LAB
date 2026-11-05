@@ -91,7 +91,12 @@ export function createControlRouter({ express, getDemos, onChange, exec = defaul
     const fail = (code, error) => res.status(code).json({ ok: false, error });
     if (!inDocker && !isLoopbackAddr(req.socket.remoteAddress)) return fail(403, 'loopback-only');
     // Same-origin: a browser POST always carries Origin. A missing or foreign one is refused.
-    if (!req.headers.origin || req.headers.origin !== `http://${req.headers.host}`) return fail(403, 'bad-origin');
+    // Behind the lab-proxy the browser's Origin is https://local.ping-devops.com:8443 while the
+    // proxied Host header is the lab's own; the proxy forwards the original as X-Forwarded-*,
+    // and that pair becomes the expected origin.
+    const xfHost = req.headers['x-forwarded-host'];
+    const expectedOrigin = xfHost ? `${req.headers['x-forwarded-proto'] || 'https'}://${xfHost}` : `http://${req.headers.host}`;
+    if (!req.headers.origin || req.headers.origin !== expectedOrigin) return fail(403, 'bad-origin');
     const demo = getDemos().find((d) => d.id === req.params.id);
     if (!demo) return fail(404, 'unknown-demo');
     if (!demo.composeFile) return fail(400, 'no-compose-file');

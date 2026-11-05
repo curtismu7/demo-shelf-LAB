@@ -320,18 +320,24 @@ export default function App() {
             <p style={{ marginTop: 6, marginBottom: 0 }}>Run it in a terminal to get these updates. Safe to re-run. This panel stays closed until the next release.</p>
           </div>
         )}
-        {updateNotice && (!notesOpen || !releaseVersion) && (
+        {updateNotice && (
           <div className="note" data-state="warn" role="status">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
               <strong>Updates available.</strong>
               <button type="button" aria-label="Dismiss update banner" onClick={() => { setUpdateNotice(null); dismissNotes(); }}>Close</button>
             </div>
-            {updateNotice.notice}
-            <div style={{ marginTop: 8, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-              <code style={{ fontSize: "0.85em", wordBreak: "break-all" }}>{updateNotice.updateCommand}</code>
-              <button type="button" onClick={() => { copyText(updateNotice.updateCommand); setAnnounce("Update command copied"); }}>Copy</button>
-            </div>
-            <p style={{ marginTop: 6, marginBottom: 0 }}>Run it in a terminal — it updates the demos and keeps everything else. Safe to re-run.</p>
+            <div dangerouslySetInnerHTML={{ __html: mdToNodes(updateNotice.notice) }} style={{ marginTop: 4 }} />
+            {/* One update command on screen at a time: the What's-new panel owns it
+                while open; the banner shows its own copy only when the panel is closed. */}
+            {!notesOpen && (
+              <>
+                <div style={{ marginTop: 8, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                  <code style={{ fontSize: "0.85em", wordBreak: "break-all" }}>{updateNotice.updateCommand}</code>
+                  <button type="button" onClick={() => { copyText(updateNotice.updateCommand); setAnnounce("Update command copied"); }}>Copy</button>
+                </div>
+                <p style={{ marginTop: 6, marginBottom: 0 }}>Run it in a terminal — it updates the demos and keeps everything else. Safe to re-run.</p>
+              </>
+            )}
           </div>
         )}
         {error && <div className="note" data-state="error" role="alert">Cannot reach the shelf server ({error}). {data ? "Showing the last known state." : "Is it running?"}</div>}
