@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Card, Drawer } from "./Card.jsx";
-import { LABELS, STATES } from "./status.js";
+import { LABELS, BUCKETS, BUCKET_OF_STATE } from "./status.js";
 import ShelfLink from "./components/ShelfLink.jsx";
 
 const REFRESH_MS = 30000;
@@ -59,8 +59,20 @@ async function copyText(text) {
 }
 
 function toItems(data) {
-  const reg = data.demos.map((d) => ({ ...d, planned: false }));
-  const planned = data.planned.map((p) => ({ ...p, catalogId: p.id, planned: true }));
+  // Bucket per the owner's four statuses. A demo that answers health is Running;
+  // one in the catalog/GitHub but not deployed here is New; everything else
+  // (cloned/installed but not answering) is Offline. "Deployed" counts every
+  // installed demo (Running + Offline are its live subsets).
+  const reg = data.demos.map((d) => {
+    const stateBucket = BUCKET_OF_STATE[d.status?.state] || "offline";
+    const installed = d.where === "installed" || d.install === "installed" || !("where" in d);
+    let bucket;
+    if (stateBucket === "running") bucket = "running";
+    else if (!installed || d.install === "not-installed") bucket = "new";
+    else bucket = stateBucket === "new" ? "new" : "offline";
+    return { ...d, planned: false, bucket };
+  });
+  const planned = data.planned.map((p) => ({ ...p, catalogId: p.id, planned: true, bucket: "new" }));
   return [...reg, ...planned];
 }
 
@@ -68,8 +80,8 @@ const THEMES = [["auto", "Auto"], ["light", "Light"], ["dark", "Dark"]];
 const WHERES = [["all", "All"], ["installed", "Installed"], ["mock", "Mock"]];
 const kindOf = (i) => (i.kind || "").toLowerCase();
 
-// The page opens on Ready; ?status=all (or another state) overrides it.
-const DEFAULT_STATUS = "ready";
+// The page opens on All; ?status=<bucket> (or "all") overrides it.
+const DEFAULT_STATUS = "all";
 
 // Filter state that is worth sharing lives in the address: ?q=oidc&tags=pingfederate,real&status=all
 function fromAddress() {
@@ -79,7 +91,7 @@ function fromAddress() {
     return {
       q: p.get("q") || "",
       tags: new Set((p.get("tags") || "").split(",").map((t) => t.trim()).filter(Boolean)),
-      status: st === "all" || STATES.includes(st) ? st : DEFAULT_STATUS,
+      status: st === "all" || BUCKETS.some((b) => b.id === st) ? st : DEFAULT_STATUS,
     };
   } catch {
     return { q: "", tags: new Set(), status: DEFAULT_STATUS };
@@ -277,8 +289,8 @@ export default function App() {
   const items = useMemo(() => (data ? toItems(data) : []), [data]);
   const openItem = open && items.find((i) => i.planned === open.planned && i.id === open.id);
   const counts = useMemo(() => {
-    const c = Object.fromEntries(STATES.map((s) => [s, 0]));
-    for (const i of items) c[i.status.state] = (c[i.status.state] || 0) + 1;
+    const c = Object.fromEntries(BUCKETS.map((b) => [b.id, 0]));
+    for (const i of items) c[i.bucket] = (c[i.bucket] || 0) + 1;
     return c;
   }, [items]);
 
@@ -307,7 +319,7 @@ export default function App() {
     const q = text.trim().toLowerCase();
     return (where === "all" || i.where === where) &&
       (kind === "all" || (kind === "unclassified" ? !i.kind : kindOf(i).includes(kind))) &&
-      (status === "all" || i.status.state === status) &&
+      (status === "all" || i.bucket === status) &&
       (!q || [i.name, i.catalogId, ...(i.alsoCatalogIds || []), i.description, ...(i.tags || []).flatMap((t) => [t, tagInfo.get(t)?.label])].some((f) => (f || "").toLowerCase().includes(q)));
   };
   const passesTags = (i, skip) => tagGroups.every((g) => {
@@ -414,9 +426,12 @@ export default function App() {
         {data && (
           <>
             <section className="lights" aria-label="Summary by status">
-              {STATES.map((s) => (
-                <button key={s} type="button" className="chip" data-state={s} aria-pressed={status === s} onClick={() => setStatus(status === s ? "all" : s)}>
-                  <b>{counts[s]}</b> {LABELS[s]}
+              <button type="button" className="chip" data-state="all" aria-pressed={status === "all"} onClick={() => setStatus("all")}>
+                <b>{items.length}</b> All
+              </button>
+              {BUCKETS.map((b) => (
+                <button key={b.id} type="button" className="chip" data-state={b.id} aria-pressed={status === b.id} onClick={() => setStatus(status === b.id ? "all" : b.id)}>
+                  <b>{counts[b.id] || 0}</b> {b.label}
                 </button>
               ))}
             </section>
@@ -439,7 +454,8 @@ export default function App() {
               <label>Status
                 <select value={status} onChange={(e) => setStatus(e.target.value)}>
                   <option value="all">All statuses</option>
-                  {STATES.map((s) => <option key={s} value={s}>{LABELS[s]}</option>)}
+                  <option value="all">All</option>
+                  {BUCKETS.map((b) => <option key={b.id} value={b.id}>{b.label}</option>)}
                 </select>
               </label>
             </form>

@@ -1,3 +1,29 @@
+// User-facing status buckets for the shelf (four, per the owner):
+//   Running  — the demo answers its health check right now
+//   Deployed — cloned/installed on this machine (may be running or stopped; Running is the live subset)
+//   Offline  — installed but not answering (stopped, failed, or unhealthy)
+//   New      — in GitHub/the catalog but not deployed on this machine
+// The server's finer-grained states (ready/broken/needs-setup/…) still drive the
+// Details drawer; the shelf summary and filter use these four buckets.
+export const BUCKETS = [
+  { id: "running",  label: "Running" },
+  { id: "deployed", label: "Deployed" },
+  { id: "offline",  label: "Offline" },
+  { id: "new",      label: "New" },
+];
+
+// Internal states → bucket. 'planned' (in the catalog, not registered) counts as New.
+export const BUCKET_OF_STATE = {
+  ready: "running",
+  "needs-setup": "running",
+  "up-no-contract": "running",
+  unknown: "running",
+  down: "offline",
+  broken: "offline",
+  planned: "new",
+};
+
+// Kept for the Details drawer labels.
 export const LABELS = {
   ready: "Ready",
   "needs-setup": "Needs setup",
@@ -7,9 +33,6 @@ export const LABELS = {
   down: "Down",
   planned: "Planned",
 };
-
-// Summary order and the status filter options.
-export const STATES = ["ready", "needs-setup", "broken", "down", "up-no-contract", "unknown", "planned"];
 
 export const HINTS = {
   ready: { means: "The demo answered its health check and reports it is ready.", fix: "Nothing to do." },

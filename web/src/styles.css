@@ -161,6 +161,17 @@ html[data-present] {
   font-size: 1rem;
 }
 
+/* The four user-facing buckets: Running (green), Deployed (blue/info), Offline (amber), New (neutral) */
+.chip[data-state="running"]  { border-left: 4px solid var(--status-ok); }
+.chip[data-state="deployed"] { border-left: 4px solid var(--status-warn); }
+.chip[data-state="offline"]  { border-left: 4px solid var(--muted); }
+.chip[data-state="new"]      { border-left: 4px solid var(--accent); }
+.chip[data-state="all"]      { border-left: 4px solid var(--border); }
+.chip[aria-pressed="true"] {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 .chip small {
   font-weight: 500;
 }
