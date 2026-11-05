@@ -76,10 +76,36 @@ html[data-present] {
 
 .note[data-state="warn"] {
   border-left: 4px solid var(--status-warn);
+  background: color-mix(in srgb, var(--status-warn) 12%, var(--surface));
 }
 
 .note[data-state="error"] {
   border-left: 4px solid var(--accent);
+}
+
+.note[data-state="info"] {
+  border-left: 4px solid var(--status-ok);
+  background: color-mix(in srgb, var(--status-ok) 10%, var(--surface));
+}
+
+/* The update banner and the What's-new panel: bold headlines, tinted panels. */
+.note[data-state="warn"] strong,
+.note[data-state="info"] strong {
+  font-weight: 700;
+  font-size: 1.02em;
+  letter-spacing: 0.01em;
+}
+
+.note[data-state="warn"] strong { color: var(--status-warn); }
+.note[data-state="info"] strong { color: var(--status-ok); }
+
+.note[data-state="warn"] code,
+.note[data-state="info"] code {
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  background: var(--surface);
 }
 
 .howto {
@@ -527,7 +553,7 @@ html[data-present] {
 /* Shared Ping products this demo needs (rule 20). A warning list; nothing renders when all are ready. */
 .box__ping[data-state="warn"] {
   color: var(--text-body);
-  border-left: 3px solid var(--status-warn, #b7791f);
+  border-left: 3px solid var(--status-warn);
   padding-left: 8px;
 }
 

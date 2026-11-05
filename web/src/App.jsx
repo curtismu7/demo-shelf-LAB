@@ -32,6 +32,23 @@ async function call(path, method = "GET") {
   return body;
 }
 
+// Minimal markdown for the release notes: bold, inline code, bullets, headings.
+function mdToNodes(md) {
+  const inline = (t) => t
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/`([^`]+)`/g, "<code>$1</code>");
+  const out = [];
+  for (const raw of md.split("\n")) {
+    const line = raw.trim();
+    if (!line) { out.push("<div style='height:6px'></div>"); continue; }
+    if (line.startsWith("- ")) { out.push(`<div style='margin:2px 0 2px 14px;text-indent:-10px'>• ${inline(line.slice(2))}</div>`); continue; }
+    if (/^\*\*[^*]+\*\*$/.test(line)) { out.push(`<div style='font-weight:700;margin-top:8px'>${inline(line)}</div>`); continue; }
+    out.push(`<div>${inline(line)}</div>`);
+  }
+  return out.join("");
+}
+
 async function copyText(text) {
   try {
     await navigator.clipboard.writeText(text);
@@ -295,7 +312,7 @@ export default function App() {
               <strong>What's new — {releaseVersion}</strong>
               <button type="button" aria-label="Close release notes" onClick={dismissNotes}>Close</button>
             </div>
-            <pre style={{ whiteSpace: "pre-wrap", fontFamily: "inherit", margin: "8px 0 0" }}>{releases.notes.replace(/^##\s+.+\n/, "")}</pre>
+            <div style={{ margin: "8px 0 0" }} dangerouslySetInnerHTML={{ __html: mdToNodes(releases.notes.replace(/^##\s+.+\n/, "")) }} />
             <div style={{ marginTop: 8, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
               <code style={{ fontSize: "0.85em", wordBreak: "break-all" }}>{releases.updateCommand}</code>
               <button type="button" onClick={() => { copyText(releases.updateCommand); setAnnounce("Update command copied"); }}>Copy</button>
@@ -303,7 +320,7 @@ export default function App() {
             <p style={{ marginTop: 6, marginBottom: 0 }}>Run it in a terminal to get these updates. Safe to re-run. This panel stays closed until the next release.</p>
           </div>
         )}
-        {updateNotice && (notesOpen || !releaseVersion) && (
+        {updateNotice && (!notesOpen || !releaseVersion) && (
           <div className="note" data-state="warn" role="status">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
               <strong>Updates available.</strong>
