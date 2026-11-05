@@ -150,15 +150,19 @@ describe("first load while the install check is pending", () => {
   it("looks again after a short wait, not after 30 s, then settles", async () => {
     const first = body([card("i", "Absent I", { install: "unknown" })], { installPending: true });
     const second = body([card("i", "Absent I", { install: "not-installed" })], { installPending: false });
-    const f = vi.fn().mockResolvedValueOnce({ ok: true, json: async () => first }).mockResolvedValue({ ok: true, json: async () => second });
+    const f = vi.fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ notice: null }) }) // /api/notice on mount
+      .mockResolvedValueOnce({ ok: true, json: async () => first })
+      .mockResolvedValue({ ok: true, json: async () => second });
     vi.stubGlobal("fetch", f);
     render(<App />);
     await screen.findByRole("heading", { name: "Absent I" });
     expect(screen.queryByText("Not installed")).toBeNull();
     expect(await screen.findByText("Not installed", {}, { timeout: 8000 })).toBeInTheDocument(); // the 30 s timer has not fired: this is the quick look
-    expect(f).toHaveBeenCalledTimes(2);
+    await new Promise((r) => setTimeout(r, 100)); // let mount-time one-shots (notice/shelf-link) settle
+    const base = f.mock.calls.length;
     await new Promise((r) => setTimeout(r, 1500));
-    expect(f).toHaveBeenCalledTimes(2); // no more quick looks once nothing is pending
+    expect(f.mock.calls.length).toBe(base); // no more quick looks once nothing is pending
   }, 20000);
 });
 
