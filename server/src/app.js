@@ -79,6 +79,34 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
   // Update notice from the meta-repo's UPDATES.md (owner-edited, fetched from
   // GitHub). Cached for 5 minutes; empty/failed fetch = no banner. The user's
   // update action is always the same: re-run the install command.
+  // Release notes from the meta-repo's RELEASE_NOTES.md: { version, notes } plus
+  // the update command. version = first "## <heading>" in the file; the UI opens
+  // the notes when it differs from the last version the user dismissed.
+  const releasesUrl = process.env.SHELF_RELEASES_URL
+    || 'https://raw.githubusercontent.com/curtismu7/AI-DEMO-Standalone/main/RELEASE_NOTES.md';
+  let releasesCache = { at: 0, body: null };
+  app.get('/api/releases', async (req, res) => {
+    const nowMs = Date.now();
+    if (nowMs - releasesCache.at > 5 * 60 * 1000) {
+      try {
+        const r = await (fetchFn || fetch)(releasesUrl, { signal: AbortSignal.timeout(8000) });
+        const text = r.ok ? await r.text() : '';
+        const marker = '<!-- SHELF RELEASES BELOW';
+        const idx = text.indexOf(marker);
+        const content = idx >= 0 ? text.slice(idx + text.slice(idx).indexOf('-->') + 3).trim() : text;
+        const m = content.match(/^##\s+(.+)$/m);
+        releasesCache = { at: nowMs, body: { version: m ? m[1].trim() : null, notes: content || null } };
+      } catch {
+        releasesCache = { at: nowMs, body: releasesCache.body ?? { version: null, notes: null } };
+      }
+    }
+    res.set('Cache-Control', 'no-store');
+    res.json({
+      ...(releasesCache.body || { version: null, notes: null }),
+      updateCommand: 'curl -fsSL https://raw.githubusercontent.com/curtismu7/AI-DEMO-Standalone/main/scripts/install.sh | bash',
+    });
+  });
+
   const noticeUrl = process.env.SHELF_NOTICE_URL
     || 'https://raw.githubusercontent.com/curtismu7/AI-DEMO-Standalone/main/UPDATES.md';
   let noticeCache = { at: 0, body: null };

@@ -78,6 +78,12 @@ export default function App() {
   const [note, setNote] = useState(null);
   // Update notice from the family's UPDATES.md: { notice, updateCommand } or null.
   const [updateNotice, setUpdateNotice] = useState(null);
+  // Release notes: { version, notes, updateCommand } from /api/releases.
+  // Open by default when `version` differs from the last one the user dismissed;
+  // the dismissal persists in localStorage until the next version appears.
+  const [releases, setReleases] = useState(null);
+  const [notesOpen, setNotesOpen] = useState(false);
+  const [releaseVersion, setReleaseVersion] = useState(null);
   const [announce, setAnnounce] = useState("");
   const [where, setWhere] = useState("all");
   const [kind, setKind] = useState("all");
@@ -125,6 +131,24 @@ export default function App() {
       if (b && b.notice) setUpdateNotice(b);
     }).catch(() => { /* no notice is fine */ });
   }, []);
+
+  // Release notes: open automatically when a NEW version appears (one the user
+  // has not dismissed); stay closed once dismissed until the version changes.
+  useEffect(() => {
+    fetch("/api/releases").then((r) => r.json()).then((b) => {
+      if (!b || !b.notes || !b.version) return;
+      setReleases(b);
+      setReleaseVersion(b.version);
+      let seen = null;
+      try { seen = window.localStorage.getItem("shelf-releases-seen"); } catch { /* private mode */ }
+      setNotesOpen(seen !== b.version);
+    }).catch(() => { /* no release notes is fine */ });
+  }, []);
+
+  const dismissNotes = () => {
+    setNotesOpen(false);
+    try { if (releaseVersion) window.localStorage.setItem("shelf-releases-seen", releaseVersion); } catch { /* private mode */ }
+  };
 
   useEffect(() => {
     if (present) document.documentElement.dataset.present = "1";
@@ -265,6 +289,20 @@ export default function App() {
       </header>
       <main className="room">
         <div className="sr" role="status" aria-live="polite">{announce}</div>
+        {notesOpen && releases && (
+          <div className="note" data-state="info" role="region" aria-label="Release notes">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
+              <strong>What's new — {releaseVersion}</strong>
+              <button type="button" aria-label="Close release notes" onClick={dismissNotes}>Close</button>
+            </div>
+            <pre style={{ whiteSpace: "pre-wrap", fontFamily: "inherit", margin: "8px 0 0" }}>{releases.notes.replace(/^##\s+.+\n/, "")}</pre>
+            <div style={{ marginTop: 8, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+              <code style={{ fontSize: "0.85em", wordBreak: "break-all" }}>{releases.updateCommand}</code>
+              <button type="button" onClick={() => { copyText(releases.updateCommand); setAnnounce("Update command copied"); }}>Copy</button>
+            </div>
+            <p style={{ marginTop: 6, marginBottom: 0 }}>Run it in a terminal to get these updates. Safe to re-run. This panel stays closed until the next release.</p>
+          </div>
+        )}
         {updateNotice && (
           <div className="note" data-state="warn" role="status">
             <strong>Updates available.</strong> {updateNotice.notice}
