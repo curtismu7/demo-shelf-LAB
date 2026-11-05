@@ -623,3 +623,9 @@ html[data-present] {
   overflow-wrap: anywhere;
   user-select: all;
 }
+
+/* Fleet version chip in the header subtitle */
+.top__version {
+  color: var(--muted);
+  font-weight: 600;
+}

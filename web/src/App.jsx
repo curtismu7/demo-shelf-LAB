@@ -291,7 +291,7 @@ export default function App() {
       <header className="top">
         <div className="top__name">
           <h1>Demo<span className="top__dot">.</span> Shelf</h1>
-          <p className="top__sub">Every Ping demo you can run on your laptop. Green is up. Grey is waiting for you to start it.</p>
+          <p className="top__sub">Every Ping demo you can run on your laptop. Green is up. Grey is waiting for you to start it.{releaseVersion && <span className="top__version"> · v{releaseVersion}</span>}</p>
         </div>
         <div className="top__tools">
             <ShelfLink />

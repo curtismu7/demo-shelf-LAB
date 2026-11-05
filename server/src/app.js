@@ -79,23 +79,30 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
   // Update notice from the meta-repo's UPDATES.md (owner-edited, fetched from
   // GitHub). Cached for 5 minutes; empty/failed fetch = no banner. The user's
   // update action is always the same: re-run the install command.
-  // Release notes from the meta-repo's RELEASE_NOTES.md: { version, notes } plus
-  // the update command. version = first "## <heading>" in the file; the UI opens
-  // the notes when it differs from the last version the user dismissed.
-  const releasesUrl = process.env.SHELF_RELEASES_URL
-    || 'https://raw.githubusercontent.com/curtismu7/AI-DEMO-Standalone/main/RELEASE_NOTES.md';
+  // Release notes + fleet version from the meta-repo: VERSION (the family-wide
+  // version, e.g. "2.1") and RELEASE_NOTES.md (what changed). The UI opens the
+  // notes when the version differs from the last one the user dismissed.
+  // Version semantics: MAJOR bump = breaking (new setup requirements, lab removals);
+  // MINOR bump = new labs/features worth showing the What's-new panel.
+  const metaBase = process.env.SHELF_META_URL
+    || 'https://raw.githubusercontent.com/curtismu7/AI-DEMO-Standalone/main';
+  const releasesUrl = `${metaBase}/RELEASE_NOTES.md`;
+  const versionUrl = `${metaBase}/VERSION`;
   let releasesCache = { at: 0, body: null };
   app.get('/api/releases', async (req, res) => {
     const nowMs = Date.now();
     if (nowMs - releasesCache.at > 5 * 60 * 1000) {
       try {
-        const r = await (fetchFn || fetch)(releasesUrl, { signal: AbortSignal.timeout(8000) });
+        const [r, v] = await Promise.all([
+          (fetchFn || fetch)(releasesUrl, { signal: AbortSignal.timeout(8000) }),
+          (fetchFn || fetch)(versionUrl, { signal: AbortSignal.timeout(8000) }).catch(() => null),
+        ]);
         const text = r.ok ? await r.text() : '';
+        const version = v && v.ok ? (await v.text()).trim() : null;
         const marker = '<!-- SHELF RELEASES BELOW';
         const idx = text.indexOf(marker);
         const content = idx >= 0 ? text.slice(idx + text.slice(idx).indexOf('-->') + 3).trim() : text;
-        const m = content.match(/^##\s+(.+)$/m);
-        releasesCache = { at: nowMs, body: { version: m ? m[1].trim() : null, notes: content || null } };
+        releasesCache = { at: nowMs, body: { version: version || null, notes: content || null } };
       } catch {
         releasesCache = { at: nowMs, body: releasesCache.body ?? { version: null, notes: null } };
       }
