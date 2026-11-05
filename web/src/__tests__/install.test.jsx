@@ -4,7 +4,7 @@ import App from "../App.jsx";
 import { cloneCommand } from "../install.js";
 
 const st = (state) => ({ state, lastChecked: "2026-10-21T10:00:00Z", latencyMs: 12 });
-const REPO = "https://github.com/ping-sandbox/x-LAB";
+const REPO = "https://github.com/curtismu7/x-LAB";
 const card = (id, name, over = {}) => ({ id, name, catalogId: id.toUpperCase(), kind: "Demo", group: "C", wave: 0, description: `${name} text`, url: "http://localhost:4500", where: "installed", composeFile: "/x/c.yml", startCommand: "docker compose -f /x/c.yml up -d", canStart: true, install: "unknown", imagesBuilt: null, repo: null, status: st("down"), ...over });
 const body = (demos, over = {}) => ({ startEnabled: true, agent: "up", installPending: false, groups: { C: "Tokens" }, demos, planned: [], ...over });
 const cardOf = (name) => within(screen.getByRole("heading", { name }).closest("article"));
