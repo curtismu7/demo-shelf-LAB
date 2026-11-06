@@ -30,7 +30,7 @@ const digest = (s) => crypto.createHash('sha256').update(String(s)).digest();
 export const sameToken = (a, b) => crypto.timingSafeEqual(digest(a), digest(b));
 
 // `getDemos()` returns the host's registered installed demos; it may throw if the registry is invalid.
-export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir = null, demoRoot = null, installOptions = {} }) {
+export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir = null, demoRoot = null, installOptions = {}, lastRunning = null, networkLimit = undefined }) {
   const hosts = new Set([`127.0.0.1:${port}`, `localhost:${port}`, `[::1]:${port}`, `host.docker.internal:${port}`]);
   const busy = new Set();
   const installs = createInstallChecker({ getDemos, exec, fileExists, shelfDir, ...installOptions });
@@ -75,7 +75,11 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
         const r = await runCompose(demo, 'start', { exec, fileExists, shelfDir });
         return res.status(r.status).json({ ...r.body, deploy: g.how, dir: g.dir });
       }
-      const r = await runCompose(demo, req.params.action, { exec, fileExists, shelfDir });
+      const r = await runCompose(demo, req.params.action, { exec, fileExists, shelfDir, networkLimit });
+      if (r.status === 200 && lastRunning) {
+        if (req.params.action === 'start' || req.params.action === 'deploy') lastRunning.recordStart(demo.id);
+        if (req.params.action === 'stop') lastRunning.recordStop(demo.id);
+      }
       res.status(r.status).json(r.body);
     } catch {
       res.status(500).json({ ok: false, error: 'internal' });
@@ -83,6 +87,36 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
       installs.invalidate(demo.id);
       busy.delete(demo.id);
     }
+  });
+
+  // Restore the last-running set: starts the recorded demos, least-recently-used first (so a
+  // dependency tends to come up before its consumer), capped by SHELF_RESTORE_LIMIT (default 10).
+  // Each start goes through the same runCompose path as a manual start (guards included); a
+  // failure for one demo does not stop the rest. Returns the per-demo outcome, enum errors only.
+  app.post('/v1/restore-last', express.json(), async (req, res) => {
+    if (!lastRunning) return res.status(409).json({ ok: false, error: 'no-last-running' });
+    let limit = Number(req.body?.limit ?? 10);
+    if (!Number.isInteger(limit) || limit < 1 || limit > 50) limit = 10;
+    const ids = lastRunning.restoreIds(limit);
+    const results = [];
+    for (const id of ids) {
+      if (busy.has(id)) { results.push({ id, started: false, error: 'busy' }); continue; }
+      const demo = (() => { try { return getDemos().find((d) => d.id === id); } catch { return null; } })();
+      if (!demo?.composeFile) { lastRunning.recordStop(id); results.push({ id, started: false, error: 'not-registered' }); continue; }
+      busy.add(id);
+      try {
+        const r = await runCompose(demo, 'start', { exec, fileExists, shelfDir, networkLimit });
+        if (r.status === 200) { lastRunning.recordStart(id); results.push({ id, started: true }); }
+        else results.push({ id, started: false, error: r.body.error });
+      } catch { results.push({ id, started: false, error: 'internal' }); }
+      finally { installs.invalidate(id); busy.delete(id); }
+    }
+    res.json({ ok: true, schema: 'shelf-agent-restore/1', results });
+  });
+
+  app.get('/v1/last-running', (req, res) => {
+    if (!lastRunning) return res.status(409).json({ ok: false, error: 'no-last-running' });
+    res.json({ ok: true, schema: 'shelf-agent-last-running/1', demos: lastRunning.list() });
   });
 
   app.use((req, res) => res.status(404).json({ ok: false, error: 'not-found' }));

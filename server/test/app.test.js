@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { describe, expect, it, vi } from 'vitest';
 import { createApp } from '../src/app.js';
+import { createLastRunning } from '../src/lastRunning.js';
 import { composeArgs, redact } from '../src/control.js';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -107,6 +108,7 @@ describe('start/stop', () => {
     expect(r.body).toMatchObject({ ok: true, id: 'a', action: 'start', output: 'started' });
     expect(exec.mock.calls).toEqual([
       ['docker', ['context', 'show']],
+      ['docker', ['network', 'ls', '--format', '{{.Name}}']],
       ['docker', ['compose', '-f', '/tmp/a/c.yml', '-f', '/tmp/a/o.yml', 'up', '-d'], { cwd: '/tmp/a', timeoutMs: 600000 }],
     ]);
   });
@@ -178,6 +180,69 @@ describe('start/stop', () => {
     const r = await post(app(exec), '/api/demos/a/start', sameOrigin);
     expect([r.status, r.body.error]).toEqual([503, 'docker-unavailable']);
   });
+  it('GET /api/last-running returns the restore ids (LRU first)', async () => {
+    const file = path.join(os.tmpdir(), `lastrunning-${Date.now()}.json`);
+    const lastRunning = createLastRunning({ file });
+    lastRunning.recordStart('a'); lastRunning.recordStart('b');
+    const r = await request(app(okExec(), { lastRunning })).get('/api/last-running').set('Host', 'localhost:4400');
+    expect(r.status).toBe(200);
+    expect(r.body.ids).toEqual(['a', 'b']);
+    expect(r.body.schema).toBe('shelf-last-running/1');
+    fs.rmSync(file, { force: true });
+  });
+  it('restore ids are empty when nothing was running', async () => {
+    const r = await request(app(okExec())).get('/api/last-running').set('Host', 'localhost:4400');
+    expect(r.status).toBe(404);
+  });
+
+  it('network-pool guard: refuses a start when too many docker networks exist, with the fix', async () => {
+    const exec = vi.fn(async (f, args) => {
+      if (args[0] === 'context') return { stdout: 'orbstack', stderr: '' };
+      if (args[0] === 'network') return { stdout: Array.from({ length: 40 }, (_, i) => 'n' + i).join('\n'), stderr: '' };
+      return { stdout: 'started', stderr: '' };
+    });
+    const r = await post(app(exec), '/api/demos/a/start', sameOrigin);
+    expect([r.status, r.body.error]).toEqual([409, 'network-pool-nearly-full:40']);
+    expect(r.body.output).toMatch(/docker network prune -f/);
+    expect(exec.mock.calls.some((c) => c[1][0] === 'compose')).toBe(false); // never ran compose
+  });
+
+  it('network-pool guard: passes when there is room', async () => {
+    const exec = okExec(); // network ls returns 'started' -> 1 network
+    const r = await post(app(exec), '/api/demos/a/start', sameOrigin);
+    expect(r.status).toBe(200);
+  });
+
+  it('network-pool guard: limit is configurable', async () => {
+    const exec = okExec();
+    const r = await post(app(exec, { networkLimit: 0 }), '/api/demos/a/start', sameOrigin);
+    expect([r.status, r.body.error]).toEqual([409, 'network-pool-nearly-full:1']);
+  });
+
+  it('network-pool guard: refuses a start when too many docker networks exist, with the fix', async () => {
+    const exec = vi.fn(async (f, args) => {
+      if (args[0] === 'context') return { stdout: 'orbstack', stderr: '' };
+      if (args[0] === 'network') return { stdout: Array.from({ length: 40 }, (_, i) => 'n' + i).join('\n'), stderr: '' };
+      return { stdout: 'started', stderr: '' };
+    });
+    const r = await post(app(exec), '/api/demos/a/start', sameOrigin);
+    expect([r.status, r.body.error]).toEqual([409, 'network-pool-nearly-full:40']);
+    expect(r.body.output).toMatch(/docker network prune -f/);
+    expect(exec.mock.calls.some((c) => c[1][0] === 'compose')).toBe(false); // never ran compose
+  });
+
+  it('network-pool guard: passes when there is room', async () => {
+    const exec = okExec(); // network ls returns 'started' -> 1 network
+    const r = await post(app(exec), '/api/demos/a/start', sameOrigin);
+    expect(r.status).toBe(200);
+  });
+
+  it('network-pool guard: limit is configurable', async () => {
+    const exec = okExec();
+    const r = await post(app(exec, { networkLimit: 0 }), '/api/demos/a/start', sameOrigin);
+    expect([r.status, r.body.error]).toEqual([409, 'network-pool-nearly-full:1']);
+  });
+
   it('refuses when a compose file is missing', async () => {
     const exec = okExec();
     const r = await post(app(exec, { fileExists: (f) => f !== '/tmp/a/o.yml' }), '/api/demos/a/start', sameOrigin);
@@ -188,6 +253,7 @@ describe('start/stop', () => {
     let release;
     const exec = vi.fn(async (f, args) => {
       if (args[0] === 'context') return { stdout: 'orbstack', stderr: '' };
+      if (args[0] === 'network') return { stdout: '', stderr: '' };
       await new Promise((r) => { release = r; });
       return { stdout: 'ok', stderr: '' };
     });
@@ -201,10 +267,10 @@ describe('start/stop', () => {
   });
   it('reports a timeout and a failure, with redacted trimmed output', async () => {
     const t = Object.assign(new Error('x'), { killed: true, stdout: '', stderr: '' });
-    let r = await post(app(vi.fn(async (f, a) => { if (a[0] === 'context') return { stdout: 'orbstack' }; throw t; })), '/api/demos/a/start', sameOrigin);
+    let r = await post(app(vi.fn(async (f, a) => { if (a[0] === 'context') return { stdout: 'orbstack' }; if (a[0] === 'network') return { stdout: '', stderr: '' }; throw t; })), '/api/demos/a/start', sameOrigin);
     expect([r.status, r.body.error]).toEqual([502, 'timeout']);
     const f = Object.assign(new Error('x'), { stdout: '', stderr: 'boom TOKEN=abc123 Bearer qqq' });
-    r = await post(app(vi.fn(async (fl, a) => { if (a[0] === 'context') return { stdout: 'orbstack' }; throw f; })), '/api/demos/a/start', sameOrigin);
+    r = await post(app(vi.fn(async (fl, a) => { if (a[0] === 'context') return { stdout: 'orbstack' }; if (a[0] === 'network') return { stdout: '', stderr: '' }; throw f; })), '/api/demos/a/start', sameOrigin);
     expect(r.body).toMatchObject({ error: 'compose-failed' });
     expect(r.body.output).toBe('boom TOKEN=[redacted] Bearer [redacted]');
   });

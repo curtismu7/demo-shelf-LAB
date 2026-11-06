@@ -25,8 +25,11 @@ const WHY = {
   "deploy-needs-host-shelf": "Deploy works when the shelf runs on the host (npm start), not in the container",
 };
 
-async function call(path, method = "GET") {
-  const res = await fetch(path, { method });
+async function call(path, method = "GET", jsonBody) {
+  const res = await fetch(path, {
+    method,
+    ...(jsonBody !== undefined ? { headers: { "Content-Type": "application/json" }, body: JSON.stringify(jsonBody) } : {}),
+  });
   const body = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(body.error || `HTTP ${res.status}`);
   return body;
@@ -286,6 +289,40 @@ export default function App() {
     load(true);
   }
 
+  // Restore last set: start the demos that were running before the machine restarted,
+  // most recent set first (the server caps and orders them). Skips the shelf itself.
+  const [restoreRunning, setRestoreRunning] = useState(false);
+  async function restoreLast() {
+    if (!data || restoreRunning) return;
+    setRestoreRunning(true);
+    setNote("restore: starting the last-running set...");
+    try {
+      const last = await call("/api/last-running");
+      const ids = last.ids || [];
+      if (!ids.length) { setNote("restore: nothing was running before the restart."); setRestoreRunning(false); return; }
+      let okCount = 0; const failed = [];
+      for (const id of ids) {
+        const name = data.demos.find((d) => d.id === id)?.name || id;
+        setNote(`restore: ${name} (${okCount}/${ids.length} done)...`);
+        try {
+          await call(`/api/demos/${encodeURIComponent(id)}/start`, "POST");
+          okCount += 1;
+        } catch (e) {
+          failed.push(name);
+          setNote(`restore: ${name} failed — continuing (${WHY[e.message] || e.message})`);
+        }
+      }
+      setAnnounce(`Restore finished: ${okCount} started, ${failed.length} failed`);
+      setNote(failed.length
+        ? `Restore: ${okCount} started, ${failed.length} failed (${failed.join(", ")}).`
+        : `Restore: all ${okCount} demos started.`);
+      load(true);
+    } catch (e) {
+      setNote(`restore failed (${WHY[e.message] || e.message})`);
+    }
+    setRestoreRunning(false);
+  }
+
   function showDetails(item) {
     opener.current = document.activeElement;
     setOpen({ planned: item.planned, id: item.id });
@@ -390,6 +427,9 @@ export default function App() {
             </select>
           </label>
           <button type="button" aria-pressed={present} onClick={() => setPresent((p) => !p)}>Present</button>
+          <button type="button" onClick={restoreLast} disabled={busy || restoreRunning || stopAllRunning || deployAllRunning} aria-busy={restoreRunning || undefined} title="Starts the demos that were running before the last restart (up to 10, most recent set)">
+            {restoreRunning && <span className="spin" aria-hidden="true" />}Restore last set
+          </button>
           <button type="button" onClick={stopAll} disabled={busy || stopAllRunning || deployAllRunning} aria-busy={stopAllRunning || undefined} title="Stops every running demo; the shelf stays up">
             {stopAllRunning && <span className="spin" aria-hidden="true" />}Stop all
           </button>

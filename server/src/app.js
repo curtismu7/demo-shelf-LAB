@@ -62,7 +62,7 @@ export function installOf(d, status, map) {
 const LOOPBACK_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
 
 // `loopbackOnly` guards against DNS rebinding: a loopback-bound shelf only answers to loopback Host names.
-export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, installSource = null, demoRoot = null, refreshWaitMs = 4000, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait, pingProductsCheck }) {
+export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, installSource = null, demoRoot = null, refreshWaitMs = 4000, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait, pingProductsCheck, lastRunning = null, networkLimit = undefined }) {
   const demos = expandWhere(registry);
   const app = express();
   app.disable('x-powered-by');
@@ -226,7 +226,15 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     } catch (e) { next(e); }
   });
 
-  if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: (id) => { poller.invalidate(); install.invalidate(id); }, exec, fileExists, agent, inDocker, shelfDir, demoRoot }));
+  // The last-running set on the host-run path: the UI reads the ids and starts each demo
+  // through the normal control router (the same pattern as stop-all). The container path
+  // uses the start agent's POST /v1/restore-last instead.
+  if (allowStart && lastRunning) {
+    app.get('/api/last-running', (req, res) => {
+      res.set('Cache-Control', 'no-store').json({ ok: true, schema: 'shelf-last-running/1', ids: lastRunning.restoreIds(10) });
+    });
+  }
+  if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: (id) => { poller.invalidate(); install.invalidate(id); }, exec, fileExists, agent, inDocker, shelfDir, demoRoot, lastRunning, networkLimit }));
   app.use('/api', (req, res) => res.status(404).json({ error: 'not-found' }));
 
   if (webDist && fs.existsSync(path.join(webDist, 'index.html'))) {
