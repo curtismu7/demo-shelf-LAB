@@ -1,533 +1,541 @@
 {
- "schema": "demo-shelf-catalog/1",
- "groups": {
-  "A": "Identity and authentication: Ping products",
-  "B": "Authorization and policy",
-  "C": "Tokens and protocols (teaching tools)",
-  "D": "Agents, MCP and AI security",
-  "E": "Learning and enablement",
-  "F": "Telemetry, transaction tracing and workload identity",
-  "G": "SE platform tools",
-  "H": "Standards and interop labs"
- },
- "items": [
-  {
-   "id": "A4",
-   "name": "CIBA lab",
-   "kind": "Tester",
-   "group": "A",
-   "seed": "built",
-   "wave": 3,
-   "status": "active"
+  "schema": "demo-shelf-catalog/1",
+  "groups": {
+    "A": "Identity and authentication: Ping products",
+    "B": "Authorization and policy",
+    "C": "Tokens and protocols (teaching tools)",
+    "D": "Agents, MCP and AI security",
+    "E": "Learning and enablement",
+    "F": "Telemetry, transaction tracing and workload identity",
+    "G": "SE platform tools",
+    "H": "Standards and interop labs"
   },
-  {
-   "id": "A5",
-   "name": "Step-up auth",
-   "kind": "Demo",
-   "group": "A",
-   "seed": "built",
-   "wave": 3,
-   "status": "active"
-  },
-  {
-   "id": "A11",
-   "name": "pi.flow native sign-in kit",
-   "kind": "Demo",
-   "group": "A",
-   "seed": "built",
-   "wave": 3,
-   "status": "active"
-  },
-  {
-   "id": "A19",
-   "name": "PingGateway route lab",
-   "kind": "Demo",
-   "group": "A",
-   "seed": "built",
-   "wave": 3,
-   "status": "active"
-  },
-  {
-   "id": "A29",
-   "name": "PingOne LAB (protocol cards and playground)",
-   "kind": "Demo",
-   "group": "A",
-   "seed": "built",
-   "wave": 3,
-   "status": "active"
-  },
-  {
-   "id": "B2",
-   "name": "Authorize policy playground",
-   "kind": "Tester",
-   "group": "B",
-   "seed": "partial",
-   "wave": 3,
-   "status": "active"
-  },
-  {
-   "id": "C1",
-   "name": "ID-JAG",
-   "kind": "Demo",
-   "group": "C",
-   "seed": "built",
-   "wave": 0,
-   "status": "active"
-  },
-  {
-   "id": "C2",
-   "name": "Token-flow workbench",
-   "kind": "Demo",
-   "group": "C",
-   "seed": "partial",
-   "wave": 1,
-   "status": "active"
-  },
-  {
-   "id": "C22",
-   "name": "Stolen-token lab (bearer vs DPoP / mTLS at the gateway)",
-   "kind": "Demo",
-   "group": "C",
-   "seed": "partial",
-   "wave": 3,
-   "status": "active"
-  },
-  {
-   "id": "D1",
-   "name": "PingOne Privilege (AI gateway)",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": 2,
-   "status": "active"
-  },
-  {
-   "id": "D2",
-   "name": "MCP auth lab",
-   "kind": "Demo/Tester",
-   "group": "D",
-   "seed": "built",
-   "wave": 2,
-   "status": "active"
-  },
-  {
-   "id": "D3",
-   "name": "MCP inspector",
-   "kind": "Tester",
-   "group": "D",
-   "seed": "built",
-   "wave": 2,
-   "status": "active"
-  },
-  {
-   "id": "D5",
-   "name": "MCP toolkit / discovery agent",
-   "kind": "Tester",
-   "group": "D",
-   "seed": "built",
-   "wave": 2,
-   "status": "active"
-  },
-  {
-   "id": "D6",
-   "name": "Hostile MCP / rug-pull",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": 2,
-   "status": "active"
-  },
-  {
-   "id": "D7",
-   "name": "Hostile A2A agent",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": 2,
-   "status": "active"
-  },
-  {
-   "id": "D11",
-   "name": "Agent Registry / onboarding",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": 4,
-   "status": "active"
-  },
-  {
-   "id": "D12",
-   "name": "AI Guard",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": 4,
-   "status": "active"
-  },
-  {
-   "id": "D14",
-   "name": "Kill switch / runaway agent",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": 4,
-   "status": "active"
-  },
-  {
-   "id": "D17",
-   "name": "Audit trail",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": 4,
-   "status": "active"
-  },
-  {
-   "id": "D20",
-   "name": "AI gateway client",
-   "kind": "Tester",
-   "group": "D",
-   "seed": "built",
-   "wave": 2,
-   "status": "active"
-  },
-  {
-   "id": "D21",
-   "name": "Personal agent (Dot)",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": 5,
-   "status": "active"
-  },
-  {
-   "id": "D22",
-   "name": "Worker agent",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "partial",
-   "wave": 5,
-   "status": "active"
-  },
-  {
-   "id": "D24",
-   "name": "Standard AI use cases",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": 5,
-   "status": "active"
-  },
-  {
-   "id": "D25",
-   "name": "ChatGPT / Claude connector login",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": 2,
-   "status": "active"
-  },
-  {
-   "id": "D29",
-   "name": "Progressive trust ladder",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "partial",
-   "wave": 3,
-   "status": "active"
-  },
-  {
-   "id": "D31",
-   "name": "No tool, no promise (tool set as authorization boundary)",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": 2,
-   "status": "active"
-  },
-  {
-   "id": "D33",
-   "name": "Agent attack gallery (including MCP authorization attacks)",
-   "kind": "Tester",
-   "group": "D",
-   "seed": "partial",
-   "wave": 2,
-   "status": "active"
-  },
-  {
-   "id": "D35",
-   "name": "MCP authorization conformance scorecard",
-   "kind": "Tester",
-   "group": "D",
-   "seed": "partial",
-   "wave": 2,
-   "status": "active"
-  },
-  {
-   "id": "D36",
-   "name": "CIMD lab",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D37",
-   "name": "MCP elicitation lab",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": 3,
-   "status": "active"
-  },
-  {
-   "id": "D98",
-   "name": "P1 third-party token exchange (PingOne accepts third-party signed JWTs)",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D99",
-   "name": "Gateway claims lab (nested-claim gate and AgentCore posture, gateway v1.261024)",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "E3",
-   "name": "Diagram studio",
-   "kind": "Standalone",
-   "group": "E",
-   "seed": "built",
-   "wave": 1,
-   "status": "active"
-  },
-  {
-   "id": "G4",
-   "name": "Mock Authorize server",
-   "kind": null,
-   "group": "G",
-   "seed": null,
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "A28",
-   "name": "PingFederate LAB",
-   "kind": "Demo",
-   "group": "A",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "A30",
-   "name": "Session LAB",
-   "kind": "Demo",
-   "group": "A",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "C40",
-   "name": "Intent / PAR Inspector",
-   "kind": "Demo",
-   "group": "C",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D54",
-   "name": "Agent Gateway Inspector",
-   "kind": "Tester",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D100",
-   "name": "Poppy Agent Tester",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D101",
-   "name": "Intent, Purpose and Behaviour LAB",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D102",
-   "name": "Coding Agents LAB",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D103",
-   "name": "Data Protection LAB",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D104",
-   "name": "SaaS Access LAB",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D105",
-   "name": "Agent Governance LAB",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D106",
-   "name": "MCP Surface LAB",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D107",
-   "name": "Federated Identity LAB",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D108",
-   "name": "Secrets Vault LAB",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D109",
-   "name": "AI Policies LAB",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D110",
-   "name": "Meridian Pay A2A hop lab",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D111",
-   "name": "OBO Delegation inspector lab",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D112",
-   "name": "JIT ephemeral credentials lab",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D113",
-   "name": "JEV decision model lab",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active"
-  },
-  {
-   "id": "D114",
-   "name": "Ping Services Stub",
-   "kind": "Tester",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active",
-   "summary": "One stub exercising every shared Ping service the family deploys (rule 20): shared local PingFederate, PingGateway, Privilege Agent Gateway, PingOne SaaS, PingOne Privilege console, SE-K8s PingFederate. One real, read-only call per service; Mock/Real toggle; proves wiring after setup, provisions nothing."
-  },
-  {
-   "id": "D115",
-   "name": "Demo field guide",
-   "kind": "Tool",
-   "group": "E",
-   "seed": "built",
-   "wave": null,
-   "status": "active",
-   "summary": "JSON-driven card-deck handoff page: each deployment edits data/cards.json (title, base URL, sections, cards) and the page renders it. No baked-in routes, hosts, or credentials; the build refuses credential-shaped card text. Tool tier, port 7590."
-  },
-  {
-   "id": "D116",
-   "name": "MCP gateway weather scope",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active",
-   "summary": "A third-party weather MCP server scoped at an agent gateway: a live, admin-editable state policy (one US state, any, or any-except-blocked) enforced entirely at the edge; name AND coordinate checks, exact matching, fail-narrow, capability kill switch. Switching the policy flips the SAME call, no restart. Port 7670."
-  },
-  {
-   "id": "D117",
-   "name": "Agent preferences gate",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active",
-   "summary": "The user sets what their AI agent may do (allowed action tiers, spend cap, unknown-agent policy); a mock tool boundary enforces it on every agent tool call: permit, human approval (HITL, 428 + task id, single-use receipt) or deny. A mock Protect evaluation at session start names an AI agent. Port 7660."
-  },
-  {
-   "id": "D118",
-   "name": "AI Gateway Suite",
-   "kind": "Demo",
-   "group": "D",
-   "seed": "built",
-   "wave": null,
-   "status": "active",
-   "summary": "Relayed agent chat: preset prompts (access review, prompt injection, jailbreak, exfiltration, PII, tool misuse) travel Main Agent -> AI Gateway (A2A) -> Worker Agent -> AI Gateway (MCP) -> MCP tool on a movable ReactFlow diagram with a per-hop trace and AI Guard blocks; a Personal Agent tab connects to a remote MCP server with tool forms and an OAuth dialog. Mock default; Real relays to an owner-configured central agent. Port 5750."
-  }
- ]
+  "items": [
+    {
+      "id": "A4",
+      "name": "CIBA lab",
+      "kind": "Tester",
+      "group": "A",
+      "seed": "built",
+      "wave": 3,
+      "status": "active"
+    },
+    {
+      "id": "A5",
+      "name": "Step-up auth",
+      "kind": "Demo",
+      "group": "A",
+      "seed": "built",
+      "wave": 3,
+      "status": "active"
+    },
+    {
+      "id": "A11",
+      "name": "pi.flow native sign-in kit",
+      "kind": "Demo",
+      "group": "A",
+      "seed": "built",
+      "wave": 3,
+      "status": "active"
+    },
+    {
+      "id": "A19",
+      "name": "PingGateway route lab",
+      "kind": "Demo",
+      "group": "A",
+      "seed": "built",
+      "wave": 3,
+      "status": "active"
+    },
+    {
+      "id": "A29",
+      "name": "PingOne LAB (protocol cards and playground)",
+      "kind": "Demo",
+      "group": "A",
+      "seed": "built",
+      "wave": 3,
+      "status": "active"
+    },
+    {
+      "id": "B2",
+      "name": "Authorize policy playground",
+      "kind": "Tester",
+      "group": "B",
+      "seed": "partial",
+      "wave": 3,
+      "status": "active"
+    },
+    {
+      "id": "C1",
+      "name": "ID-JAG",
+      "kind": "Demo",
+      "group": "C",
+      "seed": "built",
+      "wave": 0,
+      "status": "active"
+    },
+    {
+      "id": "C2",
+      "name": "Token-flow workbench",
+      "kind": "Demo",
+      "group": "C",
+      "seed": "partial",
+      "wave": 1,
+      "status": "active"
+    },
+    {
+      "id": "C22",
+      "name": "Stolen-token lab (bearer vs DPoP / mTLS at the gateway)",
+      "kind": "Demo",
+      "group": "C",
+      "seed": "partial",
+      "wave": 3,
+      "status": "active"
+    },
+    {
+      "id": "D1",
+      "name": "PingOne Privilege (AI gateway)",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": 2,
+      "status": "active"
+    },
+    {
+      "id": "D2",
+      "name": "MCP auth lab",
+      "kind": "Demo/Tester",
+      "group": "D",
+      "seed": "built",
+      "wave": 2,
+      "status": "active"
+    },
+    {
+      "id": "D3",
+      "name": "MCP inspector",
+      "kind": "Tester",
+      "group": "D",
+      "seed": "built",
+      "wave": 2,
+      "status": "active"
+    },
+    {
+      "id": "D5",
+      "name": "MCP toolkit / discovery agent",
+      "kind": "Tester",
+      "group": "D",
+      "seed": "built",
+      "wave": 2,
+      "status": "active"
+    },
+    {
+      "id": "D6",
+      "name": "Hostile MCP / rug-pull",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": 2,
+      "status": "active"
+    },
+    {
+      "id": "D7",
+      "name": "Hostile A2A agent",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": 2,
+      "status": "active"
+    },
+    {
+      "id": "D11",
+      "name": "Agent Registry / onboarding",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": 4,
+      "status": "active"
+    },
+    {
+      "id": "D12",
+      "name": "AI Guard",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": 4,
+      "status": "active"
+    },
+    {
+      "id": "D14",
+      "name": "Kill switch / runaway agent",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": 4,
+      "status": "active"
+    },
+    {
+      "id": "D17",
+      "name": "Audit trail",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": 4,
+      "status": "active"
+    },
+    {
+      "id": "D20",
+      "name": "AI gateway client",
+      "kind": "Tester",
+      "group": "D",
+      "seed": "built",
+      "wave": 2,
+      "status": "active"
+    },
+    {
+      "id": "D21",
+      "name": "Personal agent (Dot)",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": 5,
+      "status": "active"
+    },
+    {
+      "id": "D22",
+      "name": "Worker agent",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "partial",
+      "wave": 5,
+      "status": "active"
+    },
+    {
+      "id": "D24",
+      "name": "Standard AI use cases",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": 5,
+      "status": "active"
+    },
+    {
+      "id": "D25",
+      "name": "ChatGPT / Claude connector login",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": 2,
+      "status": "active"
+    },
+    {
+      "id": "D29",
+      "name": "Progressive trust ladder",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "partial",
+      "wave": 3,
+      "status": "active"
+    },
+    {
+      "id": "D31",
+      "name": "No tool, no promise (tool set as authorization boundary)",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": 2,
+      "status": "active"
+    },
+    {
+      "id": "D33",
+      "name": "Agent attack gallery (including MCP authorization attacks)",
+      "kind": "Tester",
+      "group": "D",
+      "seed": "partial",
+      "wave": 2,
+      "status": "active"
+    },
+    {
+      "id": "D35",
+      "name": "MCP authorization conformance scorecard",
+      "kind": "Tester",
+      "group": "D",
+      "seed": "partial",
+      "wave": 2,
+      "status": "active"
+    },
+    {
+      "id": "D36",
+      "name": "CIMD lab",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D37",
+      "name": "MCP elicitation lab",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": 3,
+      "status": "active"
+    },
+    {
+      "id": "D98",
+      "name": "P1 third-party token exchange (PingOne accepts third-party signed JWTs)",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D99",
+      "name": "Gateway claims lab (nested-claim gate and AgentCore posture, gateway v1.261024)",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "E3",
+      "name": "Diagram studio",
+      "kind": "Standalone",
+      "group": "E",
+      "seed": "built",
+      "wave": 1,
+      "status": "active"
+    },
+    {
+      "id": "G4",
+      "name": "Mock Authorize server",
+      "kind": null,
+      "group": "G",
+      "seed": null,
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "A28",
+      "name": "PingFederate LAB",
+      "kind": "Demo",
+      "group": "A",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "A30",
+      "name": "Session LAB",
+      "kind": "Demo",
+      "group": "A",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "C40",
+      "name": "Intent / PAR Inspector",
+      "kind": "Demo",
+      "group": "C",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D54",
+      "name": "Agent Gateway Inspector",
+      "kind": "Tester",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D100",
+      "name": "Poppy Agent Tester",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D101",
+      "name": "Intent, Purpose and Behaviour LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D102",
+      "name": "Coding Agents LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D103",
+      "name": "Data Protection LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D104",
+      "name": "SaaS Access LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D105",
+      "name": "Agent Governance LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D106",
+      "name": "MCP Surface LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D107",
+      "name": "Federated Identity LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D108",
+      "name": "Secrets Vault LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D109",
+      "name": "AI Policies LAB",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D110",
+      "name": "Meridian Pay A2A hop lab",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D111",
+      "name": "OBO Delegation inspector lab",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D112",
+      "name": "JIT ephemeral credentials lab",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D113",
+      "name": "JEV decision model lab",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active"
+    },
+    {
+      "id": "D114",
+      "name": "Ping Services Stub",
+      "kind": "Tester",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active",
+      "summary": "One stub exercising every shared Ping service the family deploys (rule 20): shared local PingFederate, PingGateway, Privilege Agent Gateway, PingOne SaaS, PingOne Privilege console, SE-K8s PingFederate. One real, read-only call per service; Mock/Real toggle; proves wiring after setup, provisions nothing."
+    },
+    {
+      "id": "D115",
+      "name": "Demo field guide",
+      "kind": "Tool",
+      "group": "E",
+      "seed": "built",
+      "wave": null,
+      "status": "active",
+      "summary": "JSON-driven card-deck handoff page: each deployment edits data/cards.json (title, base URL, sections, cards) and the page renders it. No baked-in routes, hosts, or credentials; the build refuses credential-shaped card text. Tool tier, port 7590."
+    },
+    {
+      "id": "D116",
+      "name": "MCP gateway weather scope",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active",
+      "summary": "A third-party weather MCP server scoped at an agent gateway: a live, admin-editable state policy (one US state, any, or any-except-blocked) enforced entirely at the edge; name AND coordinate checks, exact matching, fail-narrow, capability kill switch. Switching the policy flips the SAME call, no restart. Port 7670."
+    },
+    {
+      "id": "D117",
+      "name": "Agent preferences gate",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active",
+      "summary": "The user sets what their AI agent may do (allowed action tiers, spend cap, unknown-agent policy); a mock tool boundary enforces it on every agent tool call: permit, human approval (HITL, 428 + task id, single-use receipt) or deny. A mock Protect evaluation at session start names an AI agent. Port 7660."
+    },
+    {
+      "id": "D118",
+      "name": "AI Gateway Suite",
+      "kind": "Demo",
+      "group": "D",
+      "seed": "built",
+      "wave": null,
+      "status": "active",
+      "summary": "Relayed agent chat: preset prompts (access review, prompt injection, jailbreak, exfiltration, PII, tool misuse) travel Main Agent -> AI Gateway (A2A) -> Worker Agent -> AI Gateway (MCP) -> MCP tool on a movable ReactFlow diagram with a per-hop trace and AI Guard blocks; a Personal Agent tab connects to a remote MCP server with tool forms and an OAuth dialog. Mock default; Real relays to an owner-configured central agent. Port 5750."
+    },
+    {
+      "id": "D119",
+      "name": "HITL, MFA & CIBA gate",
+      "kind": "Demo",
+      "group": "D",
+      "oneLiner": "Amount bands decide consent, MFA step-up or deny; CIBA approves out-of-band on the user's own device.",
+      "status": "active"
+    }
+  ]
 }

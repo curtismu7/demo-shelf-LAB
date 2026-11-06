@@ -298,6 +298,12 @@
       "agent-gateway",
       "ai-agent-security",
       "agent-controls"
+    ],
+    "D119": [
+      "agent-gateway",
+      "ai-agent-security",
+      "agent-controls",
+      "authorization-policy"
     ]
   },
   "D110": [
