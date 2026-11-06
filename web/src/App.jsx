@@ -374,11 +374,11 @@ export default function App() {
         </div>
         <div className="top__tools">
             <ShelfLink />
-          <div role="group" aria-label="Theme" className="seg">
-            {THEMES.map(([v, label]) => (
-              <button key={v} type="button" aria-pressed={theme === v} onClick={() => setTheme(v)}>{label}</button>
-            ))}
-          </div>
+          <label className="inline">Theme
+            <select value={theme} onChange={(e) => setTheme(e.target.value)} data-testid="theme">
+              {THEMES.map(([v, label]) => <option key={v} value={v}>{label}</option>)}
+            </select>
+          </label>
           <button type="button" aria-pressed={present} onClick={() => setPresent((p) => !p)}>Present</button>
           <button type="button" onClick={stopAll} disabled={busy || stopAllRunning || deployAllRunning} aria-busy={stopAllRunning || undefined} title="Stops every running demo; the shelf stays up">
             {stopAllRunning && <span className="spin" aria-hidden="true" />}Stop all
