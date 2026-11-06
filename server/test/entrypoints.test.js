@@ -132,7 +132,9 @@ describe('entry points', () => {
 
     it('npm run agent keeps running and says what to do when the container will not start', async () => {
       const { bin, opened } = setup();
-      fs.writeFileSync(path.join(bin, 'docker'), '#!/bin/sh\nif [ "$1" = context ]; then echo desktop-linux; fi\nexit 0\n', { mode: 0o755 });
+      // engine answers `context show` but `info` fails: docker is not running, so docker-up exits 1
+      // (a9f78d0 removed the context check — only `docker info` decides now).
+      fs.writeFileSync(path.join(bin, 'docker'), '#!/bin/sh\nif [ "$1" = info ]; then exit 1; fi\nif [ "$1" = context ]; then echo desktop-linux; fi\nexit 0\n', { mode: 0o755 });
       const a = await runAgent(bin, {}, (o) => /did not start/.test(o));
       try {
         expect(a.out()).toMatch(/did not start .*npm run docker/);
