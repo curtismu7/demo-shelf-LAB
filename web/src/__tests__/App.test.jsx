@@ -15,11 +15,32 @@ const shelf = (over = {}) => ({
   ...over,
 });
 const cardOf = (name) => within(screen.getByRole("heading", { name }).closest("article"));
-const mockFetch = (body) => { const f = vi.fn(async () => ({ ok: true, json: async () => body })); vi.stubGlobal("fetch", f); return f; };
+const INFO = { source: "mock", realAvailable: false, realReason: "The shelf is a launcher: it has no live mode. It starts, stops and health-checks the other demos, and each of those has its own Mock/Real toggle." };
+const mockFetch = (body) => { const f = vi.fn(async (url, init = {}) => {
+  if (String(url) === "/api/info") return { ok: true, json: async () => INFO };
+  if (String(url) === "/api/mode" && init.method === "POST") {
+    const b = JSON.parse(init.body || "{}");
+    if (!["mock", "real"].includes(b.source) || Object.keys(b).length !== 1) return { ok: false, json: async () => ({ error: "bad-request", message: 'body must be exactly {source: "mock" or "real"}' }) };
+    if (b.source === "real") return { ok: false, json: async () => ({ error: "real-not-available", message: INFO.realReason }) };
+    return { ok: true, json: async () => INFO };
+  }
+  return { ok: true, json: async () => body };
+}); vi.stubGlobal("fetch", f); return f; };
 beforeEach(() => { window.history.replaceState(null, "", "/"); }); // tests look at every card; the page itself opens on All
 afterEach(() => { vi.unstubAllGlobals(); vi.useRealTimers(); Object.defineProperty(document, "hidden", { value: false, configurable: true }); window.history.replaceState(null, "", "/"); }); // the filter lives in the address, so each test starts from a clean one
 
 describe("shelf page", () => {
+  it("the Mock/Real toggle is in the header: Real is disabled with the launcher's honest reason, and a mock switch reloads", async () => {
+    const f = mockFetch(shelf());
+    render(<App />);
+    await screen.findByText("Demo A");
+    expect(screen.getByTestId("mode-mock")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByTestId("mode-real")).toBeDisabled();
+    expect(screen.getByTestId("mode-real").getAttribute("title")).toContain("The shelf is a launcher");
+    // Already in Mock (the shelf has no live side), so the mock click is a no-op: no POST, no reload.
+    fireEvent.click(screen.getByTestId("mode-mock"));
+    expect(f.mock.calls.every(([u, i]) => !(u === "/api/mode" && i?.method === "POST"))).toBe(true);
+  });
   it("groups cards by catalog group and shows status as text", async () => {
     mockFetch(shelf());
     render(<App />);
@@ -134,7 +155,7 @@ describe("shelf page", () => {
     mockFetch(shelf());
     render(<App />);
     await screen.findByText("Demo A");
-    fireEvent.click(screen.getByRole("button", { name: "Mock" }));
+    fireEvent.click(screen.getAllByRole("button", { name: "Mock" }).find((b) => b.className.includes("chip")));
     expect(screen.getByText("No mock copies yet.")).toBeInTheDocument();
   });
   it("shows both Start and Stop on every installed card, enabling only the one that applies", async () => {

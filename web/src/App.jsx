@@ -138,6 +138,23 @@ export default function App() {
     }
   }, []);
 
+  // Rule 19: the Mock/Real toggle. The shelf is a launcher with no live mode, so Real is always disabled
+  // with the server's reason; the control still exists in the header and reports the honest answer.
+  const [modeInfo, setModeInfo] = useState(null);
+  useEffect(() => { call("/api/info").then(setModeInfo).catch(() => {}); }, []);
+  const selectMode = useCallback(async (source) => {
+    if (source === (modeInfo?.source || "mock")) return;
+    try {
+      const r = await call("/api/mode", "POST");
+      // call() only throws on !ok: a mock switch returns 200 and the info is refreshed.
+      void r;
+      setModeInfo(await call("/api/info"));
+      load(true);
+    } catch (e) {
+      setAnnounce(e.message);
+    }
+  }, [modeInfo, load]);
+
   useEffect(() => {
     load(false);
     const tick = () => { if (!document.hidden) load(false); };
@@ -363,6 +380,10 @@ export default function App() {
         </div>
         <div className="top__tools">
             <ShelfLink />
+          <div className="seg" role="group" aria-label="Mode" data-testid="mode">
+            <button type="button" aria-pressed={(modeInfo?.source || "mock") === "mock"} onClick={() => selectMode("mock")} data-testid="mode-mock">Mock</button>
+            <button type="button" aria-pressed={modeInfo?.source === "real"} disabled={modeInfo?.realAvailable !== true} title={modeInfo?.realAvailable !== true ? modeInfo?.realReason : undefined} onClick={() => selectMode("real")} data-testid="mode-real">Real</button>
+          </div>
           <label className="inline">Theme
             <select value={theme} onChange={(e) => setTheme(e.target.value)} data-testid="theme">
               {THEMES.map(([v, label]) => <option key={v} value={v}>{label}</option>)}

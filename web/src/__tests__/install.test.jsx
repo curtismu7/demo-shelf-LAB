@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "../App.jsx";
 import { cloneCommand } from "../install.js";
 
+const INFO = { source: "mock", realAvailable: false, realReason: "The shelf is a launcher: it has no live mode." };
 const st = (state) => ({ state, lastChecked: "2026-10-21T10:00:00Z", latencyMs: 12 });
 const REPO = "https://github.com/curtismu7/x-LAB";
 const card = (id, name, over = {}) => ({ id, name, catalogId: id.toUpperCase(), kind: "Demo", group: "C", wave: 0, description: `${name} text`, url: "http://localhost:4500", where: "installed", composeFile: "/x/c.yml", startCommand: "docker compose -f /x/c.yml up -d", canStart: true, install: "unknown", imagesBuilt: null, repo: null, status: st("down"), ...over });
@@ -150,10 +151,19 @@ describe("first load while the install check is pending", () => {
   it("looks again after a short wait, not after 30 s, then settles", async () => {
     const first = body([card("i", "Absent I", { install: "unknown" })], { installPending: true });
     const second = body([card("i", "Absent I", { install: "not-installed" })], { installPending: false });
-    const f = vi.fn()
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ notice: null }) }) // /api/notice on mount
-      .mockResolvedValueOnce({ ok: true, json: async () => first })
-      .mockResolvedValue({ ok: true, json: async () => second });
+    let shelfCalls = 0;
+    const f = vi.fn(async (url) => {
+      const u = String(url);
+      if (u === "/api/notice") return { ok: true, json: async () => ({ notice: null }) };
+      if (u === "/api/info") return { ok: true, json: async () => INFO };
+      if (u === "/api/releases") return { ok: true, json: async () => null };
+      if (!u.startsWith("/api/shelf")) return { ok: true, json: async () => ({}) };
+      shelfCalls += 1;
+      // The ShelfLink in the header also fetches /api/shelf once; only the App's own first load must answer
+      // pending, so the first two shelf calls answer `first` and every later one `second`.
+      const next = shelfCalls <= 2 ? first : second;
+      return { ok: true, json: async () => next };
+    });
     vi.stubGlobal("fetch", f);
     render(<App />);
     await screen.findByRole("heading", { name: "Absent I" });

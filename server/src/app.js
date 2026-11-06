@@ -67,6 +67,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
   const app = express();
   app.disable('x-powered-by');
   app.set('case sensitive routing', true);
+  app.use(express.json({ limit: '4kb' }));
   app.use((req, res, next) => {
     res.set('X-Content-Type-Options', 'nosniff');
     if (loopbackOnly && !LOOPBACK_HOSTS.has((req.headers.host || '').replace(/:\d+$/, '').toLowerCase())) return res.status(403).json({ error: 'bad-host' });
@@ -75,6 +76,17 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
 
   // demo-health/1 (docs/health-contract.md): public, GET only, no detail.
   app.get('/api/health', (req, res) => res.json({ schema: 'demo-health/1', at: new Date().toISOString(), state: 'ready', runtime: 'offline', demo: { id: 'demo-shelf-LAB', name: 'Demo Shelf LAB', version: VERSION } }));
+
+  // Rule 19: the Mock/Real toggle's contract. The shelf is a launcher: it has no live mode of its own — it
+  // starts, stops and health-checks the other demos. So realAvailable is always false with that honest reason.
+  const REAL_REASON = 'The shelf is a launcher: it has no live mode. It starts, stops and health-checks the other demos, and each of those has its own Mock/Real toggle.';
+  app.get('/api/info', (req, res) => res.json({ source: 'mock', realAvailable: false, realReason: REAL_REASON }));
+  app.post('/api/mode', (req, res) => {
+    const b = req.body && typeof req.body === 'object' && !Array.isArray(req.body) ? req.body : {};
+    if (Object.keys(b).length !== 1 || !['mock', 'real'].includes(b.source)) return res.status(400).json({ error: 'bad-request', message: 'body must be exactly {source: "mock" or "real"}' });
+    if (b.source === 'real') return res.status(409).json({ error: 'real-not-available', message: REAL_REASON });
+    return res.json({ source: 'mock', realAvailable: false, realReason: REAL_REASON });
+  });
 
   // Update notice from the meta-repo's UPDATES.md (owner-edited, fetched from
   // GitHub). Cached for 5 minutes; empty/failed fetch = no banner. The user's

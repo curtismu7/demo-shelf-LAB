@@ -248,3 +248,28 @@ describe('helpers', () => {
     fs.rmSync(dir, { recursive: true });
   });
 });
+
+describe('rule 19: Mock/Real toggle', () => {
+  const SHELF_REASON = /The shelf is a launcher/;
+  it('GET /api/info reports the honest mock-only answer', async () => {
+    const r = await request(mk()).get('/api/info').set('Host', 'localhost:4400');
+    expect(r.status).toBe(200);
+    expect(r.body).toMatchObject({ source: 'mock', realAvailable: false });
+    expect(r.body.realReason).toMatch(SHELF_REASON);
+  });
+  it('POST /api/mode {source:"real"} is refused 409 with the reason; mock answers 200; the body must be exactly {source}', async () => {
+    const app = mk();
+    const real = await request(app).post('/api/mode').set('Host', 'localhost:4400').set(sameOrigin).send({ source: 'real' });
+    expect(real.status).toBe(409);
+    expect(real.body.error).toBe('real-not-available');
+    expect(real.body.message).toMatch(SHELF_REASON);
+    const mock = await request(app).post('/api/mode').set('Host', 'localhost:4400').set(sameOrigin).send({ source: 'mock' });
+    expect(mock.status).toBe(200);
+    expect(mock.body.source).toBe('mock');
+    expect(mock.body.realAvailable).toBe(false);
+    for (const body of [{ source: 'mock', extra: 1 }, { source: 'junk' }, {}, 'x', [1]]) {
+      const r = await request(app).post('/api/mode').set('Host', 'localhost:4400').set(sameOrigin).send(body);
+      expect(r.status).toBe(400);
+    }
+  });
+});
