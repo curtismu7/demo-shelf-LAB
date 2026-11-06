@@ -518,6 +518,16 @@
    "wave": null,
    "status": "active",
    "summary": "The user sets what their AI agent may do (allowed action tiers, spend cap, unknown-agent policy); a mock tool boundary enforces it on every agent tool call: permit, human approval (HITL, 428 + task id, single-use receipt) or deny. A mock Protect evaluation at session start names an AI agent. Port 7660."
+  },
+  {
+   "id": "D118",
+   "name": "AI Gateway Suite",
+   "kind": "Demo",
+   "group": "D",
+   "seed": "built",
+   "wave": null,
+   "status": "active",
+   "summary": "Relayed agent chat: preset prompts (access review, prompt injection, jailbreak, exfiltration, PII, tool misuse) travel Main Agent -> AI Gateway (A2A) -> Worker Agent -> AI Gateway (MCP) -> MCP tool on a movable ReactFlow diagram with a per-hop trace and AI Guard blocks; a Personal Agent tab connects to a remote MCP server with tool forms and an OAuth dialog. Mock default; Real relays to an owner-configured central agent. Port 5750."
   }
  ]
 }
