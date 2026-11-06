@@ -314,6 +314,19 @@ export default function App() {
 
   const toggleTag = useCallback((id) => setPicked((prev) => { const n = new Set(prev); if (n.has(id)) n.delete(id); else n.add(id); return n; }), []);
 
+  // Ping products dropdown: a single-select view over the picked tags restricted to the
+  // "product" group. Choosing a product replaces any previously picked product tag (the
+  // group is OR), and "all" clears them; tags from other groups are untouched.
+  const productGroup = tagGroups.find((g) => g.id === "product");
+  const productPick = productGroup ? productGroup.tags.find((t) => picked.has(t.id))?.id ?? "" : "";
+  const setProductPick = useCallback((id) => setPicked((prev) => {
+    if (!productGroup) return prev;
+    const n = new Set(prev);
+    for (const t of productGroup.tags) n.delete(t.id);
+    if (id) n.add(id);
+    return n;
+  }), [productGroup]);
+
   // Within one tag group the picked tags are alternatives (OR); across groups they all have to hold (AND).
   const passesBase = (i) => {
     const q = text.trim().toLowerCase();
@@ -442,6 +455,16 @@ export default function App() {
                   <button key={v} type="button" className="chip" aria-pressed={where === v} onClick={() => setWhere(v)}>{label}</button>
                 ))}
               </div>
+              {productGroup && (
+                <label>Ping products
+                  <select value={productPick} onChange={(e) => setProductPick(e.target.value)}>
+                    <option value="">All products</option>
+                    {productGroup.tags.map((t) => (
+                      <option key={t.id} value={t.id} disabled={!picked.has(t.id) && (tagCounts[t.id] ?? 0) === 0}>{t.label}</option>
+                    ))}
+                  </select>
+                </label>
+              )}
               <label>Kind
                 <select value={kind} onChange={(e) => setKind(e.target.value)}>
                   <option value="all">All kinds</option>
