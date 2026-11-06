@@ -277,6 +277,20 @@
       "learning",
       "simulated",
       "real"
+    ],
+    "D115": [
+      "learning",
+      "ai-agent-security"
+    ],
+    "D116": [
+      "mcp-security",
+      "agent-gateway",
+      "ai-agent-security"
+    ],
+    "D117": [
+      "ai-agent-security",
+      "agent-controls",
+      "mcp-security"
     ]
   },
   "D110": [

@@ -78,23 +78,17 @@ function toItems(data) {
 
 const THEMES = [["auto", "Auto"], ["light", "Light"], ["dark", "Dark"]];
 const WHERES = [["all", "All"], ["installed", "Installed"], ["mock", "Mock"]];
-const kindOf = (i) => (i.kind || "").toLowerCase();
 
-// The page opens on All; ?status=<bucket> (or "all") overrides it.
-const DEFAULT_STATUS = "all";
-
-// Filter state that is worth sharing lives in the address: ?q=oidc&tags=pingfederate,real&status=all
+// Filter state that is worth sharing lives in the address: ?q=oidc&tags=pingfederate,real
 function fromAddress() {
   try {
     const p = new URLSearchParams(window.location.search);
-    const st = p.get("status");
     return {
       q: p.get("q") || "",
       tags: new Set((p.get("tags") || "").split(",").map((t) => t.trim()).filter(Boolean)),
-      status: st === "all" || BUCKETS.some((b) => b.id === st) ? st : DEFAULT_STATUS,
     };
   } catch {
-    return { q: "", tags: new Set(), status: DEFAULT_STATUS };
+    return { q: "", tags: new Set() };
   }
 }
 
@@ -115,8 +109,6 @@ export default function App() {
   const [releaseVersion, setReleaseVersion] = useState(null);
   const [announce, setAnnounce] = useState("");
   const [where, setWhere] = useState("all");
-  const [kind, setKind] = useState("all");
-  const [status, setStatus] = useState(() => fromAddress().status);
   const [text, setText] = useState(() => fromAddress().q);
   const [picked, setPicked] = useState(() => fromAddress().tags);
   const [present, setPresent] = useState(false);
@@ -307,10 +299,9 @@ export default function App() {
       const p = new URLSearchParams();
       if (text.trim()) p.set("q", text.trim());
       if (picked.size) p.set("tags", [...picked].join(","));
-      if (status !== DEFAULT_STATUS) p.set("status", status);
       window.history.replaceState(null, "", p.toString() ? `?${p}` : window.location.pathname);
     } catch { /* the address is a convenience */ }
-  }, [text, picked, status]);
+  }, [text, picked]);
 
   const toggleTag = useCallback((id) => setPicked((prev) => { const n = new Set(prev); if (n.has(id)) n.delete(id); else n.add(id); return n; }), []);
 
@@ -331,8 +322,6 @@ export default function App() {
   const passesBase = (i) => {
     const q = text.trim().toLowerCase();
     return (where === "all" || i.where === where) &&
-      (kind === "all" || (kind === "unclassified" ? !i.kind : kindOf(i).includes(kind))) &&
-      (status === "all" || i.bucket === status) &&
       (!q || [i.name, i.catalogId, ...(i.alsoCatalogIds || []), i.description, ...(i.tags || []).flatMap((t) => [t, tagInfo.get(t)?.label])].some((f) => (f || "").toLowerCase().includes(q)));
   };
   const passesTags = (i, skip) => tagGroups.every((g) => {
@@ -340,7 +329,7 @@ export default function App() {
     const mine = g.tags.filter((t) => picked.has(t.id));
     return !mine.length || mine.some((t) => i.tags?.includes(t.id));
   });
-  const shown = useMemo(() => items.filter((i) => passesBase(i) && passesTags(i)), [items, where, kind, status, text, picked, tagGroups]); // eslint-disable-line react-hooks/exhaustive-deps
+  const shown = useMemo(() => items.filter((i) => passesBase(i) && passesTags(i)), [items, where, text, picked, tagGroups]); // eslint-disable-line react-hooks/exhaustive-deps
   // How many cards each chip would give, with every other filter (and the other tag groups) applied.
   const tagCounts = useMemo(() => {
     const out = {};
@@ -349,7 +338,7 @@ export default function App() {
       for (const t of g.tags) out[t.id] = pool.filter((i) => i.tags?.includes(t.id)).length;
     }
     return out;
-  }, [items, where, kind, status, text, picked, tagGroups]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [items, where, text, picked, tagGroups]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Registered demos stand on the first shelf. Planned ideas follow, one shelf per catalog group.
   const byPlan = (a, b) => (a.wave ?? 99) - (b.wave ?? 99) || String(a.catalogId).localeCompare(String(b.catalogId), undefined, { numeric: true });
@@ -439,13 +428,13 @@ export default function App() {
         {data && (
           <>
             <section className="lights" aria-label="Summary by status">
-              <button type="button" className="chip" data-state="all" aria-pressed={status === "all"} onClick={() => setStatus("all")}>
+              <span type="button" className="chip" data-state="all">
                 <b>{items.length}</b> All
-              </button>
+              </span>
               {BUCKETS.map((b) => (
-                <button key={b.id} type="button" className="chip" data-state={b.id} aria-pressed={status === b.id} onClick={() => setStatus(status === b.id ? "all" : b.id)}>
+                <span key={b.id} className="chip" data-state={b.id}>
                   <b>{counts[b.id] || 0}</b> {b.label}
-                </button>
+                </span>
               ))}
             </section>
             <form className="filters" role="search" onSubmit={(e) => e.preventDefault()}>
@@ -465,22 +454,6 @@ export default function App() {
                   </select>
                 </label>
               )}
-              <label>Kind
-                <select value={kind} onChange={(e) => setKind(e.target.value)}>
-                  <option value="all">All kinds</option>
-                  <option value="demo">Demo</option>
-                  <option value="tester">Tester</option>
-                  <option value="tool">Tool</option>
-                  <option value="unclassified">Unclassified</option>
-                </select>
-              </label>
-              <label>Status
-                <select value={status} onChange={(e) => setStatus(e.target.value)}>
-                  <option value="all">All statuses</option>
-                  <option value="all">All</option>
-                  {BUCKETS.map((b) => <option key={b.id} value={b.id}>{b.label}</option>)}
-                </select>
-              </label>
             </form>
             {tagGroups.length > 0 && !tagsOpen && !picked.size && (
               <p className="tag-toggle"><button type="button" aria-expanded="false" onClick={() => setTagsOpen(true)}>Filter by tag</button> <span className="tag-filters__count" role="status">{shown.length} of {items.length} shown</span></p>

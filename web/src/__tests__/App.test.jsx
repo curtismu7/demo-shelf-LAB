@@ -16,7 +16,7 @@ const shelf = (over = {}) => ({
 });
 const cardOf = (name) => within(screen.getByRole("heading", { name }).closest("article"));
 const mockFetch = (body) => { const f = vi.fn(async () => ({ ok: true, json: async () => body })); vi.stubGlobal("fetch", f); return f; };
-beforeEach(() => { window.history.replaceState(null, "", "/?status=all"); }); // tests look at every card; the page itself opens on All
+beforeEach(() => { window.history.replaceState(null, "", "/"); }); // tests look at every card; the page itself opens on All
 afterEach(() => { vi.unstubAllGlobals(); vi.useRealTimers(); Object.defineProperty(document, "hidden", { value: false, configurable: true }); window.history.replaceState(null, "", "/"); }); // the filter lives in the address, so each test starts from a clean one
 
 describe("shelf page", () => {
@@ -38,9 +38,9 @@ describe("shelf page", () => {
     render(<App />);
     await screen.findByText("Demo A");
     const sum = screen.getByRole("region", { name: "Summary by status" });
-    expect(within(sum).getByText("Running").closest("button")).toHaveTextContent("2"); // Demo A (ready) + Demo C (up, no contract)
-    expect(within(sum).getByText("Offline").closest("button")).toHaveTextContent("1"); // Demo B (down)
-    expect(within(sum).getByText("New").closest("button")).toHaveTextContent("1");     // Passwordless (planned)
+    expect(within(sum).getByText("Running").closest("span")).toHaveTextContent("2"); // Demo A (ready) + Demo C (up, no contract)
+    expect(within(sum).getByText("Offline").closest("span")).toHaveTextContent("1"); // Demo B (down)
+    expect(within(sum).getByText("New").closest("span")).toHaveTextContent("1");     // Passwordless (planned)
     expect(within(screen.getByText("Demo A").closest("article")).getByRole("link", { name: /Open/ })).toHaveAttribute("target", "_blank");
     expect(within(screen.getByText("Demo B").closest("article")).queryByRole("link")).toBeNull();
   });
@@ -89,7 +89,7 @@ describe("shelf page", () => {
     await waitFor(() => expect(document.querySelector(".note")).not.toBeNull());
     expect(document.querySelector(".note").textContent).toMatch(/deploy done/i);
   });
-  it("filters by text, kind and status", async () => {
+  it("filters by text and shows the status summary chips", async () => {
     mockFetch(shelf());
     render(<App />);
     await screen.findByText("Demo A");
@@ -97,13 +97,7 @@ describe("shelf page", () => {
     expect(screen.queryByText("Demo A")).toBeNull();
     expect(screen.getByText("Demo B")).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText("Search"), { target: { value: "" } });
-    fireEvent.change(screen.getByLabelText("Kind"), { target: { value: "tool" } });
-    expect(screen.getByText("Demo C")).toBeInTheDocument();
-    expect(screen.queryByText("Demo B")).toBeNull();
-    fireEvent.change(screen.getByLabelText("Kind"), { target: { value: "all" } });
-    fireEvent.change(screen.getByLabelText("Status"), { target: { value: "new" } });
-    expect(screen.getByText("Passwordless")).toBeInTheDocument();
-    expect(screen.queryByText("Demo A")).toBeNull();
+    expect(screen.getByLabelText("Summary by status")).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText("Search"), { target: { value: "zzz" } });
     expect(screen.getByText("Nothing matches these filters.")).toBeInTheDocument();
   });
@@ -305,17 +299,13 @@ describe("shelf page", () => {
     expect(within(d).getByText(/built or proposed but not registered/)).toBeInTheDocument();
     expect(within(d).getByText(/A3, wave 3/)).toBeInTheDocument();
   });
-  it("lists items with no kind under an Unclassified option", async () => {
+  it("shows items with no kind alongside the rest", async () => {
     const body = shelf();
     body.planned.push({ id: "Z9", name: "Mystery", kind: null, group: "A", wave: 2, status: { state: "planned" } });
     mockFetch(body);
     render(<App />);
     await screen.findByText("Demo A");
-    fireEvent.change(screen.getByLabelText("Kind"), { target: { value: "unclassified" } });
     expect(screen.getByText("Mystery")).toBeInTheDocument();
-    expect(screen.queryByText("Demo A")).toBeNull();
-    fireEvent.change(screen.getByLabelText("Kind"), { target: { value: "tool" } });
-    expect(screen.queryByText("Mystery")).toBeNull();
   });
   it("auto-refreshes every 30 s and pauses while the tab is hidden", async () => {
     vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
@@ -517,36 +507,29 @@ describe("tags", () => {
     expect(p.get("q")).toBe("token");
     fireEvent.click(screen.getByRole("button", { name: "Clear tags" }));
     fireEvent.change(screen.getByLabelText("Search"), { target: { value: "" } });
-    expect(window.location.search).toBe(""); // status=all is the default: no param needed
+    expect(window.location.search).toBe(""); // the defaults need no param
   });
 
-  it("opens on All: every card shows, the All chip is pressed, and the address stays clean; the bucket filter narrows to Running", async () => {
+  it("the status row is a summary, not a filter: every card shows and the address stays clean", async () => {
     window.history.replaceState(null, "", "/");
     mockFetch(shelf());
     render(<App />);
     await screen.findByText("Demo A");
     expect(screen.getByText("Demo A")).toBeInTheDocument();
     expect(screen.getByText("Demo B")).toBeInTheDocument();
-    expect(within(screen.getByRole("region", { name: "Summary by status" })).getByText("All").closest("button")).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByLabelText("Status")).toHaveValue("all");
+    const summary = screen.getByRole("region", { name: "Summary by status" });
+    expect(within(summary).getByText("All").closest("span")).not.toBeNull();
+    expect(screen.queryByLabelText("Status")).toBeNull();
     expect(window.location.search).toBe("");
-    fireEvent.change(screen.getByLabelText("Status"), { target: { value: "running" } });
-    expect(await screen.findByText("Demo A")).toBeInTheDocument();
-    expect(screen.queryByText("Demo B")).toBeNull();
-    expect(window.location.search).toBe("?status=running");
   });
 
-  it("?status=new opens on the not-deployed ideas, and an unknown status falls back to All", async () => {
+  it("an old ?status= link still loads with every card shown (the param is ignored)", async () => {
     window.history.replaceState(null, "", "/?status=new");
     mockFetch(shelf());
-    const { unmount } = render(<App />);
-    expect(await screen.findByText("Passwordless")).toBeInTheDocument();
-    expect(screen.queryByText("Demo A")).toBeNull();
-    unmount();
-    window.history.replaceState(null, "", "/?status=bogus");
     render(<App />);
     await screen.findByText("Demo A");
-    expect(screen.getByLabelText("Status")).toHaveValue("all");
+    expect(screen.getByText("Passwordless")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Status")).toBeNull();
   });
 
   it("starts from the address: ?tags=real&q=real picks the chip and the search, and unknown tags are ignored", async () => {
