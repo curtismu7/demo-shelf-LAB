@@ -68,6 +68,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const fetchFn = process.env.SHELF_PROBE_HOST ? createProbeFetch({ probeHost: process.env.SHELF_PROBE_HOST }) : undefined;
     const untagged = untaggedPlanned(catalog, demos, catalogTags);
     if (untagged.length) console.warn(`${untagged.length} planned idea${untagged.length > 1 ? 's have' : ' has'} no tags (add to data/catalog-tags.json): ${untagged.join(', ')}`);
+    const dataDir = path.resolve(process.env.SHELF_DATA_DIR || path.join(root, '.data'));
     const lastRunning = createLastRunning({ file: path.join(dataDir, 'last-running.json') });
     const app = createApp({ demos, catalog, tags, catalogTags, allowStart, agent, inDocker, installSource, demoRoot, fetchFn, loopbackOnly: bind.loopback || inDocker, shelfDir: root, webDist: path.join(root, 'web', 'dist'), lastRunning });
     app.listen(port, bind.host, () => {
