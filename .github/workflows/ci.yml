@@ -60,3 +60,5 @@ jobs:
           echo "history hits: $hist"
           echo "tree files with hits: $tree_count"
           test "$hist" = "0" && test "$tree_count" = "0"
+      - name: No AI attribution
+        run: bash scripts/check-no-ai-attribution.sh
