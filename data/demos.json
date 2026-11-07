@@ -1200,6 +1200,105 @@
         "real"
       ],
       "repo": "https://github.com/curtismu7/idjag-runner-LAB"
+    },
+    {
+      "id": "agent-preferences-lab",
+      "name": "Agent Preferences Lab",
+      "kind": "Demo",
+      "description": "The user sets what their AI agent may do — allowed action tiers, a spend cap, what happens when Protect detects an AI agent — enforced at a mock MCP tool boundary: permit, human approval (HITL) or deny. Standalone mock of the AI-DEMO2 agentPreferences feature. Mock only.",
+      "url": "http://localhost:7660",
+      "healthPath": "/api/health",
+      "composeFile": "agent-preferences-lab/docker-compose.yml",
+      "tags": [
+        "agent-controls",
+        "human-in-the-loop",
+        "ai-agent-security",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/agent-preferences-lab"
+    },
+    {
+      "id": "delegation-lab",
+      "name": "Delegation Lab",
+      "catalogId": "D120",
+      "kind": "Demo",
+      "description": "Consent mints a delegated token with act={agent}; the gateway validates the chain (actor allow-list, no upstream audience). Directory groups are read EVERY decision: outside the group is denied regardless of scopes; premium expands tools and ceiling. Mock of UC1/UC9/UC9A/UC21.",
+      "url": "http://localhost:7690",
+      "healthPath": "/api/health",
+      "composeFile": "delegation-lab-LAB/docker-compose.yml",
+      "tags": [
+        "agent-gateway",
+        "ai-agent-security",
+        "agent-controls",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/delegation-lab-LAB"
+    },
+    {
+      "id": "demo-field-guide",
+      "name": "Demo field guide LAB",
+      "catalogId": "D115",
+      "kind": "Tool",
+      "description": "A JSON-driven card-deck handoff page: edit data/cards.json (title, base URL, sections, cards) and the page renders it. Genericized from the AI-DEMO2 personal-agents handoff page; no baked-in routes or credentials. Each deployment points at its own demo surfaces.",
+      "url": "http://localhost:7590",
+      "healthPath": "/api/health",
+      "composeFile": "demo-field-guide-LAB/docker-compose.yml",
+      "tags": [
+        "learning",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/demo-field-guide-LAB"
+    },
+    {
+      "id": "diagram-prove-lab",
+      "name": "Diagram Prove Lab",
+      "kind": "Tool",
+      "description": "Validated personal-agent (ChatGPT) and digital-assistant diagrams as diagram-studio data, with a Prove-it-live checklist: each token claim (RFC 8693 sub+act, scope narrowing, HITL) maps to a real prompt and its evidence. Movable boxes, Simulate, Reset, Mock/Real toggle.",
+      "url": "http://localhost:7710",
+      "healthPath": "/api/health",
+      "composeFile": "diagram-prove-lab/docker-compose.yml",
+      "tags": [
+        "learning",
+        "simulated",
+        "real"
+      ],
+      "repo": "https://github.com/curtismu7/diagram-prove-lab"
+    },
+    {
+      "id": "hitl-mfa-lab",
+      "name": "HITL MFA Lab",
+      "catalogId": "D119",
+      "kind": "Demo",
+      "description": "An agent's money movement gated by a mock authorization policy: amount bands decide PERMIT, human consent (HITL), MFA step-up or DENY, and CIBA asks for out-of-band approval on the user's phone. Single-use, amount-bound receipts. Mock of the AI-DEMO2 HITL track (UC7/UC8/UC22).",
+      "url": "http://localhost:7680",
+      "healthPath": "/api/health",
+      "composeFile": "hitl-mfa-lab-LAB/docker-compose.yml",
+      "tags": [
+        "human-in-the-loop",
+        "ciba",
+        "step-up",
+        "agent-controls",
+        "simulated",
+        "real"
+      ],
+      "repo": "https://github.com/curtismu7/hitl-mfa-lab-LAB"
+    },
+    {
+      "id": "mcp-gateway-lab",
+      "name": "MCP Gateway Lab",
+      "kind": "Demo",
+      "description": "A third-party weather MCP server scoped at an agent gateway: an admin-editable policy is enforced at the edge, so a denied call never reaches the backend and switching the policy flips the same call with no restart. Mock of the AI-DEMO2 weather-mcp showcase (UC30/31/32).",
+      "url": "http://localhost:7670",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-gateway-lab-LAB/docker-compose.yml",
+      "tags": [
+        "mcp",
+        "mcp-security",
+        "agent-gateway",
+        "simulated",
+        "real"
+      ],
+      "repo": "https://github.com/curtismu7/mcp-gateway-lab-LAB"
     }
   ]
 }
