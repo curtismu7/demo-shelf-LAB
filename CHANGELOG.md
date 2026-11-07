@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- A Help button in the header opens a side drawer listing every way to start a demo: Start on a card, Restore last set after a restart, the `scripts/setup.sh` commands (`--start`, `--start-top`, `--start-all`, with a RAM warning), and fixes when Start does nothing. Escape or Close shuts it; opening a demo's details closes it.
 - The seed registers mcp-tools (D3, MCP inspector), mcp-scanner (D4, the same app on port 4810) and mcp-resource-server (D0, port 8081), 52 demos in all. All three carry `mcp-server-built`; the tag's tooltip no longer says "not a tester or inspector".
 - New tag `mcp-server-built` ("MCP tool we built") in a new "What we built" group, on hostile-mcp and mcp-surface-lab. The tag filter shows it like any other chip.
 - `alsoCatalogIds` on a demo: extra catalog rows the one card covers (they stop showing as planned, and search finds the card by them). The server warns, and `npm run doctor` fails, on an id that is not a catalog row, repeats the entry's own `catalogId`, or is claimed by another demo.

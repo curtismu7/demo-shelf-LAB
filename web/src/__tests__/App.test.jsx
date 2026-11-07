@@ -311,6 +311,30 @@ describe("shelf page", () => {
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(document.activeElement).toBe(opener);
   });
+  it("opens a Help drawer that lists the ways to start, closes on Escape and returns focus to Help", async () => {
+    mockFetch(shelf());
+    render(<App />);
+    await screen.findByText("Demo A");
+    const helpBtn = screen.getByRole("button", { name: "Help" });
+    fireEvent.click(helpBtn);
+    const d = screen.getByRole("dialog", { name: "How to start a demo" });
+    expect(within(d).getByText("Restore last set")).toBeInTheDocument();
+    expect(within(d).getByText("scripts/setup.sh --start-top=10")).toBeInTheDocument();
+    expect(within(d).getByText("npm run agent")).toBeInTheDocument();
+    expect(within(d).getByRole("button", { name: "Close" })).toHaveFocus();
+    fireEvent.keyDown(d, { key: "Escape" });
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(helpBtn).toHaveFocus();
+  });
+  it("shows one drawer at a time: opening a demo's details closes Help", async () => {
+    mockFetch(shelf());
+    render(<App />);
+    await screen.findByText("Demo A");
+    fireEvent.click(screen.getByRole("button", { name: "Help" }));
+    fireEvent.click(within(screen.getByText("Demo B").closest("article")).getByRole("button", { name: /Details/ }));
+    expect(screen.queryByRole("dialog", { name: "How to start a demo" })).toBeNull();
+    expect(screen.getByRole("dialog", { name: "Demo B details" })).toBeInTheDocument();
+  });
   it("opens the details drawer for a planned card", async () => {
     mockFetch(shelf());
     render(<App />);
