@@ -65,7 +65,8 @@
       "pingProducts": [
         "privilege-gateway",
         "pingone"
-      ]
+      ],
+      "catalogId": "D121"
     },
     {
       "id": "id-jag-standalone",

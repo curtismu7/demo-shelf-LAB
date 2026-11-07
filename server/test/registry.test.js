@@ -153,7 +153,7 @@ describe('loadRegistry', () => {
     expect(demos.slice(0, 11).map((d) => [d.id, d.catalogId, d.url])).toEqual([
       ['ai-gateway-client', 'D20', 'http://127.0.0.1:6880'],
       ['mcp-demo-client-privilege', 'D2', 'http://127.0.0.1:6884'],
-      ['privilege-a2a-anthropic-demo', undefined, 'http://127.0.0.1:6881'],
+      ['privilege-a2a-anthropic-demo', 'D121', 'http://127.0.0.1:6881'],
       ['id-jag-standalone', 'C1', 'http://localhost:4720'],
       ['privilege-demo', 'D1', 'http://127.0.0.1:4510'],
       ['privilege-map', undefined, 'http://127.0.0.1:5301'],

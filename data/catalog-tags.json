@@ -310,6 +310,12 @@
       "ai-agent-security",
       "agent-controls",
       "authorization-policy"
+    ],
+    "D121": [
+      "a2a",
+      "mcp",
+      "agent-gateway",
+      "ai-agent-security"
     ]
   },
   "D110": [
