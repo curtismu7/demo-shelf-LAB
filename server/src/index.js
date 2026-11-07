@@ -8,6 +8,7 @@ import { createAgentClient } from './agent-client.js';
 import { createInstallChecker } from './install.js';
 import { createProbeFetch } from './probe.js';
 import { loadCatalogTags, loadTaxonomy, tagIdSet, untaggedPlanned } from './tags.js';
+import { createLastRunning } from './lastRunning.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const LOOPBACK = new Set(['127.0.0.1', '::1', 'localhost']);
@@ -67,7 +68,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const fetchFn = process.env.SHELF_PROBE_HOST ? createProbeFetch({ probeHost: process.env.SHELF_PROBE_HOST }) : undefined;
     const untagged = untaggedPlanned(catalog, demos, catalogTags);
     if (untagged.length) console.warn(`${untagged.length} planned idea${untagged.length > 1 ? 's have' : ' has'} no tags (add to data/catalog-tags.json): ${untagged.join(', ')}`);
-    const app = createApp({ demos, catalog, tags, catalogTags, allowStart, agent, inDocker, installSource, demoRoot, fetchFn, loopbackOnly: bind.loopback || inDocker, shelfDir: root, webDist: path.join(root, 'web', 'dist') });
+    const lastRunning = createLastRunning({ file: path.join(dataDir, 'last-running.json') });
+    const app = createApp({ demos, catalog, tags, catalogTags, allowStart, agent, inDocker, installSource, demoRoot, fetchFn, loopbackOnly: bind.loopback || inDocker, shelfDir: root, webDist: path.join(root, 'web', 'dist'), lastRunning });
     app.listen(port, bind.host, () => {
       console.log(`demo-shelf on http://${bind.host}:${port}  (${demos.length} demos, start/stop ${allowStart ? (inDocker ? 'via the start agent' : 'on') : 'off'})`);
     });

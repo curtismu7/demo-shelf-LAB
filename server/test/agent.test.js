@@ -5,6 +5,7 @@ import path from 'node:path';
 import request from 'supertest';
 import { describe, expect, it, vi } from 'vitest';
 import { createAgent, ensureToken, sameToken } from '../src/agent.js';
+import { createLastRunning } from '../src/lastRunning.js';
 import { createAgentClient } from '../src/agent-client.js';
 
 const TOKEN = 'a'.repeat(64);
@@ -235,5 +236,42 @@ describe('Stop never takes the shelf down', () => {
   it('without a shelf folder the guard is off (the unit default)', async () => {
     const { r } = await run(entry('a', `${SHELF}/docker-compose.yml`), 'stop', null);
     expect(r.status).toBe(200);
+  });
+
+});
+
+describe('last-running + restore-last', () => {
+  it('restore-last: starts the recorded set LRU-first, records them again, skips unknown ids', async () => {
+    const file = path.join(os.tmpdir(), `agent-lastrunning-${Date.now()}.json`);
+    const lastRunning = createLastRunning({ file });
+    lastRunning.recordStart('a'); lastRunning.recordStart('b');
+    const a = mk({ lastRunning });
+    const r = await call(a, 'post', '/v1/restore-last').send({ limit: 10 });
+    expect(r.status).toBe(200);
+    expect(r.body.results).toEqual([
+      { id: 'a', started: true },
+      { id: 'b', started: false, error: 'not-registered' },
+    ]);
+    // 'b' is not in the registry: dropped from the remembered set; 'a' re-recorded as most recent.
+    expect(lastRunning.list().map((e) => e.id)).toEqual(['a']);
+    fs.rmSync(file, { force: true });
+  });
+
+  it('restore-last: 409 when the agent has no lastRunning', async () => {
+    const r = await call(mk(), 'post', '/v1/restore-last');
+    expect(r.status).toBe(409);
+  });
+
+  it('GET /v1/last-running returns the set; 409 without lastRunning', async () => {
+    const file = path.join(os.tmpdir(), `agent-lastrunning2-${Date.now()}.json`);
+    const lastRunning = createLastRunning({ file });
+    lastRunning.recordStart('a');
+    const withLr = mk({ lastRunning });
+    const got = await call(withLr, 'get', '/v1/last-running');
+    expect(got.status).toBe(200);
+    expect(got.body.demos.map((e) => e.id)).toEqual(['a']);
+    const without = await call(mk(), 'get', '/v1/last-running');
+    expect(without.status).toBe(409);
+    fs.rmSync(file, { force: true });
   });
 });

@@ -10,6 +10,7 @@ import { expandWhere } from './app.js';
 import { loadShelfEnv } from './dotenv.js';
 import { loadAll } from './index.js';
 import { defaultExec } from './control.js';
+import { createLastRunning } from './lastRunning.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 loadShelfEnv(root);
@@ -21,7 +22,8 @@ if (!Number.isInteger(port) || port < 1 || port > 65535) {
 const dataDir = path.resolve(process.env.SHELF_DATA_DIR || path.join(root, '.data'));
 const token = ensureToken(dataDir);
 const demoRoot = path.resolve(process.env.SHELF_DEMO_ROOT || path.join(root, '..'));
-const agent = createAgent({ getDemos: () => expandWhere(loadAll().demos).filter((d) => d.where === 'installed'), token, port, exec: defaultExec, fileExists: (f) => fs.existsSync(f), shelfDir: root, demoRoot });
+const lastRunning = createLastRunning({ file: path.join(dataDir, 'last-running.json') });
+const agent = createAgent({ getDemos: () => expandWhere(loadAll().demos).filter((d) => d.where === 'installed'), token, port, exec: defaultExec, fileExists: (f) => fs.existsSync(f), shelfDir: root, demoRoot, lastRunning });
 agent.listen(port, '127.0.0.1', () => {
   console.log(`start agent on http://127.0.0.1:${port} (token in ${path.join(dataDir, 'agent-token')}). Ctrl-C to stop.`);
   if (process.env.CI || process.env.SHELF_AUTOSTART === '0' || process.env.SHELF_DATA_DIR) return;

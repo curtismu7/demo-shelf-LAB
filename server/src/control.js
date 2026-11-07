@@ -60,9 +60,20 @@ export async function orbstackGuard(exec, opts) {
   return ctx === 'orbstack' ? 'ok' : 'docker-context-not-orbstack';
 }
 
+// Docker's default address pool holds ~31 user networks; every compose project takes one for
+// its lifetime. A machine with many labs hits "all predefined address pools have been fully
+// subnetted" — a cryptic daemon error mid-deploy. The guard counts networks first and refuses
+// with the fix, so the caller (the shelf UI) can show it where the button is.
+const NETWORK_LIMIT_DEFAULT = 28;
+export async function networkPoolGuard(exec, limit = NETWORK_LIMIT_DEFAULT) {
+  let out;
+  try { out = (await exec('docker', ['network', 'ls', '--format', '{{.Name}}'])).stdout.trim().split('\n').filter(Boolean); } catch { return 'docker-unavailable'; }
+  return out.length >= limit ? `network-pool-nearly-full:${out.length}` : 'ok';
+}
+
 // The one place that touches Docker. Used by the shelf (host-run) and by the start agent. Returns { status, body }.
 // `exec` and `fileExists` are injectable for tests.
-export async function runCompose(demo, action, { exec = defaultExec, fileExists = fs.existsSync, shelfDir = null } = {}) {
+export async function runCompose(demo, action, { exec = defaultExec, fileExists = fs.existsSync, shelfDir = null, networkLimit = NETWORK_LIMIT_DEFAULT } = {}) {
   const fail = (status, error, extra = {}) => ({ status, body: { ok: false, error, ...extra } });
   if (isShelfItself(demo, shelfDir)) return fail(409, 'is-the-shelf');
   const guard = await orbstackGuard(exec);
@@ -70,6 +81,13 @@ export async function runCompose(demo, action, { exec = defaultExec, fileExists 
   if (guard !== 'ok') return fail(409, guard);
   const missing = [demo.composeFile, ...(demo.composeOverlays || [])].filter((f) => !fileExists(f));
   if (missing.length) return fail(409, 'compose-file-missing', { missing });
+  if (action === 'start' || action === 'deploy') {
+    const pool = await networkPoolGuard(exec, networkLimit);
+    if (pool === 'docker-unavailable') return fail(503, pool);
+    if (pool !== 'ok') return fail(409, pool, {
+      output: `Docker has too many networks (${pool.split(':')[1]} >= limit ${networkLimit}). Fix: docker network prune -f  (stops nothing running), or stop some labs from the shelf, or raise default-address-pools in the docker daemon settings.`,
+    });
+  }
   try {
     // Run from the compose file's own folder, as a person would: relative paths, .env and build contexts then resolve the same way.
     const out = await exec('docker', composeArgs(demo, action), { cwd: path.dirname(demo.composeFile), timeoutMs: action === 'start' ? START_TIMEOUT_MS : EXEC_TIMEOUT_MS });
@@ -83,7 +101,7 @@ export async function runCompose(demo, action, { exec = defaultExec, fileExists 
 // Express middleware factory. With `agent` (the shelf in a container) the compose call is handed to the host-side start agent;
 // without it the shelf runs Docker itself. `inDocker` skips the remote-address check, because inside a container every request
 // arrives from the Docker network: the compose file publishes the port on 127.0.0.1 only, and the Host and Origin checks still apply.
-export function createControlRouter({ express, getDemos, onChange, exec = defaultExec, fileExists = fs.existsSync, agent = null, inDocker = false, shelfDir = null, demoRoot = null }) {
+export function createControlRouter({ express, getDemos, onChange, exec = defaultExec, fileExists = fs.existsSync, agent = null, inDocker = false, shelfDir = null, demoRoot = null, lastRunning = null, networkLimit = NETWORK_LIMIT_DEFAULT }) {
   const router = express.Router({ caseSensitive: true });
   const busy = new Set();
 
@@ -110,18 +128,24 @@ export function createControlRouter({ express, getDemos, onChange, exec = defaul
           // clones/fast-forwards the registry-validated repo, then runs compose start.
           if (!demoRoot) return fail(409, 'no-demo-root');
           const r = await agent.run(demo.id, 'deploy');
-          if (r.status === 200) onChange?.(demo.id);
+          if (r.status === 200) { lastRunning?.recordStart(demo.id); onChange?.(demo.id); }
           return res.status(r.status).json(r.body);
         }
         if (!demoRoot) return fail(409, 'no-demo-root');
         const g = await ensureRepo(demo, demoRoot, { exec });
         if (!g.ok) return res.status(409).json({ ok: false, error: g.error, output: redact(g.output || '') });
-        const r = await runCompose(demo, 'start', { exec, fileExists, shelfDir });
-        if (r.status === 200) onChange?.(demo.id);
+        const r = await runCompose(demo, 'start', { exec, fileExists, shelfDir, networkLimit });
+        if (r.status === 200) { lastRunning?.recordStart(demo.id); onChange?.(demo.id); }
         return res.status(r.status).json({ ...r.body, deploy: g.how, dir: g.dir });
       }
-      const r = agent ? await agent.run(demo.id, req.params.action) : await runCompose(demo, req.params.action, { exec, fileExists, shelfDir });
-      if (r.status === 200) onChange?.(demo.id);
+      const r = agent ? await agent.run(demo.id, req.params.action) : await runCompose(demo, req.params.action, { exec, fileExists, shelfDir, networkLimit });
+      if (r.status === 200) {
+        if (lastRunning) {
+          if (req.params.action === 'start' || req.params.action === 'deploy') lastRunning.recordStart(demo.id);
+          if (req.params.action === 'stop') lastRunning.recordStop(demo.id);
+        }
+        onChange?.(demo.id);
+      }
       return res.status(r.status).json(r.body);
     } catch {
       return fail(500, 'internal'); // Express 4 does not catch a rejected handler: answer instead of hanging
