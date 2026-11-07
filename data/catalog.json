@@ -552,6 +552,14 @@
       "group": "D",
       "oneLiner": "An access review travels Main Agent, A2A, Worker Agent, MCP tool, with a per-hop trace and model calls routed through Privilege.",
       "status": "active"
+    },
+    {
+      "id": "D122",
+      "name": "A2A delegation hand-off",
+      "kind": "Demo",
+      "group": "D",
+      "oneLiner": "Generalist hands off to a specialist: nested act chain, scope narrowed per hop, gateway admits only a registered specialist.",
+      "status": "active"
     }
   ]
 }

@@ -197,6 +197,8 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'ciba-hitl-lab': '/ciba-hitl-lab/',
     'hitl-mfa-lab': '/hitl-mfa-lab/',
     'delegation-lab': '/delegation-lab/',
+    'a2a-lab': '/a2a-lab/',
+    'idjag-runner': '/idjag-runner/',
     'cimd-lab': '/cimd-lab/',
     'customer-agent': '/customer-agent/',
     'gateway-claims': '/gateway-claims/',

@@ -1167,6 +1167,39 @@
       "where": "installed",
       "repo": "https://github.com/curtismu7/ping-services-stub-LAB",
       "group": "C"
+    },
+    {
+      "id": "a2a-lab",
+      "name": "A2A Lab",
+      "catalogId": "D122",
+      "kind": "Demo",
+      "description": "A generalist agent hands off to a specialist: two RFC 8693 exchanges build the nested act chain, scope narrowed per hop. The gateway routes the call only when the specialist is registered; an unregistered identity is denied. Mock of UC2/2.5/2.6/2.7.",
+      "url": "http://localhost:7700",
+      "healthPath": "/api/health",
+      "composeFile": "a2a-lab-LAB/docker-compose.yml",
+      "tags": [
+        "agent-gateway",
+        "ai-agent-security",
+        "agent-controls",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/a2a-lab-LAB"
+    },
+    {
+      "id": "idjag-runner",
+      "name": "Tarun ID-JAG Runner",
+      "kind": "Tester",
+      "description": "Runs the PingFederate ID-JAG (cross-app access) demo without Postman: password grant + refresh, RFC 8693 exchange for the ID-JAG assertion, jwt-bearer redeem + introspection, four refusal cases, and a JWKS inspector. Real PingFederate 13.1+ only.",
+      "url": "http://localhost:4780",
+      "healthPath": "/api/health",
+      "composeFile": "idjag-runner-LAB/deploy/docker-compose.yml",
+      "tags": [
+        "pingfederate",
+        "id-jag",
+        "token-exchange",
+        "real"
+      ],
+      "repo": "https://github.com/curtismu7/idjag-runner-LAB"
     }
   ]
 }
