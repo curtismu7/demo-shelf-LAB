@@ -531,6 +531,33 @@ html[data-present] {
   overflow-wrap: anywhere;
 }
 
+.help__step {
+  margin: 18px 0 4px;
+  font-size: 0.95rem;
+}
+
+.drawer p,
+.help__list {
+  margin: 4px 0;
+}
+
+.help__list {
+  padding-left: 1.2rem;
+}
+
+.help__list li {
+  margin-top: 6px;
+}
+
+.help__cmds dt {
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
 .mono {
   font-size: 0.8rem;
 }

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Card, Drawer } from "./Card.jsx";
 import { LABELS, BUCKETS, BUCKET_OF_STATE } from "./status.js";
 import ShelfLink from "./components/ShelfLink.jsx";
+import HelpDrawer from "./components/HelpDrawer.jsx";
 
 const REFRESH_MS = 30000;
 
@@ -120,6 +121,8 @@ export default function App() {
     try { return window.localStorage.getItem("shelf-theme") || "auto"; } catch { return "auto"; }
   });
   const [open, setOpen] = useState(null);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const helpBtn = useRef(null);
   const prev = useRef(null);
   const opener = useRef(null);
   const closeRef = useRef(null);
@@ -325,12 +328,15 @@ export default function App() {
 
   function showDetails(item) {
     opener.current = document.activeElement;
+    setHelpOpen(false);
     setOpen({ planned: item.planned, id: item.id });
   }
   function closeDetails() {
     setOpen(null);
     opener.current?.focus?.();
   }
+  function openHelp() { setOpen(null); setHelpOpen(true); }
+  function closeHelp() { setHelpOpen(false); helpBtn.current?.focus?.(); }
 
   const items = useMemo(() => (data ? toItems(data) : []), [data]);
   const openItem = open && items.find((i) => i.planned === open.planned && i.id === open.id);
@@ -437,6 +443,7 @@ export default function App() {
             {deployAllRunning && <span className="spin" aria-hidden="true" />}Deploy all
           </button>
           <button type="button" onClick={() => load(true)}>Refresh</button>
+          <button type="button" ref={helpBtn} onClick={openHelp} aria-haspopup="dialog" aria-expanded={helpOpen}>Help</button>
         </div>
       </header>
       <main className="room">
@@ -564,6 +571,7 @@ export default function App() {
           </>
         )}
       </main>
+      {helpOpen && <HelpDrawer onClose={closeHelp} />}
       {openItem && <Drawer item={openItem} present={present} onClose={closeDetails} closeRef={closeRef} tagGroups={tagGroups} />}
     </>
   );
