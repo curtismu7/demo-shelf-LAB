@@ -1299,6 +1299,24 @@
         "real"
       ],
       "repo": "https://github.com/curtismu7/mcp-gateway-lab-LAB"
+    },
+    {
+      "id": "observability-lab",
+      "name": "Observability Lab",
+      "catalogId": "D123",
+      "kind": "Demo",
+      "description": "Follow a log line from PingOne, PingFederate and Ping Gateway to a searchable, alertable store. Seeded mock logs, a LogQL-lite query box, three alert rules and a label lab that shows the silent failure when one relabel rule is missing. Real mode reads one loopback Loki, read-only.",
+      "url": "http://localhost:7800",
+      "healthPath": "/api/health",
+      "composeFile": "observability-LAB/docker-compose.yml",
+      "tags": [
+        "pingone",
+        "pingfederate",
+        "pinggateway",
+        "audit-observability",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/observability-LAB"
     }
   ]
 }
