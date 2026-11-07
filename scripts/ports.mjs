@@ -15,11 +15,13 @@ const demos = loadRegistry({
 });
 const rows = demos
   .filter((d) => d.url)
-  .map((d) => ({ port: Number(new URL(d.url).port), id: d.id, name: d.name, cat: d.catalogId || '', mock: d.where === 'mock' }))
+  .map((d) => ({ port: Number(new URL(d.url).port), id: d.id, name: d.name, cat: d.catalogId || '', mock: d.where === 'mock', compose: d.composeFile || '' }))
   .filter((r) => r.port)
   .sort((a, b) => a.port - b.port || a.id.localeCompare(b.id));
 const by = new Map();
 for (const r of rows) by.set(r.port, [...(by.get(r.port) || []), r]);
+// Two cards that share one compose file are ONE app listed twice (mcp-tools and mcp-scanner on 4810): not a clash.
+const rivals = (r) => by.get(r.port).filter((o) => o.id !== r.id && !(o.compose && o.compose === r.compose));
 
 const LO = 4500, HI = 7999, BLOCK = 50;
 const blocks = [];
@@ -36,7 +38,7 @@ const out = [
   '',
   '| Port | App | Catalog | |',
   '| --- | --- | --- | --- |',
-  ...rows.map((r) => `| ${r.port} | ${r.id} | ${r.cat} | ${by.get(r.port).length > 1 ? '**CLASH** with ' + by.get(r.port).filter((o) => o.id !== r.id).map((o) => o.id).join(', ') : ''} |`),
+  ...rows.map((r) => `| ${r.port} | ${r.id} | ${r.cat} | ${rivals(r).length ? '**CLASH** with ' + rivals(r).map((o) => o.id).join(', ') : ''} |`),
   '',
   `## Blocks of ${BLOCK} (${LO}-${HI})`,
   '',
@@ -46,5 +48,5 @@ const out = [
   '',
 ];
 fs.writeFileSync(path.join(root, 'docs/ports.md'), out.join('\n'));
-const clashes = [...by.values()].filter((v) => v.length > 1).length;
+const clashes = new Set(rows.filter((r) => rivals(r).length).map((r) => r.port)).size;
 console.log(`ports: ${rows.length} apps, ${clashes} clashing port(s) -> docs/ports.md`);
