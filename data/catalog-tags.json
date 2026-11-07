@@ -316,6 +316,12 @@
       "mcp",
       "agent-gateway",
       "ai-agent-security"
+    ],
+    "D122": [
+      "agent-gateway",
+      "ai-agent-security",
+      "agent-controls",
+      "a2a"
     ]
   },
   "D110": [
