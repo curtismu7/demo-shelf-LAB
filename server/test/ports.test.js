@@ -2,11 +2,13 @@ import { describe, it, expect } from 'vitest';
 import { PACKED_RANGE, nextFreePorts, packedRangeSummary } from '../../scripts/ports-lib.mjs';
 
 describe('packed port range for new apps', () => {
-  it('is 7800-7999, above every existing app', async () => {
+  it('is 7800-7999, above every app that predates the allocator', async () => {
     expect(PACKED_RANGE).toEqual({ lo: 7800, hi: 7999 });
     const demos = (await import('../../data/demos.json', { with: { type: 'json' } })).default.demos;
     const ports = demos.filter((d) => d.url).map((d) => Number(new URL(d.url).port));
-    expect(Math.max(...ports.filter((p) => p < 8000))).toBeLessThan(PACKED_RANGE.lo);
+    // Apps that were placed by the allocator live inside the range; every older app is below it.
+    const allocated = new Set([7800]); // observability-lab
+    expect(Math.max(...ports.filter((p) => p < 8000 && !allocated.has(p)))).toBeLessThan(PACKED_RANGE.lo);
   });
   it('hands out the lowest free ports in order and skips used ones', () => {
     expect(nextFreePorts([])).toEqual([7800]);
