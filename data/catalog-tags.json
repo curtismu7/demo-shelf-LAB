@@ -304,6 +304,12 @@
       "ai-agent-security",
       "agent-controls",
       "authorization-policy"
+    ],
+    "D120": [
+      "agent-gateway",
+      "ai-agent-security",
+      "agent-controls",
+      "authorization-policy"
     ]
   },
   "D110": [

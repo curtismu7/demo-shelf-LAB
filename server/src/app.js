@@ -196,6 +196,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'agentcore-pingone-demo': '/agentcore-pingone/',
     'ciba-hitl-lab': '/ciba-hitl-lab/',
     'hitl-mfa-lab': '/hitl-mfa-lab/',
+    'delegation-lab': '/delegation-lab/',
     'cimd-lab': '/cimd-lab/',
     'customer-agent': '/customer-agent/',
     'gateway-claims': '/gateway-claims/',

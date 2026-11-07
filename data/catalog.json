@@ -536,6 +536,14 @@
       "group": "D",
       "oneLiner": "Amount bands decide consent, MFA step-up or deny; CIBA approves out-of-band on the user's own device.",
       "status": "active"
+    },
+    {
+      "id": "D120",
+      "name": "Delegation & entitlement",
+      "kind": "Demo",
+      "group": "D",
+      "oneLiner": "Consent mints act={agent}; the directory decides \u2014 group gate, then tier expansion.",
+      "status": "active"
     }
   ]
 }
