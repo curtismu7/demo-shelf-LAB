@@ -544,6 +544,14 @@
       "group": "D",
       "oneLiner": "Consent mints act={agent}; the directory decides \u2014 group gate, then tier expansion.",
       "status": "active"
+    },
+    {
+      "id": "D121",
+      "name": "Privilege A2A Anthropic demo",
+      "kind": "Demo",
+      "group": "D",
+      "oneLiner": "An access review travels Main Agent, A2A, Worker Agent, MCP tool, with a per-hop trace and model calls routed through Privilege.",
+      "status": "active"
     }
   ]
 }
