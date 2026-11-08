@@ -212,6 +212,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'no-tool-no-promise': '/no-tool-no-promise/',
     'pingfederate-lab': '/pingfederate-lab/',
     'pingone-lab': '/pingone-lab/',
+    'pingone-events-lab': '/pingone-events-lab/',
     'privilege-demo': '/privilege-demo/',
     'token-workbench': '/token-workbench/',
     'agent-kill-switch': '/agent-kill-switch/',

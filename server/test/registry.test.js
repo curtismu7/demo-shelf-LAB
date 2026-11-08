@@ -149,7 +149,7 @@ describe('loadRegistry', () => {
     // The demo root is the folder above the shelf repo, the same default the server uses.
     const demoRoot = path.resolve(path.dirname(seed), '..', '..');
     const demos = loadRegistry({ seedFile: seed, localFile: path.join(dir, 'absent.json'), allowedHosts: allowedHostsFromEnv({}), demoRoot });
-    expect(demos).toHaveLength(69); // as before, plus deploy-test-LAB, the 2026-11-03 batch (jev-lab D113, obo-lab D111, jit-lab D112), ping-services-stub (D114), and a2a-lab (D122) + idjag-runner (2026-11-07), then agent-preferences-lab, delegation-lab D120, demo-field-guide D115, diagram-prove-lab, hitl-mfa-lab D119, mcp-gateway-lab (2026-11-06 batch), then observability-lab D123 (port 7800), then privilege-logging-lab (port 7801), then field-notes-lab (port 7804), then aggregate-entitlement-lab (port 7802)
+    expect(demos).toHaveLength(70); // as before, plus deploy-test-LAB, the 2026-11-03 batch (jev-lab D113, obo-lab D111, jit-lab D112), ping-services-stub (D114), and a2a-lab (D122) + idjag-runner (2026-11-07), then agent-preferences-lab, delegation-lab D120, demo-field-guide D115, diagram-prove-lab, hitl-mfa-lab D119, mcp-gateway-lab (2026-11-06 batch), then observability-lab D123 (port 7800), then privilege-logging-lab (port 7801), then field-notes-lab (port 7804), then aggregate-entitlement-lab (port 7802), then pingone-events-lab D124 (port 7803)
     expect(demos.slice(0, 11).map((d) => [d.id, d.catalogId, d.url])).toEqual([
       ['ai-gateway-client', 'D20', 'http://127.0.0.1:6880'],
       ['mcp-demo-client-privilege', 'D2', 'http://127.0.0.1:6884'],
