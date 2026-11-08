@@ -1521,6 +1521,25 @@
         "simulated"
       ],
       "where": "installed"
+    },
+    {
+      "id": "env-map-lab",
+      "name": "Where Everything Runs",
+      "kind": "Tool",
+      "description": "A map of where software runs: your Mac (Docker), Kubernetes namespaces and SaaS, as a movable ReactFlow diagram and a table, with a what-if: Kubernetes for servers only, every front end in Docker on the Mac. Mock uses a sanitized sample; Real reads a snapshot you collect.",
+      "url": "http://localhost:7805",
+      "healthPath": "/api/health",
+      "composeFile": "env-map-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: ./scripts/run.sh (port 7805). Docker: HOST_PORT=7805 docker compose up --build -d (published on 127.0.0.1 only; Mock only). Real: run scripts/collect.sh, set ENV_MAP_SNAPSHOT in ~/Development/.env to the snapshot it wrote (outside the repo) and run on the host. No catalog row matches yet, so no catalogId; the owner assigns one with the board row.",
+      "repo": "https://github.com/curtismu7/env-map-LAB",
+      "tags": [
+        "learning",
+        "simulated",
+        "real"
+      ],
+      "where": "installed"
     }
   ]
 }
