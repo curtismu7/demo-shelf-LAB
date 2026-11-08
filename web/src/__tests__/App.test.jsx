@@ -399,6 +399,61 @@ describe("shelf page", () => {
     expect(screen.getByRole("alert")).toHaveTextContent("Cannot reach the shelf server");
     expect(screen.getByText("Demo A")).toBeInTheDocument();
   });
+  describe("after Start returns, until the demo answers", () => {
+    const downDemo = () => shelf({ startEnabled: true, demos: [{ ...shelf().demos[1], canStart: true, composeFile: "/x/c.yml" }] });
+    // Start returns at once (compose only created the containers); the shelf's health check says down for `downPolls` refreshes, then ready.
+    const startFetch = (downPolls) => {
+      let polls = 0;
+      const f = vi.fn(async (url, init = {}) => {
+        const u = String(url);
+        if (u === "/api/info") return { ok: true, json: async () => INFO };
+        if (u === "/api/demos/b/start" && init.method === "POST") return { ok: true, json: async () => ({ ok: true }) };
+        const body = downDemo();
+        if (u === "/api/shelf/refresh") { polls += 1; if (polls > downPolls) body.demos[0].status = st("ready"); }
+        return { ok: true, json: async () => body };
+      });
+      vi.stubGlobal("fetch", f);
+      return f;
+    };
+    const press = async () => { fireEvent.click(within(screen.getByText("Demo B").closest("article")).getByRole("button", { name: /^Start/ })); await act(async () => {}); };
+
+    it("shows Starting with a spinner, not Down, and flips to Ready when the health check answers", async () => {
+      vi.useFakeTimers({ toFake: ["setInterval", "clearInterval", "Date"] });
+      startFetch(2);
+      render(<App />);
+      await screen.findByText("Demo B");
+      await press();
+      const b = () => within(screen.getByText("Demo B").closest("article"));
+      expect(b().getByText("Starting")).toBeInTheDocument();
+      expect(b().queryByText("Down")).toBeNull();
+      expect(b().getByRole("button", { name: /^Start/ })).toBeDisabled();
+      expect(b().getByRole("button", { name: /^Start/ }).querySelector(".spin")).not.toBeNull();
+      expect(b().getByText(/waiting for Demo B to answer/)).toBeInTheDocument();
+      await act(async () => { vi.advanceTimersByTime(2500); });
+      expect(b().getByText("Starting")).toBeInTheDocument(); // still not answering after one look
+      await act(async () => { vi.advanceTimersByTime(5000); });
+      expect(b().getByText("Ready")).toBeInTheDocument();
+      expect(b().queryByText(/waiting for Demo B/)).toBeNull();
+      expect(b().getByRole("button", { name: /^Start/ }).querySelector(".spin")).toBeNull();
+      expect(document.querySelector(".note").textContent).toMatch(/Demo B: ready/);
+    });
+    it("gives up after 2 minutes: the spinner stops and the card says it started but is not answering", async () => {
+      vi.useFakeTimers({ toFake: ["setInterval", "clearInterval", "Date"] });
+      startFetch(Infinity);
+      render(<App />);
+      await screen.findByText("Demo B");
+      await press();
+      await act(async () => { vi.advanceTimersByTime(119000); });
+      expect(screen.getByText("Starting")).toBeInTheDocument();
+      await act(async () => { vi.advanceTimersByTime(5000); });
+      const b = within(screen.getByText("Demo B").closest("article"));
+      expect(b.queryByText("Starting")).toBeNull();
+      expect(b.getByText("Down")).toBeInTheDocument();
+      expect(b.getByText(/still not answering after 2 minutes/)).toBeInTheDocument();
+      expect(b.getByRole("button", { name: /^Start/ }).querySelector(".spin")).toBeNull();
+      expect(b.getByRole("button", { name: /^Start/ })).toBeEnabled(); // the user can try again
+    });
+  });
   it("banner on first load failure", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => { throw new Error("offline"); }));
     render(<App />);

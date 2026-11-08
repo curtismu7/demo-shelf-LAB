@@ -32,6 +32,7 @@ export const LABELS = {
   "up-no-contract": "Up (no health contract)",
   down: "Down",
   planned: "Planned",
+  starting: "Starting",
 };
 
 export const HINTS = {

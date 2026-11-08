@@ -136,7 +136,7 @@ function PingProducts({ products, live }) {
   );
 }
 
-export function Card({ item, startEnabled, present, busy, activeAction, onAction, onCopy, onDetails, tagInfo, picked, onTag }) {
+export function Card({ item, startEnabled, present, busy, activeAction, starting, onAction, onCopy, onDetails, tagInfo, picked, onTag }) {
   const s = item.status;
   if (item.planned) {
     return (
@@ -154,12 +154,15 @@ export function Card({ item, startEnabled, present, busy, activeAction, onAction
   const place = item.where === "mock" ? "Mock" : "Installed";
   const label = `${item.name} (${place})`;
   const inst = present ? "unknown" : installState(item, isUp(s.state));
+  // Started, and the app has not answered its health check yet: show Starting with a spinner instead of Down.
+  const waiting = !present && starting === "starting" && !isUp(s.state);
+  const stalled = !present && starting === "stalled" && !isUp(s.state);
   const clone = inst === "not-installed" ? cloneCommand(item.repo) : null;
   return (
     <article className="box" data-state={s.state} data-kind={item.kind || "none"} data-install={inst} aria-label={label}>
       <h3>{item.name}</h3>
       <span className="box__place">{place}</span>
-      <StatusLight state={s.state} />
+      <StatusLight state={waiting ? "starting" : s.state} />
       <p className="box__desc">{item.description}</p>
       <TagPills item={item} tagInfo={tagInfo} picked={picked} onTag={onTag} />
       <p className="box__meta">
@@ -170,9 +173,11 @@ export function Card({ item, startEnabled, present, busy, activeAction, onAction
         {s.lastChecked ? `Checked ${clock(s.lastChecked)}` : "Not checked"}
         {s.latencyMs != null && s.state !== "down" ? ` · ${s.latencyMs} ms` : ""}
       </p>
-      {inst === "not-installed" && <p className="box__install"><span className="box__tag">Not installed</span> {NOT_INSTALLED_HINT}</p>}
-      {inst === "not-built" && <p className="box__install">{NOT_BUILT}.</p>}
-      {inst === "stopped" && <p className="box__install">Installed, not answering.</p>}
+      {waiting && <p className="box__install" role="status"><span className="spin" aria-hidden="true" />Starting: waiting for {item.name} to answer. The first start can take a few minutes.</p>}
+      {stalled && <p className="box__install">Started, but it is still not answering after 2 minutes. Check its container logs (docker compose logs).</p>}
+      {!waiting && !stalled && inst === "not-installed" && <p className="box__install"><span className="box__tag">Not installed</span> {NOT_INSTALLED_HINT}</p>}
+      {!waiting && !stalled && inst === "not-built" && <p className="box__install">{NOT_BUILT}.</p>}
+      {!waiting && !stalled && inst === "stopped" && <p className="box__install">Installed, not answering.</p>}
       {(item.pingProducts || []).length > 0 && <PingProducts products={item.pingProducts} live={item.status?.state !== "down"} />}
       <div className="box__actions">
         {!present && startEnabled && item.where !== "mock" && (() => {
@@ -180,9 +185,9 @@ export function Card({ item, startEnabled, present, busy, activeAction, onAction
           const noCompose = "No compose file is registered for this demo";
           return (
             <>
-              <button type="button" className={up ? undefined : "primary"} aria-busy={activeAction === "start" || undefined} disabled={busy || !item.canStart || up || inst === "not-installed"} title={!item.canStart ? noCompose : up ? "Already running" : inst === "not-installed" ? NOT_INSTALLED_HINT : inst === "not-built" ? NOT_BUILT : undefined} onClick={() => onAction(item.id, "start")}>{activeAction === "start" && <span className="spin" aria-hidden="true" />}Start<span className="sr"> {label}</span></button>
+              <button type="button" className={up ? undefined : "primary"} aria-busy={activeAction === "start" || waiting || undefined} disabled={busy || waiting || !item.canStart || up || inst === "not-installed"} title={!item.canStart ? noCompose : up ? "Already running" : inst === "not-installed" ? NOT_INSTALLED_HINT : inst === "not-built" ? NOT_BUILT : undefined} onClick={() => onAction(item.id, "start")}>{(activeAction === "start" || waiting) && <span className="spin" aria-hidden="true" />}Start<span className="sr"> {label}</span></button>
               <button type="button" aria-busy={activeAction === "stop" || undefined} disabled={busy || !item.canStart || !up} title={!item.canStart ? noCompose : up ? `Stops only ${item.name}; the shelf keeps running` : "Not running"} onClick={() => onAction(item.id, "stop")}>{activeAction === "stop" && <span className="spin" aria-hidden="true" />}Stop<span className="sr"> {label}</span></button>
-              {item.repo && !up && <button type="button" className={up ? undefined : "primary"} aria-busy={activeAction === "deploy" || undefined} disabled={busy} title={inst === "not-installed" ? "Clones the repo, then starts the app" : "Updates the repo (fast-forward only), then starts the app"} onClick={() => onAction(item.id, "deploy")}>{activeAction === "deploy" && <span className="spin" aria-hidden="true" />}Deploy<span className="sr"> {label}</span></button>}
+              {item.repo && !up && <button type="button" className={up ? undefined : "primary"} aria-busy={activeAction === "deploy" || undefined} disabled={busy || waiting} title={inst === "not-installed" ? "Clones the repo, then starts the app" : "Updates the repo (fast-forward only), then starts the app"} onClick={() => onAction(item.id, "deploy")}>{activeAction === "deploy" && <span className="spin" aria-hidden="true" />}Deploy<span className="sr"> {label}</span></button>}
             </>
           );
         })()}
