@@ -62,6 +62,16 @@ export function installOf(d, status, map) {
 const LOOPBACK_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
 
 // `loopbackOnly` guards against DNS rebinding: a loopback-bound shelf only answers to loopback Host names.
+// The URL the visitor used to reach this shelf (the lab-proxy sends X-Forwarded-Host/-Proto). Apps served behind the proxy fetch
+// /api/shelf without their lab cookie, so the request lands here: this is how their header "Shelf" button learns where to go.
+// Host was already validated by the host check; the forwarded pair is only used when both are present and well formed.
+function shelfOrigin(req) {
+  const host = String(req.headers['x-forwarded-host'] || req.headers.host || '');
+  const proto = String(req.headers['x-forwarded-proto'] || req.protocol || 'http');
+  if (!/^[a-z0-9.-]+(:\d{1,5})?$/i.test(host) || !/^https?$/.test(proto)) return null;
+  return `${proto}://${host}`;
+}
+
 export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, installSource = null, demoRoot = null, refreshWaitMs = 4000, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait, pingProductsCheck, lastRunning = null, networkLimit = undefined, maxRunningDemos = null }) {
   const demos = expandWhere(registry);
   const app = express();
@@ -220,7 +230,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'agent-registry-demo': '/agent-registry-demo/',
   };
   app.get('/api/shelf', async (req, res, next) => {
-    try { res.set('Cache-Control', 'no-store').json(await shelf(await poller.get())); } catch (e) { next(e); }
+    try { res.set('Cache-Control', 'no-store').json({ ...(await shelf(await poller.get())), shelfUrl: shelfOrigin(req) }); } catch (e) { next(e); }
   });
   app.post('/api/shelf/refresh', async (req, res, next) => {
     try {

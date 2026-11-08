@@ -33,6 +33,19 @@ describe('GET /api/health', () => {
   });
 });
 
+describe('GET /api/shelf shelfUrl (the header Shelf button of apps served behind the proxy)', () => {
+  it('names the origin the visitor used: the forwarded pair when present, else the Host', async () => {
+    const viaProxy = await request(mk()).get('/api/shelf').set('Host', 'localhost:4400').set('X-Forwarded-Host', 'shelf.example:8443').set('X-Forwarded-Proto', 'https');
+    expect(viaProxy.body.shelfUrl).toBe('https://shelf.example:8443');
+    const direct = await request(mk()).get('/api/shelf').set('Host', 'localhost:4400');
+    expect(direct.body.shelfUrl).toBe('http://localhost:4400');
+  });
+  it('refuses a malformed forwarded host rather than echoing it', async () => {
+    const r = await request(mk()).get('/api/shelf').set('Host', 'localhost:4400').set('X-Forwarded-Host', 'a b/<x>').set('X-Forwarded-Proto', 'https');
+    expect(r.body.shelfUrl).toBeNull();
+  });
+});
+
 describe('GET /api/shelf', () => {
   it('merges registry, catalog and status; other active items are planned; backlog is hidden', async () => {
     const r = await request(mk()).get('/api/shelf').set('Host', 'localhost:4400');
