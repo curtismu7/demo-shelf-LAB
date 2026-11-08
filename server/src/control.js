@@ -176,7 +176,7 @@ export function createControlRouter({ express, getDemos, onChange, exec = defaul
           // clones/fast-forwards the registry-validated repo, then runs compose start.
           if (!demoRoot) return fail(409, 'no-demo-root');
           const r = await agent.run(demo.id, 'deploy');
-          if (r.status === 200) { lastRunning?.recordStart(demo.id); onChange?.(demo.id); }
+          if (r.status === 200) onChange?.(demo.id); // the agent records last-running; this container's .data is read-only
           return res.status(r.status).json(r.body);
         }
         if (!demoRoot) return fail(409, 'no-demo-root');
@@ -188,7 +188,7 @@ export function createControlRouter({ express, getDemos, onChange, exec = defaul
       }
       const r = agent ? await agent.run(demo.id, req.params.action) : await runCompose(demo, req.params.action, { exec, fileExists, shelfDir, networkLimit, cap });
       if (r.status === 200) {
-        if (lastRunning) {
+        if (lastRunning && !agent) { // with an agent it records the start/stop itself; this shelf's .data is mounted read-only
           if (req.params.action === 'start' || req.params.action === 'deploy') lastRunning.recordStart(demo.id);
           if (req.params.action === 'stop') lastRunning.recordStop(demo.id);
         }

@@ -74,6 +74,7 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
         const g = await ensureRepo(demo, demoRoot, { exec });
         if (!g.ok) return res.status(409).json({ ok: false, error: g.error, output: g.output || '' });
         const r = await runCompose(demo, 'start', { exec, fileExists, shelfDir, networkLimit, cap });
+        if (r.status === 200) lastRunning?.recordStart(demo.id);
         return res.status(r.status).json({ ...r.body, deploy: g.how, dir: g.dir });
       }
       const r = await runCompose(demo, req.params.action, { exec, fileExists, shelfDir, networkLimit, cap });
