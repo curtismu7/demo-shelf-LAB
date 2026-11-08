@@ -62,6 +62,8 @@ export async function orbstackGuard(exec, opts) {
 
 // At most this many shelf demos run at once (SHELF_MAX_RUNNING overrides). Starting one more stops the oldest, and says so.
 export const MAX_RUNNING_DEFAULT = 10;
+// Shared services other demos lean on: they still count toward the limit, but the limit never picks one to stop (Stop all and Stop do).
+export const NEVER_AUTO_STOPPED = new Set(['ai-guard-sidecar']);
 export function maxRunning() {
   const n = Number(process.env.SHELF_MAX_RUNNING);
   return Number.isInteger(n) && n >= 1 && n <= 100 ? n : MAX_RUNNING_DEFAULT;
@@ -120,7 +122,9 @@ export async function runCompose(demo, action, { exec = defaultExec, fileExists 
     }
     if (others.length === cap.max) {
       const rank = (d) => { const i = (cap.lastRunning?.list() || []).findIndex((e) => e.id === d.id); return i < 0 ? Infinity : i; };
-      const oldest = others.reduce((a, b) => (rank(b) > rank(a) ? b : a));
+      const candidates = others.filter((d) => !NEVER_AUTO_STOPPED.has(d.id));
+      if (!candidates.length) return fail(409, `no-demo-to-stop:${others.length}:${cap.max}`, { output: `${others.length} demos are running and the limit is ${cap.max}, and none of them may be stopped automatically. Stop one first.` });
+      const oldest = candidates.reduce((a, b) => (rank(b) > rank(a) ? b : a));
       const r = await runCompose(oldest, 'stop', { exec, fileExists, shelfDir });
       if (r.status !== 200) return fail(502, 'could-not-stop-oldest', { output: `To stay within ${cap.max} running, ${oldest.name} had to stop, but it would not: ${r.body.error}` });
       cap.lastRunning?.recordStop(oldest.id);

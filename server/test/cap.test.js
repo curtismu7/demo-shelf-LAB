@@ -71,6 +71,21 @@ describe('running cap', () => {
     expect(r.status).toBe(200);
     expect(r.body.stopped).toEqual([{ id: 'd1', name: 'Demo d1' }]);
   });
+  it('never picks ai-guard-sidecar as the oldest, even when it is the oldest', async () => {
+    const guard = { ...demo('ai-guard-sidecar') };
+    const w = world(['ai-guard-sidecar', 'd1', 'd2']);
+    const r = await runCompose(demo('d9'), 'start', { exec: w.exec, fileExists: () => true, cap: { getDemos: () => [guard, ...all], max: 3, lastRunning: lastRunning(['d2', 'd1']) } }); // guard is not recorded = would rank oldest
+    expect(r.status).toBe(200);
+    expect(r.body.stopped).toEqual([{ id: 'd1', name: 'Demo d1' }]);
+    expect(w.calls.some((c) => /ai-guard-sidecar\/docker-compose.yml down/.test(c))).toBe(false);
+  });
+  it('at the limit with only never-stopped demos running: refuses and stops nothing', async () => {
+    const guard = { ...demo('ai-guard-sidecar') };
+    const w = world(['ai-guard-sidecar']);
+    const r = await runCompose(demo('d9'), 'start', { exec: w.exec, fileExists: () => true, cap: { getDemos: () => [guard, ...all], max: 1, lastRunning: lastRunning([]) } });
+    expect([r.status, r.body.error]).toEqual([409, 'no-demo-to-stop:1:1']);
+    expect(w.calls.filter((c) => /\b(down|up)\b/.test(c))).toEqual([]);
+  });
   it('without a cap, nothing changes and docker compose ls is not even asked', async () => {
     const w = world(['d0', 'd1', 'd2', 'd3']);
     const r = await runCompose(demo('d9'), 'start', { exec: w.exec, fileExists: () => true });
