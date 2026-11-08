@@ -454,6 +454,32 @@ describe("shelf page", () => {
       expect(b.getByRole("button", { name: /^Start/ })).toBeEnabled(); // the user can try again
     });
   });
+  describe("the running limit", () => {
+    const downDemo = () => shelf({ startEnabled: true, demos: [{ ...shelf().demos[1], canStart: true, composeFile: "/x/c.yml", repo: "https://github.com/curtismu7/x-LAB" }] });
+    const startReplies = (status, body) => {
+      vi.stubGlobal("fetch", vi.fn(async (url, init = {}) => {
+        const u = String(url);
+        if (u === "/api/info") return { ok: true, json: async () => INFO };
+        if (u === "/api/demos/b/start" && init.method === "POST") return { ok: status === 200, json: async () => body };
+        return { ok: true, json: async () => downDemo() };
+      }));
+    };
+    const pressStart = async () => { await screen.findByText("Demo B"); fireEvent.click(within(screen.getByText("Demo B").closest("article")).getByRole("button", { name: /^Start/ })); };
+
+    it("tells the user which demo was stopped to make room", async () => {
+      startReplies(200, { ok: true, stopped: [{ id: "old", name: "Oldest Lab" }], limit: 10 });
+      render(<App />);
+      await pressStart();
+      await waitFor(() => expect(document.querySelector(".note").textContent).toMatch(/Stopped Oldest Lab \(the oldest\) to stay within 10 running/));
+      expect(screen.getAllByRole("status").map((e) => e.textContent).join(" ")).toContain("Stopped Oldest Lab");
+    });
+    it("says how many are running when Start is refused for being over the limit", async () => {
+      startReplies(409, { ok: false, error: "too-many-running:24:10", output: "24 demos are running and the limit is 10. Stop some first (Stop all stops every one)." });
+      render(<App />);
+      await pressStart();
+      await waitFor(() => expect(document.querySelector(".note").textContent).toMatch(/did not run: 24 demos are running and the limit is 10/));
+    });
+  });
   it("banner on first load failure", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => { throw new Error("offline"); }));
     render(<App />);

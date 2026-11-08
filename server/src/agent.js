@@ -30,7 +30,8 @@ const digest = (s) => crypto.createHash('sha256').update(String(s)).digest();
 export const sameToken = (a, b) => crypto.timingSafeEqual(digest(a), digest(b));
 
 // `getDemos()` returns the host's registered installed demos; it may throw if the registry is invalid.
-export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir = null, demoRoot = null, installOptions = {}, lastRunning = null, networkLimit = undefined }) {
+export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir = null, demoRoot = null, installOptions = {}, lastRunning = null, networkLimit = undefined, maxRunningDemos = null }) {
+  const cap = maxRunningDemos ? { getDemos, lastRunning, max: maxRunningDemos } : null;
   const hosts = new Set([`127.0.0.1:${port}`, `localhost:${port}`, `[::1]:${port}`, `host.docker.internal:${port}`]);
   const busy = new Set();
   const installs = createInstallChecker({ getDemos, exec, fileExists, shelfDir, ...installOptions });
@@ -72,10 +73,10 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
         if (!demoRoot) return res.status(409).json({ ok: false, error: 'no-demo-root' });
         const g = await ensureRepo(demo, demoRoot, { exec });
         if (!g.ok) return res.status(409).json({ ok: false, error: g.error, output: g.output || '' });
-        const r = await runCompose(demo, 'start', { exec, fileExists, shelfDir });
+        const r = await runCompose(demo, 'start', { exec, fileExists, shelfDir, networkLimit, cap });
         return res.status(r.status).json({ ...r.body, deploy: g.how, dir: g.dir });
       }
-      const r = await runCompose(demo, req.params.action, { exec, fileExists, shelfDir, networkLimit });
+      const r = await runCompose(demo, req.params.action, { exec, fileExists, shelfDir, networkLimit, cap });
       if (r.status === 200 && lastRunning) {
         if (req.params.action === 'start' || req.params.action === 'deploy') lastRunning.recordStart(demo.id);
         if (req.params.action === 'stop') lastRunning.recordStop(demo.id);
@@ -105,7 +106,7 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
       if (!demo?.composeFile) { lastRunning.recordStop(id); results.push({ id, started: false, error: 'not-registered' }); continue; }
       busy.add(id);
       try {
-        const r = await runCompose(demo, 'start', { exec, fileExists, shelfDir, networkLimit });
+        const r = await runCompose(demo, 'start', { exec, fileExists, shelfDir, networkLimit, cap });
         if (r.status === 200) { lastRunning.recordStart(id); results.push({ id, started: true }); }
         else results.push({ id, started: false, error: r.body.error });
       } catch { results.push({ id, started: false, error: 'internal' }); }
