@@ -12,6 +12,7 @@ Packed range: 6 of 200 in use, 194 free.
 
 | Port | App | Catalog | |
 | --- | --- | --- | --- |
+| 4400 | demo-shelf-lab | E2 |  |
 | 4510 | privilege-demo | D1 |  |
 | 4701 | hostile-mcp | D6 |  |
 | 4720 | id-jag-standalone | C1 |  |
@@ -39,7 +40,7 @@ Packed range: 6 of 200 in use, 194 free.
 | 5450 | poppy-agent-tester | D100 |  |
 | 5500 | pingone-lab | A29 |  |
 | 5590 | deploy-test-lab |  |  |
-| 5600 | customer-agent-lab | D24 |  |
+| 5603 | customer-agent-lab | D24 |  |
 | 5750 | gateway-suite-lab | D118 |  |
 | 5850 | agent-gateway-inspector | D54 |  |
 | 5910 | token-workbench | C2 |  |
@@ -74,12 +75,12 @@ Packed range: 6 of 200 in use, 194 free.
 | 7580 | ciba-hitl-lab | C1 |  |
 | 7590 | demo-field-guide | D115 |  |
 | 7601 | agentcore-pingone-demo-lab | D114 |  |
-| 7660 | agent-preferences-lab |  |  |
-| 7670 | mcp-gateway-lab |  |  |
+| 7660 | agent-preferences-lab | D117 |  |
+| 7670 | mcp-gateway-lab | D116 |  |
 | 7680 | hitl-mfa-lab | D119 |  |
 | 7690 | delegation-lab | D120 |  |
 | 7700 | a2a-lab | D122 |  |
-| 7710 | diagram-prove-lab |  |  |
+| 7710 | diagram-prove-lab | E3 |  |
 | 7720 | meridian-a2a-hop | D110 |  |
 | 7800 | observability-lab | D123 |  |
 | 7801 | privilege-logging-lab |  |  |

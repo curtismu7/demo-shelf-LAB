@@ -161,7 +161,7 @@ describe('loadRegistry', () => {
       ['pingone-signin-lab', 'A11', 'http://127.0.0.1:6171'],
       ['pingone-lab', 'A29', 'http://127.0.0.1:5500'],
       ['pingfederate-lab', 'A28', 'http://127.0.0.1:5400'],
-      ['customer-agent-lab', 'D24', 'http://127.0.0.1:5600'],
+      ['customer-agent-lab', 'D24', 'http://127.0.0.1:5603'],
     ]);
   });
   it('the committed seed registers the mcp-tools-LAB and mcp-resource-server-LAB entries with portable compose paths and the mcp-server-built tag', () => {
