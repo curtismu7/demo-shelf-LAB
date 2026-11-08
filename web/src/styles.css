@@ -46,6 +46,12 @@
   gap: 4px;
 }
 
+.top__tools label.inline {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
 /* Ping UI standard: secondary/utility actions are outlined, pill-shaped, 600 weight,
    Montserrat (the family font). Primary keeps the red gradient (standalone-ui.css). */
 .top__tools button,
