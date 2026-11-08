@@ -19,6 +19,18 @@ describe('Start / Stop through the start agent (the shelf in a container)', () =
     expect(r.body).toMatchObject({ ok: true, id: 'a', action: 'start' });
     expect(agent.run).toHaveBeenCalledWith('a', 'start');
   });
+  it('does not write last-running itself: the agent owns it, and the container mounts .data read-only', async () => {
+    const readOnly = { list: () => [], restoreIds: () => [], recordStart: vi.fn(() => { throw new Error('EROFS'); }), recordStop: vi.fn(() => { throw new Error('EROFS'); }) };
+    const agent = agentStub({ run: vi.fn(async (id, action) => ({ status: 200, body: { ok: true, id, action, stopped: [{ id: 'old', name: 'Old' }], limit: 10 } })) });
+    const app = mk(agent, { lastRunning: readOnly });
+    for (const action of ['start', 'stop']) {
+      const r = await post(app, `/api/demos/a/${action}`);
+      expect([action, r.status, r.body.error]).toEqual([action, 200, undefined]); // used to be 500 internal after a successful start
+    }
+    expect((await post(app, '/api/demos/a/start')).body.stopped).toEqual([{ id: 'old', name: 'Old' }]); // the note can name what was stopped
+    expect(readOnly.recordStart).not.toHaveBeenCalled();
+    expect(readOnly.recordStop).not.toHaveBeenCalled();
+  });
   it('still requires a same-origin POST and a registered demo with a compose file', async () => {
     const agent = agentStub();
     const app = mk(agent);
