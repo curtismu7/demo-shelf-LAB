@@ -254,7 +254,7 @@
       "catalogId": "D24",
       "kind": "Demo",
       "description": "The customer-facing AI agent with all 87 of its use cases in eight tracks: delegation with an act claim, authorize decisions, step-up and human approval, gateway attacks and refusals. A simulation: a mock engine produces every token and hop offline.",
-      "url": "http://127.0.0.1:5600",
+      "url": "http://127.0.0.1:5603",
       "healthPath": "/api/health",
       "composeFile": "customer-agent-LAB/docker-compose.yml",
       "composeOverlays": [],
