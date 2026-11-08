@@ -1357,6 +1357,28 @@
         "real"
       ],
       "where": "installed"
+    },
+    {
+      "id": "aggregate-entitlement-lab",
+      "name": "Aggregate entitlement lab",
+      "kind": "Tester",
+      "description": "See how an MCP aggregate lists only the tools each caller may use and refuses the rest by name: six checks, guided steps and a diagram. Mock simulates the Ping release claim (UNVERIFIED on our tenant); Real measures your own gateway's aggregate apps with your agent keys.",
+      "url": "http://localhost:7802",
+      "healthPath": "/api/health",
+      "composeFile": "aggregate-entitlement-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: npm run build, then npm start (port 7802, loopback only). Docker: HOST_PORT=7802 docker compose up --build -d (publishes 127.0.0.1:7802 only). Mock needs nothing. Real: set AGG_ENT_GW_URL, AGG_ENT_GW_APPS and AGG_ENT_GW_KEY_<NAME> in ~/Development/.env, then use the Real toggle. Fork of mcp-tools-LAB (its Entitled listing page). No catalog row matches, so no catalogId; the owner assigns one with the board row. composeFile is relative to the shelf's demo root.",
+      "repo": "https://github.com/curtismu7/aggregate-entitlement-LAB",
+      "tags": [
+        "mcp",
+        "mcp-security",
+        "pingone-privilege",
+        "agent-gateway",
+        "simulated",
+        "real"
+      ],
+      "where": "installed"
     }
   ]
 }
