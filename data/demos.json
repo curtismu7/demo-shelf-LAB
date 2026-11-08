@@ -37,7 +37,8 @@
         "pingone-privilege",
         "mcp",
         "oauth",
-        "real"
+        "real",
+        "agent-gateway"
       ],
       "where": "installed",
       "repo": "https://github.com/curtismu7/mcp-demo-client-privilege-LAB",
@@ -58,7 +59,9 @@
         "pingone-privilege",
         "a2a",
         "agent-identity",
-        "real"
+        "real",
+        "agent-gateway",
+        "pingone"
       ],
       "where": "installed",
       "repo": "https://github.com/curtismu7/privilege-a2a-anthropic-demo-LAB",
@@ -110,7 +113,9 @@
         "mcp",
         "pingone-privilege",
         "real",
-        "simulated"
+        "simulated",
+        "pingfederate",
+        "pingone"
       ],
       "where": "installed",
       "repo": "https://github.com/curtismu7/privilege-demo-LAB",
@@ -151,7 +156,9 @@
       "tags": [
         "mcp",
         "pingone-privilege",
-        "simulated"
+        "simulated",
+        "agent-gateway",
+        "pingone"
       ],
       "where": "installed",
       "repo": "https://github.com/curtismu7/agent-mcp-door-demo-LAB",
@@ -350,7 +357,8 @@
         "oauth",
         "simulated",
         "real",
-        "pingone"
+        "pingone",
+        "pingfederate"
       ],
       "repo": "https://github.com/curtismu7/cimd-LAB",
       "pingProducts": [
@@ -393,7 +401,9 @@
         "oauth",
         "pingone-privilege",
         "simulated",
-        "token-exchange"
+        "token-exchange",
+        "pinggateway",
+        "pingfederate"
       ],
       "repo": "https://github.com/curtismu7/gateway-claims-LAB",
       "pingProducts": [
@@ -529,7 +539,8 @@
         "cimd",
         "oauth",
         "mcp",
-        "simulated"
+        "simulated",
+        "pingfederate"
       ],
       "repo": "https://github.com/curtismu7/personal-agent-demo-LAB",
       "pingProducts": [
@@ -551,7 +562,8 @@
         "rfc9728",
         "mcp",
         "oauth",
-        "simulated"
+        "simulated",
+        "pingfederate"
       ],
       "repo": "https://github.com/curtismu7/ping-gateway-route-LAB",
       "pingProducts": [
@@ -574,7 +586,8 @@
         "oauth",
         "fapi",
         "simulated",
-        "pingone"
+        "pingone",
+        "pingfederate"
       ],
       "repo": "https://github.com/curtismu7/token-workbench-LAB",
       "pingProducts": [
@@ -635,7 +648,8 @@
         "oauth",
         "authorization-policy",
         "simulated",
-        "pingone"
+        "pingone",
+        "pingfederate"
       ],
       "repo": "https://github.com/curtismu7/intent-par-inspector-LAB",
       "pingProducts": [
@@ -909,7 +923,8 @@
         "simulated",
         "ciba",
         "step-up",
-        "pingid"
+        "pingid",
+        "pingone"
       ],
       "pingProducts": [
         "pingone"
@@ -971,7 +986,8 @@
         "simulated",
         "dpop",
         "mtls",
-        "pingone"
+        "pingone",
+        "pingfederate"
       ],
       "pingProducts": [
         "pingfederate"
@@ -1397,6 +1413,114 @@
         "simulated"
       ],
       "repo": "https://github.com/curtismu7/pingone-events-LAB"
+    },
+    {
+      "id": "ciba-hitl-lab",
+      "name": "CIBA HITL Lab",
+      "catalogId": "C1",
+      "kind": "Demo",
+      "description": "Twenty-four steps from scope to tool with a human in the loop: one login, one token exchange, an OBO token that keeps the full scope set; a write is denied with a CIBA identifier, the gateway rewrites the 403 into a JSON-RPC 2.0 error, the human approves, the agent replays, Authorize verifies…",
+      "url": "http://localhost:7580",
+      "healthPath": "/api/health",
+      "composeFile": "ciba-hitl-lab/docker-compose.yml",
+      "composeOverlays": [],
+      "repo": "https://github.com/curtismu7/ciba-hitl-lab-LAB",
+      "tags": [
+        "ciba",
+        "token-exchange",
+        "authorization-policy",
+        "simulated",
+        "human-in-the-loop",
+        "pingfederate"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "muse",
+      "name": "Muse",
+      "catalogId": "D21",
+      "kind": "Demo",
+      "description": "A personal agent (Muse) calls tools through a PingOne Privilege-shaped gateway, with a DaVinci-shaped detection flow in front. Simulated: no tenant, no OBO.",
+      "url": "http://127.0.0.1:5100",
+      "healthPath": "/api/health",
+      "composeFile": "muse-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "repo": "https://github.com/curtismu7/muse-LAB",
+      "tags": [
+        "pingone-privilege",
+        "agent-gateway",
+        "agent-identity",
+        "ai-agent-security",
+        "simulated"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "agentcore-pingone-demo-lab",
+      "name": "AgentCore PingOne LAB",
+      "catalogId": "D114",
+      "kind": "Demo",
+      "description": "An AI agent on AWS Bedrock AgentCore Runtime whose identity comes from PingOne, in mock only: the M2M flow (the agent's own token), the USER_FEDERATION 3LO flow (a human login through the agent, four measured shapes), and on-behalf-of delegation. Mock/Real toggle; Real ships disabled.",
+      "url": "http://localhost:7601",
+      "healthPath": "/api/health",
+      "composeFile": "agentcore-pingone-demo-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "repo": "https://github.com/curtismu7/agentcore-pingone-demo-LAB",
+      "tags": [
+        "pingone",
+        "agent-identity",
+        "token-exchange",
+        "oauth",
+        "ai-agent-security",
+        "simulated",
+        "real",
+        "aws",
+        "aws-agentcore"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "meridian-a2a-hop",
+      "name": "Meridian Pay A2A hop lab",
+      "catalogId": "D110",
+      "kind": "Demo",
+      "description": "Walk a delegated agent token chain one hop at a time: sign in, hand the job to a platform-signed external agent, exchange tokens (RFC 8693, third-party subject and actor), and call MCP tools through Privilege doors. Every hop shows sub/act/aud/scope, and refusals are demoed on purpose. Runs…",
+      "url": "http://127.0.0.1:7720",
+      "healthPath": "/api/health",
+      "composeFile": "meridian-a2a-hop-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "repo": "https://github.com/curtismu7/meridian-a2a-hop-LAB",
+      "tags": [
+        "pingone-privilege",
+        "pingone",
+        "a2a",
+        "token-exchange",
+        "ai-agent-security",
+        "simulated",
+        "real"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "gateway-suite-lab",
+      "name": "AI Gateway Suite LAB",
+      "catalogId": "D118",
+      "kind": "Demo",
+      "description": "Relayed agent chat: preset prompts (access review, prompt injection, jailbreak, exfiltration, PII, tool misuse) travel Main Agent -> AI Gateway (A2A) -> Worker Agent -> AI Gateway (MCP) -> MCP tool on a movable ReactFlow diagram with a per-hop trace and AI Guard blocks; a Personal Agent tab connects",
+      "url": "http://localhost:5750",
+      "healthPath": "/api/health",
+      "composeFile": "gateway-suite-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "repo": "https://github.com/curtismu7/gateway-suite-LAB",
+      "tags": [
+        "a2a",
+        "mcp",
+        "agent-gateway",
+        "ai-agent-security",
+        "agent-controls",
+        "simulated"
+      ],
+      "where": "installed"
     }
   ]
 }
