@@ -1338,6 +1338,25 @@
         "simulated",
         "real"
       ]
+    },
+    {
+      "id": "field-notes-lab",
+      "name": "Field Notes",
+      "kind": "Tool",
+      "description": "A library of pages about our apps and what we learned: findings, how-tos and investigations, one Markdown file each. Mock shows the sanitized pages shipped in the repo; Real (owner-run, loopback only) shows a local folder of full notes.",
+      "url": "http://localhost:7804",
+      "healthPath": "/api/health",
+      "composeFile": "field-notes-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: ./scripts/run.sh (port 7804). Docker: HOST_PORT=7804 docker compose up --build -d (published on 127.0.0.1 only; Mock only). Real: set FIELD_NOTES_DIR in ~/Development/.env to a folder of .md pages outside the repo and run on the host. No catalog row matches yet, so no catalogId; the owner assigns one with the board row.",
+      "repo": "https://github.com/curtismu7/field-notes-LAB",
+      "tags": [
+        "learning",
+        "simulated",
+        "real"
+      ],
+      "where": "installed"
     }
   ]
 }
