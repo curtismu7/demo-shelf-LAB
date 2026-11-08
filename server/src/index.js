@@ -9,6 +9,7 @@ import { createInstallChecker } from './install.js';
 import { createProbeFetch } from './probe.js';
 import { loadCatalogTags, loadTaxonomy, tagIdSet, untaggedPlanned } from './tags.js';
 import { createLastRunning } from './lastRunning.js';
+import { maxRunning } from './control.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const LOOPBACK = new Set(['127.0.0.1', '::1', 'localhost']);
@@ -70,7 +71,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     if (untagged.length) console.warn(`${untagged.length} planned idea${untagged.length > 1 ? 's have' : ' has'} no tags (add to data/catalog-tags.json): ${untagged.join(', ')}`);
     const dataDir = path.resolve(process.env.SHELF_DATA_DIR || path.join(root, '.data'));
     const lastRunning = createLastRunning({ file: path.join(dataDir, 'last-running.json') });
-    const app = createApp({ demos, catalog, tags, catalogTags, allowStart, agent, inDocker, installSource, demoRoot, fetchFn, loopbackOnly: bind.loopback || inDocker, shelfDir: root, webDist: path.join(root, 'web', 'dist'), lastRunning });
+    const app = createApp({ demos, catalog, tags, catalogTags, allowStart, agent, inDocker, installSource, demoRoot, fetchFn, loopbackOnly: bind.loopback || inDocker, shelfDir: root, webDist: path.join(root, 'web', 'dist'), lastRunning, maxRunningDemos: maxRunning() });
     app.listen(port, bind.host, () => {
       console.log(`demo-shelf on http://${bind.host}:${port}  (${demos.length} demos, start/stop ${allowStart ? (inDocker ? 'via the start agent' : 'on') : 'off'})`);
     });

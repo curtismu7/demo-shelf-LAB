@@ -108,6 +108,7 @@ describe('start/stop', () => {
     expect(r.body).toMatchObject({ ok: true, id: 'a', action: 'start', output: 'started' });
     expect(exec.mock.calls).toEqual([
       ['docker', ['context', 'show']],
+      ['docker', ['info', '--format', '{{json .DefaultAddressPools}}']], // the network limit comes from the daemon's address pools
       ['docker', ['network', 'ls', '--format', '{{.Name}}']],
       ['docker', ['compose', '-f', '/tmp/a/c.yml', '-f', '/tmp/a/o.yml', 'up', '-d'], { cwd: '/tmp/a', timeoutMs: 600000 }],
     ]);
@@ -207,6 +208,29 @@ describe('start/stop', () => {
     expect(exec.mock.calls.some((c) => c[1][0] === 'compose')).toBe(false); // never ran compose
   });
 
+  it('network-pool guard: reads the real address pool, so a roomy pool allows more than 28 networks', async () => {
+    const exec = vi.fn(async (f, args) => {
+      if (args[0] === 'context') return { stdout: 'orbstack', stderr: '' };
+      if (args[0] === 'info') return { stdout: '[{"Base":"10.200.0.0/16","Size":24}]', stderr: '' }; // 256 networks
+      if (args[0] === 'network') return { stdout: Array.from({ length: 42 }, (_, i) => 'n' + i).join('\n'), stderr: '' };
+      return { stdout: 'started', stderr: '' };
+    });
+    const r = await post(app(exec), '/api/demos/a/start', sameOrigin);
+    expect(r.status).toBe(200);
+  });
+
+  it('network-pool guard: a small real pool refuses earlier than 28, and says the real limit', async () => {
+    const exec = vi.fn(async (f, args) => {
+      if (args[0] === 'context') return { stdout: 'orbstack', stderr: '' };
+      if (args[0] === 'info') return { stdout: '[{"Base":"172.17.0.0/16","Size":20}]', stderr: '' }; // 16 networks, limit 13
+      if (args[0] === 'network') return { stdout: Array.from({ length: 14 }, (_, i) => 'n' + i).join('\n'), stderr: '' };
+      return { stdout: 'started', stderr: '' };
+    });
+    const r = await post(app(exec), '/api/demos/a/start', sameOrigin);
+    expect([r.status, r.body.error]).toEqual([409, 'network-pool-nearly-full:14']);
+    expect(r.body.output).toMatch(/limit 13\b/);
+  });
+
   it('network-pool guard: passes when there is room', async () => {
     const exec = okExec(); // network ls returns 'started' -> 1 network
     const r = await post(app(exec), '/api/demos/a/start', sameOrigin);
@@ -253,7 +277,7 @@ describe('start/stop', () => {
     let release;
     const exec = vi.fn(async (f, args) => {
       if (args[0] === 'context') return { stdout: 'orbstack', stderr: '' };
-      if (args[0] === 'network') return { stdout: '', stderr: '' };
+      if (args[0] === 'network' || args[0] === 'info') return { stdout: '', stderr: '' };
       await new Promise((r) => { release = r; });
       return { stdout: 'ok', stderr: '' };
     });

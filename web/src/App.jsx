@@ -36,7 +36,7 @@ async function call(path, method = "GET", jsonBody) {
     ...(jsonBody !== undefined ? { headers: { "Content-Type": "application/json" }, body: JSON.stringify(jsonBody) } : {}),
   });
   const body = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(body.error || `HTTP ${res.status}`);
+  if (!res.ok) throw Object.assign(new Error(body.error || `HTTP ${res.status}`), { output: body.output });
   return body;
 }
 
@@ -246,14 +246,16 @@ export default function App() {
     setActiveAction(`${id}/${action}`);
     setNote(`${action} ${id}...`);
     try {
-      await call(`/api/demos/${encodeURIComponent(id)}/${action}`, "POST");
-      setNote(`${id}: ${action} done`);
+      const r = await call(`/api/demos/${encodeURIComponent(id)}/${action}`, "POST");
+      const bumped = r.stopped?.length ? ` Stopped ${r.stopped.map((d) => d.name).join(", ")} (the oldest) to stay within ${r.limit} running.` : "";
+      setNote(`${id}: ${action} done${bumped ? `.${bumped}` : ""}`);
+      if (bumped) setAnnounce(bumped.trim());
       setStarting((s) => {
         const { [id]: _gone, ...rest } = s;
         return action === "stop" ? rest : { ...rest, [id]: { at: Date.now(), stalled: false } };
       });
     } catch (e) {
-      setNote(`${id}: ${action} did not run: ${WHY[e.message] || e.message}`);
+      setNote(`${id}: ${action} did not run: ${WHY[e.message] || e.output || e.message}`);
     }
     setBusy(false);
     setActiveAction(null);
@@ -274,12 +276,13 @@ export default function App() {
     const targets = data.demos.filter((d) => !d.isShelf && ["down", "not-installed", "broken"].includes(d.status?.state));
     if (!targets.length) { setAnnounce("Everything is already up"); setNote("Nothing to deploy — every demo is up."); return; }
     setDeployAllRunning(true);
-    let okCount = 0; const failed = [];
+    let okCount = 0; let limitHit = null; const failed = [];
     for (const d of targets) {
       setNote(`deploy-all: ${d.name} (${okCount}/${targets.length} done)...`);
       try {
-        await call(`/api/demos/${encodeURIComponent(d.id)}/deploy`, "POST");
+        const r = await call(`/api/demos/${encodeURIComponent(d.id)}/deploy`, "POST");
         okCount += 1;
+        if (r.stopped?.length) { limitHit = r.limit; break; } // the next one would stop another running demo
       } catch (e) {
         failed.push(d.name);
         setNote(`deploy-all: ${d.name} failed — continuing (${WHY[e.message] || e.message})`);
@@ -287,9 +290,11 @@ export default function App() {
     }
     setDeployAllRunning(false);
     setAnnounce(`Deploy all finished: ${okCount} up, ${failed.length} failed`);
-    setNote(failed.length
-      ? `Deploy all: ${okCount} up, ${failed.length} failed (${failed.join(", ")}). Check the failed demo's Details for the reason.`
-      : `Deploy all: all ${okCount} demos are up.`);
+    setNote(limitHit
+      ? `Deploy all stopped at the limit of ${limitHit} running demos (${okCount} started). Stop some, then run it again for the rest.`
+      : failed.length
+        ? `Deploy all: ${okCount} up, ${failed.length} failed (${failed.join(", ")}). Check the failed demo's Details for the reason.`
+        : `Deploy all: all ${okCount} demos are up.`);
     load(true);
   }
 

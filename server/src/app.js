@@ -62,7 +62,7 @@ export function installOf(d, status, map) {
 const LOOPBACK_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
 
 // `loopbackOnly` guards against DNS rebinding: a loopback-bound shelf only answers to loopback Host names.
-export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, installSource = null, demoRoot = null, refreshWaitMs = 4000, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait, pingProductsCheck, lastRunning = null, networkLimit = undefined }) {
+export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, installSource = null, demoRoot = null, refreshWaitMs = 4000, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait, pingProductsCheck, lastRunning = null, networkLimit = undefined, maxRunningDemos = null }) {
   const demos = expandWhere(registry);
   const app = express();
   app.disable('x-powered-by');
@@ -242,7 +242,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
       res.set('Cache-Control', 'no-store').json({ ok: true, schema: 'shelf-last-running/1', ids: lastRunning.restoreIds(10) });
     });
   }
-  if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: (id) => { poller.invalidate(); install.invalidate(id); }, exec, fileExists, agent, inDocker, shelfDir, demoRoot, lastRunning, networkLimit }));
+  if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: (id) => { poller.invalidate(); install.invalidate(id); }, exec, fileExists, agent, inDocker, shelfDir, demoRoot, lastRunning, networkLimit, maxRunningDemos }));
   app.use('/api', (req, res) => res.status(404).json({ error: 'not-found' }));
 
   if (webDist && fs.existsSync(path.join(webDist, 'index.html'))) {
