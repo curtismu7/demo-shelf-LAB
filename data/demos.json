@@ -1368,8 +1368,10 @@
       "composeFile": "aggregate-entitlement-LAB/docker-compose.yml",
       "composeOverlays": [],
       "pingProducts": [],
-      "notes": "Host-run: npm run build, then npm start (port 7802, loopback only). Docker: HOST_PORT=7802 docker compose up --build -d (publishes 127.0.0.1:7802 only). Mock needs nothing. Real: set AGG_ENT_GW_URL, AGG_ENT_GW_APPS and AGG_ENT_GW_KEY_<NAME> in ~/Development/.env, then use the Real toggle. Fork of mcp-tools-LAB (its Entitled listing page). No catalog row matches, so no catalogId; the owner assigns one with the board row. composeFile is relative to the shelf's demo root.",
+      "notes": "Host-run: npm run build, then npm start (port 7802, loopback only). Docker: HOST_PORT=7802 docker compose up --build -d (publishes 127.0.0.1:7802 only). Mock needs nothing. Real: set AGG_ENT_GW_URL, AGG_ENT_GW_APPS and AGG_ENT_GW_KEY_<NAME> in ~/Development/.env, then use the Real toggle. Fork of mcp-tools-LAB (its Entitled listing page). Catalog id D125 (owner, 2026-11-08). composeFile is relative to the shelf's demo root.",
       "repo": "https://github.com/curtismu7/aggregate-entitlement-LAB",
+      "catalogId": "D125",
+      "alsoCatalogIds": [],
       "tags": [
         "mcp",
         "mcp-security",
