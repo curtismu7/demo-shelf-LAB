@@ -5,6 +5,10 @@ import ShelfLink from "./components/ShelfLink.jsx";
 import HelpDrawer from "./components/HelpDrawer.jsx";
 
 const REFRESH_MS = 30000;
+// After Start returns, compose has only created the containers. The card keeps its spinner and the shelf looks again every
+// START_POLL_MS until the demo answers its health check, or START_WAIT_MS passes (then the card says it did not come up).
+const START_POLL_MS = 2500;
+const START_WAIT_MS = 120000;
 
 // What a refused Start / Stop means, in words a person can act on.
 const WHY = {
@@ -217,6 +221,26 @@ export default function App() {
 
   useEffect(() => { if (open) closeRef.current?.focus(); }, [open]);
 
+  // Demos that were started and are not answering yet: { [id]: { at, stalled } }. A card in here keeps its spinner.
+  const [starting, setStarting] = useState({});
+  const startingIds = Object.keys(starting).filter((id) => !starting[id].stalled).join(",");
+  useEffect(() => {
+    if (!startingIds) return undefined;
+    const t = setInterval(() => {
+      load(true);
+      setStarting((s) => Object.fromEntries(Object.entries(s).map(([id, v]) => [id, !v.stalled && Date.now() - v.at >= START_WAIT_MS ? { ...v, stalled: true } : v])));
+    }, START_POLL_MS);
+    return () => clearInterval(t);
+  }, [startingIds, load]);
+  // The demo answered: the spinner is done.
+  useEffect(() => {
+    if (!data) return;
+    const up = Object.keys(starting).filter((id) => { const d = data.demos.find((x) => x.id === id); return !d || (d.status && d.status.state !== "down"); });
+    if (!up.length) return;
+    setStarting((s) => Object.fromEntries(Object.entries(s).filter(([id]) => !up.includes(id))));
+    setNote(`${up.map((id) => data.demos.find((x) => x.id === id)?.name || id).join(", ")}: ready`);
+  }, [data, starting]);
+
   async function act(id, action) {
     setBusy(true);
     setActiveAction(`${id}/${action}`);
@@ -224,6 +248,10 @@ export default function App() {
     try {
       await call(`/api/demos/${encodeURIComponent(id)}/${action}`, "POST");
       setNote(`${id}: ${action} done`);
+      setStarting((s) => {
+        const { [id]: _gone, ...rest } = s;
+        return action === "stop" ? rest : { ...rest, [id]: { at: Date.now(), stalled: false } };
+      });
     } catch (e) {
       setNote(`${id}: ${action} did not run: ${WHY[e.message] || e.message}`);
     }
@@ -562,6 +590,7 @@ export default function App() {
                 <div className="shelf__row">
                   {sec.rows.map((i) => (
                     <Card key={`${i.planned ? "p" : "r"}-${i.id}`} item={i} present={present} startEnabled={data.startEnabled} busy={busy || data.agent === "down" || data.agent === "token-rejected"}
+                      starting={starting[i.id] ? (starting[i.id].stalled ? "stalled" : "starting") : null}
                       activeAction={activeAction === `${i.id}/start` ? "start" : activeAction === `${i.id}/stop` ? "stop" : activeAction === `${i.id}/deploy` ? "deploy" : null}
                       onAction={act} onCopy={copy} onDetails={showDetails} tagInfo={tagInfo} picked={picked} onTag={toggleTag} />
                   ))}

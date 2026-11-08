@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- After Start returns, the card keeps its spinner and shows Starting (not Down) while the demo comes up. The shelf looks again every 2.5 s and flips the card to Ready as soon as the health check answers. If nothing answers within 2 minutes, the spinner stops and the card says it started but is not answering, and points to the container logs. Stop clears the state.
 - A Help button in the header opens a side drawer listing every way to start a demo: Start on a card, Restore last set after a restart, the `scripts/setup.sh` commands (`--start`, `--start-top`, `--start-all`, with a RAM warning), and fixes when Start does nothing. Escape or Close shuts it; opening a demo's details closes it.
 - The seed registers mcp-tools (D3, MCP inspector), mcp-scanner (D4, the same app on port 4810) and mcp-resource-server (D0, port 8081), 52 demos in all. All three carry `mcp-server-built`; the tag's tooltip no longer says "not a tester or inspector".
 - New tag `mcp-server-built` ("MCP tool we built") in a new "What we built" group, on hostile-mcp and mcp-surface-lab. The tag filter shows it like any other chip.

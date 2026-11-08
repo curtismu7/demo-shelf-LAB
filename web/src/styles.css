@@ -457,6 +457,11 @@ html[data-present] {
   --light: var(--status-info);
 }
 
+.light[data-state="starting"] {
+  --light: var(--status-warn);
+}
+
+.light[data-state="starting"]::before,
 .light[data-state="ready"]::before {
   animation: glow 2.4s ease-in-out infinite;
 }
