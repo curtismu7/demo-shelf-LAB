@@ -78,7 +78,7 @@ Packed range: 5 of 200 in use, 195 free.
 | 7710 | diagram-prove-lab |  |  |
 | 7800 | observability-lab | D123 |  |
 | 7801 | privilege-logging-lab |  |  |
-| 7802 | aggregate-entitlement-lab |  |  |
+| 7802 | aggregate-entitlement-lab | D125 |  |
 | 7803 | pingone-events-lab | D124 |  |
 | 7804 | field-notes-lab |  |  |
 | 8081 | mcp-resource-server | D0 |  |
