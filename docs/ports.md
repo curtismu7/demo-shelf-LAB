@@ -26,6 +26,7 @@ Packed range: 5 of 200 in use, 195 free.
 | 4950 | stolen-token-lab | C22 |  |
 | 5010 | agent-registry-demo | D11 |  |
 | 5050 | ping-gateway-route-lab | A19 |  |
+| 5100 | muse | D21 |  |
 | 5150 | gateway-claims-lab | D99 |  |
 | 5181 | attack-gallery | D33 |  |
 | 5200 | p1-third-party-exchange | D98 |  |
@@ -39,6 +40,7 @@ Packed range: 5 of 200 in use, 195 free.
 | 5500 | pingone-lab | A29 |  |
 | 5590 | deploy-test-lab |  |  |
 | 5600 | customer-agent-lab | D24 |  |
+| 5750 | gateway-suite-lab | D118 |  |
 | 5850 | agent-gateway-inspector | D54 |  |
 | 5910 | token-workbench | C2 |  |
 | 6001 | diagram-studio | E3 |  |
@@ -69,13 +71,16 @@ Packed range: 5 of 200 in use, 195 free.
 | 7550 | jev-lab | D113 |  |
 | 7560 | obo-lab | D111 |  |
 | 7570 | jit-lab | D112 |  |
+| 7580 | ciba-hitl-lab | C1 |  |
 | 7590 | demo-field-guide | D115 |  |
+| 7601 | agentcore-pingone-demo-lab | D114 |  |
 | 7660 | agent-preferences-lab |  |  |
 | 7670 | mcp-gateway-lab |  |  |
 | 7680 | hitl-mfa-lab | D119 |  |
 | 7690 | delegation-lab | D120 |  |
 | 7700 | a2a-lab | D122 |  |
 | 7710 | diagram-prove-lab |  |  |
+| 7720 | meridian-a2a-hop | D110 |  |
 | 7800 | observability-lab | D123 |  |
 | 7801 | privilege-logging-lab |  |  |
 | 7802 | aggregate-entitlement-lab | D125 |  |
@@ -99,7 +104,7 @@ Packed range: 5 of 200 in use, 195 free.
 | 4950-4999 | stolen-token-lab |
 | 5000-5049 | agent-registry-demo |
 | 5050-5099 | ping-gateway-route-lab |
-| 5100-5149 | **open** |
+| 5100-5149 | muse |
 | 5150-5199 | gateway-claims-lab, attack-gallery |
 | 5200-5249 | p1-third-party-exchange, pingone-mcp-inspector |
 | 5250-5299 | cimd-lab |
@@ -112,7 +117,7 @@ Packed range: 5 of 200 in use, 195 free.
 | 5600-5649 | customer-agent-lab |
 | 5650-5699 | **open** |
 | 5700-5749 | **open** |
-| 5750-5799 | **open** |
+| 5750-5799 | gateway-suite-lab |
 | 5800-5849 | **open** |
 | 5850-5899 | agent-gateway-inspector |
 | 5900-5949 | token-workbench |
@@ -148,10 +153,10 @@ Packed range: 5 of 200 in use, 195 free.
 | 7400-7449 | federated-identity-lab |
 | 7450-7499 | secrets-vault-lab |
 | 7500-7549 | ai-policies-lab |
-| 7550-7599 | jev-lab, obo-lab, jit-lab, demo-field-guide |
-| 7600-7649 | **open** |
+| 7550-7599 | jev-lab, obo-lab, jit-lab, ciba-hitl-lab, demo-field-guide |
+| 7600-7649 | agentcore-pingone-demo-lab |
 | 7650-7699 | agent-preferences-lab, mcp-gateway-lab, hitl-mfa-lab, delegation-lab |
-| 7700-7749 | a2a-lab, diagram-prove-lab |
+| 7700-7749 | a2a-lab, diagram-prove-lab, meridian-a2a-hop |
 | 7750-7799 | **open** |
 | 7800-7849 | observability-lab, privilege-logging-lab, aggregate-entitlement-lab, pingone-events-lab, field-notes-lab |
 | 7850-7899 | **open** |
