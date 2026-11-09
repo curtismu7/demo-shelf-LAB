@@ -1139,7 +1139,7 @@
     },
     {
       "id": "jev-lab",
-      "addedAt": "2026-11-03T16:03:20-06:00",
+      "addedAt": "2026-11-04T23:16:01Z",
       "name": "JEV Decision Model LAB",
       "catalogId": "D113",
       "kind": "Demo",
@@ -1159,14 +1159,14 @@
         "pingone"
       ],
       "where": "installed",
-      "repo": "https://github.com/curtismu7/jev-lab",
+      "repo": "https://github.com/curtismu7/jev-lab-LAB",
       "pingProducts": [
         "pingone"
       ]
     },
     {
       "id": "obo-lab",
-      "addedAt": "2026-11-03T16:03:20-06:00",
+      "addedAt": "2026-11-04T23:17:59Z",
       "name": "OBO Delegation Inspector LAB",
       "catalogId": "D111",
       "kind": "Demo",
@@ -1186,14 +1186,14 @@
         "real"
       ],
       "where": "installed",
-      "repo": "https://github.com/curtismu7/obo-lab",
+      "repo": "https://github.com/curtismu7/obo-lab-LAB",
       "pingProducts": [
         "pingone"
       ]
     },
     {
       "id": "jit-lab",
-      "addedAt": "2026-11-03T16:03:20-06:00",
+      "addedAt": "2026-11-04T23:16:06Z",
       "name": "JIT Ephemeral Credentials LAB",
       "catalogId": "D112",
       "kind": "Demo",
@@ -1213,7 +1213,7 @@
         "real"
       ],
       "where": "installed",
-      "repo": "https://github.com/curtismu7/jit-lab",
+      "repo": "https://github.com/curtismu7/jit-lab-LAB",
       "pingProducts": [
         "pingfederate"
       ]
@@ -1278,7 +1278,7 @@
     },
     {
       "id": "agent-preferences-lab",
-      "addedAt": "2026-11-07T08:02:58-06:00",
+      "addedAt": "2026-11-06T12:23:33Z",
       "name": "Agent Preferences Lab",
       "kind": "Demo",
       "description": "The user sets what their AI agent may do — allowed action tiers, a spend cap, what happens when Protect detects an AI agent — enforced at a mock MCP tool boundary: permit, human approval (HITL) or deny. Standalone mock of the AI-DEMO2 agentPreferences feature. Mock only.",
@@ -1291,7 +1291,7 @@
         "ai-agent-security",
         "simulated"
       ],
-      "repo": "https://github.com/curtismu7/agent-preferences-lab"
+      "repo": "https://github.com/curtismu7/agent-preferences-lab-LAB"
     },
     {
       "id": "delegation-lab",
@@ -1329,7 +1329,7 @@
     },
     {
       "id": "diagram-prove-lab",
-      "addedAt": "2026-11-07T08:02:58-06:00",
+      "addedAt": "2026-11-06T15:03:49Z",
       "name": "Diagram Prove Lab",
       "kind": "Tool",
       "description": "Validated personal-agent (ChatGPT) and digital-assistant diagrams as diagram-studio data, with a Prove-it-live checklist: each token claim (RFC 8693 sub+act, scope narrowing, HITL) maps to a real prompt and its evidence. Movable boxes, Simulate, Reset, Mock/Real toggle.",
@@ -1341,7 +1341,7 @@
         "simulated",
         "real"
       ],
-      "repo": "https://github.com/curtismu7/diagram-prove-lab"
+      "repo": "https://github.com/curtismu7/diagram-prove-lab-LAB"
     },
     {
       "id": "hitl-mfa-lab",
