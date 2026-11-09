@@ -88,7 +88,7 @@ Packed range: 8 of 200 in use, 192 free.
 | 7804 | field-notes-lab |  |  |
 | 7805 | env-map-lab |  |  |
 | 7806 | pingcli-lab | D126 |  |
-| 7807 | mcp-skills-lab |  |  |
+| 7807 | mcp-skills-lab | D127 |  |
 | 8081 | mcp-resource-server | D0 |  |
 
 ## Blocks of 50 (4500-7999)

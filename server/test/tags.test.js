@@ -80,10 +80,10 @@ describe('the committed seed', () => {
   it('has the starter groups', () => {
     expect(tags.groups.map((g) => g.label)).toEqual(['Ping products', 'Use cases', 'Diagram packs', 'Simulated or real', 'Standards and protocols', 'What we built', 'AWS']);
   });
-  // "An MCP tool we built" (servers, clients and tools): a curated list, so a new entry gets the tag on purpose.
+  // "An MCP tool we built" (servers, clients and tools): a curated list, so a new entry gets the tag on purpose (mcp-skills-lab: owner approved 2026-11-09, its Mock server is ours).
   it('mcp-server-built is in the taxonomy and sits on exactly the entries the owner named', () => {
     expect(known.has('mcp-server-built')).toBe(true);
-    expect(demos.filter((d) => d.tags.includes('mcp-server-built')).map((d) => d.id).sort()).toEqual(['hostile-mcp', 'mcp-resource-server', 'mcp-scanner', 'mcp-surface-lab', 'mcp-tools']);
+    expect(demos.filter((d) => d.tags.includes('mcp-server-built')).map((d) => d.id).sort()).toEqual(['hostile-mcp', 'mcp-resource-server', 'mcp-scanner', 'mcp-skills-lab', 'mcp-surface-lab', 'mcp-tools']);
     // mcp-tools and mcp-scanner are one app (port 4810) listed twice, kind Tester: the owner counts it as ours.
     expect(demos.find((d) => d.id === 'mcp-tools').url).toBe(demos.find((d) => d.id === 'mcp-scanner').url);
   });
