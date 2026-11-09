@@ -39,6 +39,7 @@ The shelf lists the demos in two files, merged by `id`:
 | `kind` | no | `Demo`, `Tester` or `Tool`; defaults to the catalog row's kind. |
 | `tags` | no | Up to 20 tag ids from `data/tags.json` (see Tags below). An id that is not in the taxonomy stops the server and is named in the message. Shown as pills on the card and used by the tag filter. |
 | `healthPath` | no | Plain path starting with `/`. Default `/api/health`. |
+| `openPath` | no | Plain path starting with `/`, `#` fragment allowed (for example `/#/diagram`). Open, Copy URL and the start script go to `url` plus this; health checks still use `url`. Not applied to the Mock card. |
 | `composeFile`, `composeOverlays` | no | `.yml` / `.yaml` paths with no shell characters or `..`: absolute, or relative to the demo root. The demo root is `SHELF_DEMO_ROOT`, and defaults to the folder above this shelf (where the demo repos sit). A relative path makes an entry portable across machines, so use it for new entries. Used for Copy start command and for Start / Stop (always on). Overlays need a `composeFile`. |
 
 Whether a demo is installed is not a field: the start agent looks for the registered `composeFile` (and overlays) on your machine. See "Installed, stopped, not installed" in the README.

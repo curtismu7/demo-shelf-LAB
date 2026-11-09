@@ -1528,6 +1528,7 @@
       "kind": "Tool",
       "description": "A map of where software runs: your Mac (Docker), Kubernetes namespaces and SaaS, as a movable ReactFlow diagram and a table, with a what-if: Kubernetes for servers only, every front end in Docker on the Mac. Mock uses a sanitized sample; Real reads a snapshot you collect.",
       "url": "http://localhost:7805",
+      "openPath": "/#/diagram",
       "healthPath": "/api/health",
       "composeFile": "env-map-LAB/docker-compose.yml",
       "composeOverlays": [],
