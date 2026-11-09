@@ -90,13 +90,15 @@ async function fakesRun(browser) {
     await page.getByRole('button', { name: 'Refresh' }).click();
     await page.locator('article.box[data-state="down"]', { has: page.getByRole('heading', { name: 'Fake goes-down' }) }).waitFor({ timeout: 8000 });
     check('goes-down: Ready -> Down after Refresh', true);
-    check('summary counts follow (2 Down: hung + goes-down)', (await page.locator('.chip[data-state="down"]').innerText()).trim().startsWith('2'));
+    // Since 40343d6 (owner, 2026-11-05) the summary is four buckets; Offline = installed but not answering (broken, hung, goes-down).
+    check('summary counts follow (3 Offline: broken + hung + goes-down)', (await page.locator('.lights .chip[data-state="offline"] b').innerText()).trim() === '3');
     check('screen-reader announcement names the change', (await page.locator('[role=status].sr').innerText()).includes('Fake goes-down is now Down'));
 
-    // Status filter and present mode.
-    await page.locator('.chip[data-state="needs-setup"]').click();
-    check('status chip filters the page to one card', (await page.locator('article.box[data-state]').count()) === 1);
-    await page.locator('.chip[data-state="needs-setup"]').click();
+    // Filter and present mode. The status chips are a summary now (40343d6), so filter with the search box.
+    await page.getByRole('searchbox', { name: 'Search' }).fill('Fake needs-setup');
+    await page.waitForFunction(() => document.querySelectorAll('article.box[data-state]').length === 1, null, { timeout: 5000 }).catch(() => {});
+    check('search filters the page to one card', (await page.locator('article.box[data-state]').count()) === 1 && (await cardOf(page, 'Fake needs-setup').count()) === 1);
+    await page.getByRole('searchbox', { name: 'Search' }).fill('');
     await page.getByRole('button', { name: 'Present' }).click();
     check('Present mode switches on', (await page.locator('html[data-present="1"]').count()) === 1);
     await page.screenshot({ path: path.join(shots, 'shelf-present.png') });
