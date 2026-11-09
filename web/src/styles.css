@@ -185,7 +185,7 @@ html[data-present] {
   font-size: 1rem;
 }
 
-/* The four user-facing buckets: Running (green), Deployed (blue/info), Offline (amber), New (neutral) */
+/* The four user-facing buckets: Running (green), Deployed (blue/info), Offline (amber), Not deployed (neutral) */
 .chip[data-state="running"]  { border-left: 4px solid var(--status-ok); }
 .chip[data-state="deployed"] { border-left: 4px solid var(--status-warn); }
 .chip[data-state="offline"]  { border-left: 4px solid var(--muted); }

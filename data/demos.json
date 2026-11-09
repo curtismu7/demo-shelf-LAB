@@ -2,7 +2,7 @@
   "demos": [
     {
       "id": "ai-gateway-client",
-      "addedAt": "2026-10-31T18:46:34-05:00",
+      "addedAt": "2026-11-04T23:13:48Z",
       "name": "Agent Privilege Client LAB",
       "catalogId": "D20",
       "kind": "Tester",
@@ -26,7 +26,7 @@
     },
     {
       "id": "mcp-demo-client-privilege",
-      "addedAt": "2026-10-31T18:46:34-05:00",
+      "addedAt": "2026-11-04T23:16:20Z",
       "name": "MCP Demo Client for Privilege LAB",
       "kind": "Demo",
       "description": "Chat-first local MCP demo client for protected MCP demos behind a PingOne Privilege gateway.",
@@ -50,7 +50,7 @@
     },
     {
       "id": "privilege-a2a-anthropic-demo",
-      "addedAt": "2026-10-31T18:46:34-05:00",
+      "addedAt": "2026-11-04T23:19:14Z",
       "name": "Privilege A2A Anthropic demo LAB",
       "kind": "Demo",
       "description": "Three Node processes that show an access review through A2A and MCP, on Anthropic or Google models.",
@@ -76,7 +76,7 @@
     },
     {
       "id": "id-jag-standalone",
-      "addedAt": "2026-10-31T18:46:34-05:00",
+      "addedAt": "2026-11-04T23:15:43Z",
       "name": "ID-JAG Standalone LAB",
       "catalogId": "C1",
       "kind": "Demo",
@@ -102,7 +102,7 @@
     },
     {
       "id": "privilege-demo",
-      "addedAt": "2026-10-31T18:46:34-05:00",
+      "addedAt": "2026-11-04T23:19:20Z",
       "name": "Privilege demo LAB",
       "kind": "Demo",
       "description": "An AI agent's MCP tool calls pass a policy enforcement point that decides allow, deny or hold with Cedar. Runs offline in mock mode (in-process mock issuer and tool backends) or verifies Bearer tokens from your own PingFederate in live mode.",
@@ -131,7 +131,7 @@
     },
     {
       "id": "privilege-map",
-      "addedAt": "2026-10-31T18:46:34-05:00",
+      "addedAt": "2026-11-04T23:12:16Z",
       "name": "Privilege Map LAB",
       "kind": "Demo",
       "description": "The PingOne Privilege Federated Identity model as ReactFlow diagrams you can drag and walk through, plus 21 Privilege feature cards, stories and a talk track. Mock only.",
@@ -152,7 +152,7 @@
     },
     {
       "id": "agent-mcp-door-demo",
-      "addedAt": "2026-10-31T18:46:34-05:00",
+      "addedAt": "2026-11-04T23:13:29Z",
       "name": "Agent Meets the MCP Door LAB",
       "kind": "Demo",
       "description": "A member's own AI agent reaches an enterprise MCP door: discover, register, consent, per-call token exchange, gateway, policy decision, human approval, audit. Movable React Flow sequence diagram with a payload or mock token under each message, talk track and presenter mode. Mock only.",
@@ -176,7 +176,7 @@
     },
     {
       "id": "pingone-signin-lab",
-      "addedAt": "2026-11-02T07:04:17-06:00",
+      "addedAt": "2026-11-04T23:19:02Z",
       "name": "PingOne Sign-in LAB",
       "kind": "Demo",
       "description": "Sign-in behaviour, mock only: failures, lockout, replay, MFA, step-up (RFC 9470) and CIBA with a mock phone. For real PingOne response shapes and live tenant runs, see the pingone-LAB repo.",
@@ -205,7 +205,7 @@
     },
     {
       "id": "pingone-lab",
-      "addedAt": "2026-11-02T07:04:17-06:00",
+      "addedAt": "2026-11-04T23:18:49Z",
       "name": "PingOne LAB",
       "catalogId": "A29",
       "kind": "Demo",
@@ -232,7 +232,7 @@
     },
     {
       "id": "pingfederate-lab",
-      "addedAt": "2026-11-02T07:37:08-06:00",
+      "addedAt": "2026-11-04T23:18:43Z",
       "name": "PingFederate LAB",
       "catalogId": "A28",
       "kind": "Demo",
@@ -260,7 +260,7 @@
     },
     {
       "id": "customer-agent-lab",
-      "addedAt": "2026-11-02T07:37:08-06:00",
+      "addedAt": "2026-11-04T23:14:42Z",
       "name": "Customer Agent LAB",
       "catalogId": "D24",
       "kind": "Demo",
@@ -280,7 +280,7 @@
     },
     {
       "id": "agent-kill-switch",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:13:23Z",
       "name": "Agent Kill Switch",
       "catalogId": "D14",
       "kind": "Demo",
@@ -298,7 +298,7 @@
     },
     {
       "id": "agent-registry-demo",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:13:36Z",
       "name": "Agent Registry Lifecycle",
       "catalogId": "D11",
       "kind": "Demo",
@@ -320,7 +320,7 @@
     },
     {
       "id": "ai-guard-sidecar",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:13:55Z",
       "name": "AI Guard Sidecar",
       "catalogId": "D12",
       "kind": "Demo",
@@ -338,7 +338,7 @@
     },
     {
       "id": "attack-gallery",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:14:09Z",
       "name": "Agent attack gallery",
       "catalogId": "D33",
       "kind": "Tester",
@@ -358,7 +358,7 @@
     },
     {
       "id": "cimd-lab",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:14:29Z",
       "name": "CIMD Lab",
       "catalogId": "D36",
       "kind": "Demo",
@@ -383,7 +383,7 @@
     },
     {
       "id": "diagram-studio",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:15:06Z",
       "name": "Diagram Studio",
       "catalogId": "E3",
       "kind": "Tool",
@@ -401,7 +401,7 @@
     },
     {
       "id": "gateway-claims-lab",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:15:19Z",
       "name": "Gateway Claims Lab",
       "catalogId": "D99",
       "kind": "Demo",
@@ -431,7 +431,7 @@
     },
     {
       "id": "hostile-a2a",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:15:32Z",
       "name": "Hostile A2A / poisoned Agent Card",
       "catalogId": "D7",
       "kind": "Demo",
@@ -450,7 +450,7 @@
     },
     {
       "id": "hostile-mcp",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:15:38Z",
       "name": "Hostile MCP / rug-pull",
       "catalogId": "D6",
       "kind": "Demo",
@@ -471,7 +471,7 @@
     },
     {
       "id": "mcp-auth-conformance-lab",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:16:13Z",
       "name": "MCP Auth Conformance Lab",
       "catalogId": "D35",
       "kind": "Tester",
@@ -490,7 +490,7 @@
     },
     {
       "id": "mcp-discovery",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:16:26Z",
       "name": "MCP Discovery",
       "catalogId": "D5",
       "kind": "Tester",
@@ -510,7 +510,7 @@
     },
     {
       "id": "no-tool-no-promise",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:17:54Z",
       "name": "No tool, no promise",
       "catalogId": "D31",
       "kind": "Demo",
@@ -528,7 +528,7 @@
     },
     {
       "id": "p1-third-party-exchange",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:18:05Z",
       "name": "P1 Third-Party Exchange",
       "catalogId": "D98",
       "kind": "Demo",
@@ -549,7 +549,7 @@
     },
     {
       "id": "personal-agent-demo",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:18:18Z",
       "name": "Personal Agent Flow",
       "catalogId": "D21",
       "kind": "Demo",
@@ -574,7 +574,7 @@
     },
     {
       "id": "ping-gateway-route-lab",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:18:24Z",
       "name": "PingGateway Route Lab (simulated)",
       "catalogId": "A19",
       "kind": "Demo",
@@ -599,7 +599,7 @@
     },
     {
       "id": "token-workbench",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:20:01Z",
       "name": "Token Workbench",
       "catalogId": "C2",
       "kind": "Demo",
@@ -624,7 +624,7 @@
     },
     {
       "id": "worker-demo",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:20:08Z",
       "name": "Worker Agent Demo",
       "catalogId": "D22",
       "kind": "Demo",
@@ -643,7 +643,7 @@
     },
     {
       "id": "session-lab",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:19:47Z",
       "name": "Session Lab: PingOne and DaVinci sessions and cookies",
       "catalogId": "A30",
       "kind": "Demo",
@@ -665,7 +665,7 @@
     },
     {
       "id": "intent-par-inspector",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:15:49Z",
       "name": "Intent / PAR Inspector",
       "catalogId": "C40",
       "kind": "Demo",
@@ -688,7 +688,7 @@
     },
     {
       "id": "poppy-agent-tester",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:19:09Z",
       "name": "Poppy Agent Tester",
       "catalogId": "D100",
       "kind": "Demo",
@@ -707,7 +707,7 @@
     },
     {
       "id": "intent-purpose-behaviour-lab",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:15:55Z",
       "name": "Intent, Purpose and Behaviour Lab",
       "catalogId": "D101",
       "kind": "Demo",
@@ -726,7 +726,7 @@
     },
     {
       "id": "coding-agents-lab",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:14:36Z",
       "name": "Coding Agents LAB",
       "catalogId": "D102",
       "kind": "Demo",
@@ -744,7 +744,7 @@
     },
     {
       "id": "data-protection-lab",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:14:48Z",
       "name": "Data Protection LAB",
       "catalogId": "D103",
       "kind": "Demo",
@@ -762,7 +762,7 @@
     },
     {
       "id": "saas-access-lab",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:19:32Z",
       "name": "SaaS Access LAB",
       "catalogId": "D104",
       "kind": "Demo",
@@ -780,7 +780,7 @@
     },
     {
       "id": "agent-governance-lab",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:13:17Z",
       "name": "Agent Governance LAB",
       "catalogId": "D105",
       "kind": "Demo",
@@ -798,7 +798,7 @@
     },
     {
       "id": "mcp-surface-lab",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:16:45Z",
       "name": "MCP Surface LAB",
       "catalogId": "D106",
       "kind": "Demo",
@@ -817,7 +817,7 @@
     },
     {
       "id": "federated-identity-lab",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:15:12Z",
       "name": "Federated Identity LAB",
       "catalogId": "D107",
       "kind": "Demo",
@@ -835,7 +835,7 @@
     },
     {
       "id": "secrets-vault-lab",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:19:39Z",
       "name": "Secrets Vault LAB",
       "catalogId": "D108",
       "kind": "Demo",
@@ -853,7 +853,7 @@
     },
     {
       "id": "ai-policies-lab",
-      "addedAt": "2026-11-02T13:34:32-06:00",
+      "addedAt": "2026-11-04T23:14:02Z",
       "name": "AI Policies LAB",
       "catalogId": "D109",
       "kind": "Demo",
@@ -1062,7 +1062,7 @@
     },
     {
       "id": "mcp-tools",
-      "addedAt": "2026-11-02T15:27:49-06:00",
+      "addedAt": "2026-11-04T23:16:50Z",
       "name": "MCP inspector",
       "catalogId": "D3",
       "kind": "Tester",
@@ -1083,7 +1083,7 @@
     },
     {
       "id": "mcp-scanner",
-      "addedAt": "2026-11-02T15:27:49-06:00",
+      "addedAt": "2026-11-04T23:16:50Z",
       "name": "MCP scanner",
       "catalogId": "D4",
       "kind": "Tester",
@@ -1104,7 +1104,7 @@
     },
     {
       "id": "mcp-resource-server",
-      "addedAt": "2026-11-02T15:27:49-06:00",
+      "addedAt": "2026-11-04T23:16:38Z",
       "name": "MCP resource server",
       "catalogId": "D0",
       "kind": "Tool",
@@ -1123,7 +1123,7 @@
     },
     {
       "id": "deploy-test-lab",
-      "addedAt": "2026-11-03T07:43:16-06:00",
+      "addedAt": "2026-11-04T23:15:00Z",
       "name": "Deploy Test LAB",
       "kind": "Tool",
       "description": "Throwaway app that exists to exercise the shelf's one-click Deploy: clone, build, run. One page and a demo-health/1 endpoint. Not part of any demo story.",
@@ -1220,7 +1220,7 @@
     },
     {
       "id": "ping-services-stub",
-      "addedAt": "2026-11-04T03:46:30-06:00",
+      "addedAt": "2026-11-04T23:18:31Z",
       "name": "Ping Services Stub LAB",
       "catalogId": "D114",
       "kind": "Tester",
@@ -1243,7 +1243,7 @@
     },
     {
       "id": "a2a-lab",
-      "addedAt": "2026-11-07T07:07:14-06:00",
+      "addedAt": "2026-11-07T04:28:10Z",
       "name": "A2A Lab",
       "catalogId": "D122",
       "kind": "Demo",
@@ -1261,7 +1261,7 @@
     },
     {
       "id": "idjag-runner",
-      "addedAt": "2026-11-07T07:07:14-06:00",
+      "addedAt": "2026-11-06T11:27:11Z",
       "name": "Tarun ID-JAG Runner",
       "kind": "Tester",
       "description": "Runs the PingFederate ID-JAG (cross-app access) demo without Postman: password grant + refresh, RFC 8693 exchange for the ID-JAG assertion, jwt-bearer redeem + introspection, four refusal cases, and a JWKS inspector. Real PingFederate 13.1+ only.",
@@ -1295,7 +1295,7 @@
     },
     {
       "id": "delegation-lab",
-      "addedAt": "2026-11-07T08:02:58-06:00",
+      "addedAt": "2026-11-07T03:16:05Z",
       "name": "Delegation Lab",
       "catalogId": "D120",
       "kind": "Demo",
@@ -1313,7 +1313,7 @@
     },
     {
       "id": "demo-field-guide",
-      "addedAt": "2026-11-07T08:02:58-06:00",
+      "addedAt": "2026-11-05T19:17:42Z",
       "name": "Demo field guide LAB",
       "catalogId": "D115",
       "kind": "Tool",
@@ -1345,7 +1345,7 @@
     },
     {
       "id": "hitl-mfa-lab",
-      "addedAt": "2026-11-07T08:02:58-06:00",
+      "addedAt": "2026-11-06T22:32:05Z",
       "name": "HITL MFA Lab",
       "catalogId": "D119",
       "kind": "Demo",
@@ -1365,7 +1365,7 @@
     },
     {
       "id": "mcp-gateway-lab",
-      "addedAt": "2026-11-07T08:02:58-06:00",
+      "addedAt": "2026-11-06T15:38:18Z",
       "name": "MCP Gateway Lab",
       "kind": "Demo",
       "description": "A third-party weather MCP server scoped at an agent gateway: an admin-editable policy is enforced at the edge, so a denied call never reaches the backend and switching the policy flips the same call with no restart. Mock of the AI-DEMO2 weather-mcp showcase (UC30/31/32).",
@@ -1383,7 +1383,7 @@
     },
     {
       "id": "observability-lab",
-      "addedAt": "2026-11-07T08:35:15-06:00",
+      "addedAt": "2026-11-07T14:26:25Z",
       "name": "Observability Lab",
       "catalogId": "D123",
       "kind": "Demo",
@@ -1402,7 +1402,7 @@
     },
     {
       "id": "privilege-logging-lab",
-      "addedAt": "2026-11-07T15:38:21-06:00",
+      "addedAt": "2026-11-07T21:35:14Z",
       "name": "Privilege Logging Lab",
       "kind": "Tester",
       "description": "Drive each Privilege gateway use case and see what gets logged, scored on user, agent, tool and policy decision. Mock replays 17 transactions measured on 2026-11-07; Real (owner-run) sends them to your gateway and reads the log back. The gaps are listed, not hidden.",
@@ -1424,7 +1424,7 @@
     },
     {
       "id": "field-notes-lab",
-      "addedAt": "2026-11-07T22:47:13-06:00",
+      "addedAt": "2026-11-08T03:12:08Z",
       "name": "Field Notes",
       "kind": "Tool",
       "description": "A library of pages about our apps and what we learned: findings, how-tos and investigations, one Markdown file each. Mock shows the sanitized pages shipped in the repo; Real (owner-run, loopback only) shows a local folder of full notes.",
@@ -1444,7 +1444,7 @@
     },
     {
       "id": "aggregate-entitlement-lab",
-      "addedAt": "2026-11-07T23:08:55-06:00",
+      "addedAt": "2026-11-08T05:04:20Z",
       "name": "Aggregate entitlement lab",
       "kind": "Tester",
       "description": "See how an MCP aggregate lists only the tools each caller may use and refuses the rest by name: six checks, guided steps and a diagram. Mock simulates the Ping release claim (UNVERIFIED on our tenant); Real measures your own gateway's aggregate apps with your agent keys.",
@@ -1469,7 +1469,7 @@
     },
     {
       "id": "pingone-events-lab",
-      "addedAt": "2026-11-08T05:08:18-06:00",
+      "addedAt": "2026-11-08T03:55:13Z",
       "name": "PingOne Events Lab",
       "catalogId": "D124",
       "kind": "Demo",
@@ -1486,7 +1486,7 @@
     },
     {
       "id": "ciba-hitl-lab",
-      "addedAt": "2026-11-08T09:32:06-06:00",
+      "addedAt": "2026-11-04T23:14:23Z",
       "name": "CIBA HITL Lab",
       "catalogId": "C1",
       "kind": "Demo",
@@ -1508,7 +1508,7 @@
     },
     {
       "id": "muse",
-      "addedAt": "2026-11-08T09:32:06-06:00",
+      "addedAt": "2026-11-04T23:17:09Z",
       "name": "Muse",
       "catalogId": "D21",
       "kind": "Demo",
@@ -1529,7 +1529,7 @@
     },
     {
       "id": "agentcore-pingone-demo-lab",
-      "addedAt": "2026-11-08T09:32:06-06:00",
+      "addedAt": "2026-11-04T23:13:42Z",
       "name": "AgentCore PingOne LAB",
       "catalogId": "D114",
       "kind": "Demo",
@@ -1554,7 +1554,7 @@
     },
     {
       "id": "meridian-a2a-hop",
-      "addedAt": "2026-11-08T09:32:06-06:00",
+      "addedAt": "2026-11-04T23:16:57Z",
       "name": "Meridian Pay A2A hop lab",
       "catalogId": "D110",
       "kind": "Demo",
@@ -1577,7 +1577,7 @@
     },
     {
       "id": "gateway-suite-lab",
-      "addedAt": "2026-11-08T09:32:06-06:00",
+      "addedAt": "2026-11-04T23:15:25Z",
       "name": "AI Gateway Suite LAB",
       "catalogId": "D118",
       "kind": "Demo",
@@ -1599,7 +1599,7 @@
     },
     {
       "id": "env-map-lab",
-      "addedAt": "2026-11-08T10:51:23-06:00",
+      "addedAt": "2026-11-08T16:44:20Z",
       "name": "Where Everything Runs",
       "kind": "Tool",
       "description": "A map of where software runs: your Mac (Docker), Kubernetes namespaces and SaaS, as a movable ReactFlow diagram and a table, with a what-if: Kubernetes for servers only, every front end in Docker on the Mac. Mock uses a sanitized sample; Real reads a snapshot you collect.",
@@ -1620,7 +1620,7 @@
     },
     {
       "id": "pingcli-lab",
-      "addedAt": "2026-11-09T07:06:25-06:00",
+      "addedAt": "2026-11-09T13:17:47Z",
       "name": "PingCLI Lab",
       "catalogId": "D126",
       "kind": "Demo",

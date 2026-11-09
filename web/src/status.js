@@ -2,17 +2,17 @@
 //   Running  — the demo answers its health check right now
 //   Deployed — cloned/installed on this machine (may be running or stopped; Running is the live subset)
 //   Offline  — installed but not answering (stopped, failed, or unhealthy)
-//   New      — in GitHub/the catalog but not deployed on this machine
+//   Not deployed — in GitHub/the catalog but not deployed on this machine (not the same as the What's new filter)
 // The server's finer-grained states (ready/broken/needs-setup/…) still drive the
 // Details drawer; the shelf summary and filter use these four buckets.
 export const BUCKETS = [
   { id: "running",  label: "Running" },
   { id: "deployed", label: "Deployed" },
   { id: "offline",  label: "Offline" },
-  { id: "new",      label: "New" },
+  { id: "new",      label: "Not deployed" },
 ];
 
-// Internal states → bucket. 'planned' (in the catalog, not registered) counts as New.
+// Internal states → bucket. 'planned' (in the catalog, not registered) counts as Not deployed.
 export const BUCKET_OF_STATE = {
   ready: "running",
   "needs-setup": "running",
