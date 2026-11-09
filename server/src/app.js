@@ -232,6 +232,12 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'token-workbench': '/token-workbench/',
     'agent-kill-switch': '/agent-kill-switch/',
     'agent-registry-demo': '/agent-registry-demo/',
+    // First-run labs (AI-DEMO-Standalone scripts/first-run-labs.txt), routed 2026-11-09.
+    'mcp-demo-client-privilege': '/mcp-demo-client/',
+    'privilege-a2a-anthropic-demo': '/privilege-a2a/',
+    'id-jag-standalone': '/id-jag-kit/',
+    'hostile-a2a': '/hostile-a2a/',
+    'data-protection-lab': '/data-protection/',
   };
   app.get('/api/shelf', async (req, res, next) => {
     try { res.set('Cache-Control', 'no-store').json({ ...(await shelf(await poller.get())), shelfUrl: shelfOrigin(req) }); } catch (e) { next(e); }
