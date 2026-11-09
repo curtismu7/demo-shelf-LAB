@@ -10,7 +10,7 @@ Tier: Tool. A local launcher that lists every registered demo with a status ligh
 
 ## Where things live
 - `data/demos.json` is the committed seed (the -LAB apps). `.data/demos.local.json` is the user's own file, git-ignored, merged by `id`.
-- Each demo adds itself to `.data/demos.local.json` on `npm start` through `scripts/shelf-register.mjs` (a vendored copy; the canonical one is in AI-DEMO-Standalone). That script is not in this repo; this repo only reads the file.
+- Each demo adds itself to `.data/demos.local.json` on `npm start` through `scripts/shelf-register.mjs` (a vendored copy; the canonical one is in AI-DEMO-Standalone). This repo carries a byte-identical copy at `scripts/shelf-register.mjs` (AI-DEMO-Standalone's `check-drift.sh` compares it); the shelf itself never runs it, it only reads `.data/demos.local.json`. Re-vendor it from AI-DEMO-Standalone main, never edit it here.
 - The Updates banner lists labs added to the meta-repo's `.gitmodules` in the last 48 hours (`GET /api/new-apps`, `server/src/newApps.js`) above the UPDATES.md notice. One refresh costs 2 unauthenticated GitHub API calls (1 when nothing changed in the window), cached 10 minutes; everything else comes from raw.githubusercontent.com. Overrides: `SHELF_META_RAW_BASE`, `SHELF_META_API_URL`, `SHELF_DEMOS_URL`.
 - `web/src/standalone-ui.css` is the vendored shared stylesheet. Do not edit it. App CSS (`web/src/styles.css`) uses its tokens only: no colour literals, no `prefers-color-scheme`, no `!important`, no italics, BEM names.
 
