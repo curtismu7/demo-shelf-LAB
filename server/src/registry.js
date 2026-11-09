@@ -10,7 +10,7 @@ const LOOPBACK = new Set(['localhost', '127.0.0.1', '[::1]', '::1']);
 // Characters that mean something to a shell. execFile never uses one, but a path holding them is a typo or an attack.
 const SHELL_CHARS = /[;&|$`<>\\"'*?(){}!#\n\r\t\0]/;
 const WHERE = ['installed', 'mock', 'both'];
-const FIELDS = ['id', 'name', 'catalogId', 'alsoCatalogIds', 'kind', 'description', 'url', 'where', 'mockUrl', 'healthPath', 'composeFile', 'composeOverlays', 'notes', 'tags', 'repo', 'pingProducts'];
+const FIELDS = ['id', 'name', 'catalogId', 'alsoCatalogIds', 'kind', 'description', 'url', 'where', 'mockUrl', 'healthPath', 'openPath', 'composeFile', 'composeOverlays', 'notes', 'tags', 'repo', 'pingProducts'];
 
 // https://github.com/<org>/<name> only (optional .git). Returns the canonical form without ".git", or null. The web page builds
 // `git clone <repo>.git` from it (so a name that still ends in .git after one is stripped is refused: stripping twice would name another repo), so nothing else may get through: no query, fragment, userinfo, port, spaces or newlines.
@@ -104,6 +104,8 @@ export function validateDemos(demos, { allowedHosts = [], demoRoot, tagIds } = {
     }
     const hp = d.healthPath === undefined ? '/api/health' : d.healthPath;
     if (typeof hp !== 'string' || !/^\/[A-Za-z0-9._~\-/]*$/.test(hp) || hp.startsWith('//') || hp.includes('..')) errors.push(`${at}: healthPath must be a plain path starting with "/"`);
+    // Where Open lands inside the app (for example "/#/diagram"); health checks still use url.
+    if (d.openPath !== undefined && (typeof d.openPath !== 'string' || !/^\/[A-Za-z0-9._~\-/#]*$/.test(d.openPath) || d.openPath.startsWith('//') || d.openPath.includes('..'))) errors.push(`${at}: openPath must be a plain path starting with "/" (a "#" fragment is allowed)`);
     if (d.composeFile !== undefined) checkPath(`${at}: composeFile`, d.composeFile, errors, demoRoot);
     if (d.composeOverlays !== undefined) {
       if (!Array.isArray(d.composeOverlays)) errors.push(`${at}: composeOverlays must be an array of paths`);

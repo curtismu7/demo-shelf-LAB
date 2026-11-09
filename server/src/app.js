@@ -14,7 +14,10 @@ const VERSION = JSON.parse(fs.readFileSync(new URL('../../package.json', import.
 // The URL is printed BEFORE the open so a failed `open` still leaves it visible. `open` is macOS; elsewhere the user sees the URL.
 const q = (a) => (/^[\w@%+=:,./-]+$/.test(a) ? a : `'${a.replace(/'/g, `'\\''`)}'`);
 
-export function startScript({ composeFile, composeOverlays = [], url, healthPath = '/api/health' }) {
+// The URL Open goes to: the registered origin plus openPath when one is set.
+export const openUrl = ({ url, openPath }) => (url && openPath ? url.replace(/\/$/, '') + openPath : url);
+
+export function startScript({ composeFile, composeOverlays = [], url, openPath, healthPath = '/api/health' }) {
   if (!composeFile) return null;
   const cmd = [
     `cd ${q(path.dirname(composeFile))}`,
@@ -22,12 +25,12 @@ export function startScript({ composeFile, composeOverlays = [], url, healthPath
   ];
   if (url) {
     const safe = (s) => s.replace(/'/g, `'\\''`);
-    const u = q(url);
+    const u = q(openUrl({ url, openPath }));
     const health = q(url.replace(/\/$/, '') + (healthPath || '/api/health'));
     cmd.push(
       `echo "When it is up, the app is at: ${safe(url)}"`,
       `i=0; until curl -sfso /dev/null ${health} || [ $i -ge 24 ]; do i=$((i+1)); sleep 5; done`,
-      `open ${u} 2>/dev/null || echo "Could not open the browser automatically. Open: ${safe(url)}"`,
+      `open ${u} 2>/dev/null || echo "Could not open the browser automatically. Open: ${safe(openUrl({ url, openPath }))}"`,
     );
   }
   return cmd.join(' && ');
@@ -42,7 +45,7 @@ export function expandWhere(demos) {
     const where = d.where || 'installed';
     const installed = where !== 'mock' ? [{ ...d, where: 'installed' }] : [];
     const { composeFile, composeOverlays, ...rest } = d; // eslint-disable-line no-unused-vars
-    const mock = where !== 'installed' ? [{ ...rest, ...(d.tags ? { tags: hostedTags(d.tags) } : {}), id: where === 'both' ? `${d.id}-mock` : d.id, url: d.mockUrl, where: 'mock' }] : [];
+    const mock = where !== 'installed' ? [{ ...rest, ...(d.tags ? { tags: hostedTags(d.tags) } : {}), id: where === 'both' ? `${d.id}-mock` : d.id, url: d.mockUrl, openPath: undefined, where: 'mock' }] : [];
     return [...installed, ...mock];
   });
 }
@@ -179,7 +182,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
       startCommand: startCommand(d),
       description: d.description,
       tags: d.tags ?? [],
-      url: d.url,
+      url: openUrl(d),
       proxyUrl: PROXY_PATHS[d.id] ? `https://local.ping-devops.com:8443${PROXY_PATHS[d.id]}` : null,
       where: d.where,
       wave: byCatalogId.get(d.catalogId)?.wave ?? null,
