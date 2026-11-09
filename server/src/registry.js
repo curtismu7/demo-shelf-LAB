@@ -10,7 +10,7 @@ const LOOPBACK = new Set(['localhost', '127.0.0.1', '[::1]', '::1']);
 // Characters that mean something to a shell. execFile never uses one, but a path holding them is a typo or an attack.
 const SHELL_CHARS = /[;&|$`<>\\"'*?(){}!#\n\r\t\0]/;
 const WHERE = ['installed', 'mock', 'both'];
-const FIELDS = ['id', 'name', 'catalogId', 'alsoCatalogIds', 'kind', 'description', 'url', 'where', 'mockUrl', 'healthPath', 'openPath', 'composeFile', 'composeOverlays', 'notes', 'tags', 'repo', 'pingProducts'];
+const FIELDS = ['id', 'addedAt', 'name', 'catalogId', 'alsoCatalogIds', 'kind', 'description', 'url', 'where', 'mockUrl', 'healthPath', 'openPath', 'composeFile', 'composeOverlays', 'notes', 'tags', 'repo', 'pingProducts'];
 
 // https://github.com/<org>/<name> only (optional .git). Returns the canonical form without ".git", or null. The web page builds
 // `git clone <repo>.git` from it (so a name that still ends in .git after one is stripped is refused: stripping twice would name another repo), so nothing else may get through: no query, fragment, userinfo, port, spaces or newlines.
@@ -20,6 +20,25 @@ export function cleanRepo(value) {
   const m = REPO.exec(value.endsWith('.git') ? value.slice(0, -4) : value);
   if (!m || m[1] === '.' || m[1] === '..' || m[2] === '.' || m[2] === '..' || m[2].endsWith('.git')) return null;
   return `https://github.com/${m[1]}/${m[2]}`;
+}
+
+// When the app joined the shelf: an ISO date (YYYY-MM-DD, read as UTC midnight) or a full ISO timestamp with Z or an offset.
+// Returns the time in ms, or null when the text is not a real calendar date (so 2026-02-30 is refused, not rolled into March).
+const ADDED_AT = /^(\d{4})-(\d{2})-(\d{2})(T\d{2}:\d{2}(:\d{2}(\.\d{1,3})?)?(Z|[+-]\d{2}:\d{2}))?$/;
+export function parseAddedAt(value) {
+  const m = typeof value === 'string' ? ADDED_AT.exec(value) : null;
+  if (!m) return null;
+  const day = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+  if (day.getUTCFullYear() !== +m[1] || day.getUTCMonth() !== +m[2] - 1 || day.getUTCDate() !== +m[3]) return null;
+  const ms = Date.parse(value);
+  return Number.isNaN(ms) ? null : ms;
+}
+
+// An app is "new" for this many hours after addedAt. Rolling, from the server's clock, so every view agrees.
+export const NEW_WINDOW_HOURS = 48;
+export function isNewDemo(addedAt, nowMs, windowHours = NEW_WINDOW_HOURS) {
+  const ms = parseAddedAt(addedAt);
+  return ms !== null && ms <= nowMs && nowMs - ms < windowHours * 3600 * 1000;
 }
 
 export class RegistryError extends Error {
@@ -75,7 +94,7 @@ function checkOrigin(label, value, allowedHosts, errors) {
 }
 
 // Returns the cleaned demos (unknown keys dropped). Throws RegistryError.
-export function validateDemos(demos, { allowedHosts = [], demoRoot, tagIds } = {}) {
+export function validateDemos(demos, { allowedHosts = [], demoRoot, tagIds, now = Date.now } = {}) {
   const errors = [];
   if (!Array.isArray(demos)) throw new RegistryError(['"demos" must be an array']);
   const seen = new Set();
@@ -88,6 +107,11 @@ export function validateDemos(demos, { allowedHosts = [], demoRoot, tagIds } = {
     else seen.add(d.id);
     for (const f of ['name', 'description']) {
       if (typeof d[f] !== 'string' || !d[f].trim() || d[f].length > 300) errors.push(`${at}: ${f} must be a non-empty string up to 300 characters`);
+    }
+    if (d.addedAt !== undefined) {
+      const ms = parseAddedAt(d.addedAt);
+      if (ms === null) errors.push(`${at}: addedAt must be a date (YYYY-MM-DD) or an ISO timestamp with Z or an offset`);
+      else if (ms > now()) errors.push(`${at}: addedAt ${d.addedAt} is in the future`);
     }
     for (const f of ['catalogId', 'kind']) {
       if (d[f] !== undefined && (typeof d[f] !== 'string' || d[f].length > 40)) errors.push(`${at}: ${f} must be a short string`);
@@ -160,7 +184,7 @@ function readJson(file, label) {
 }
 
 // Seed first, then the local file: same id = fields overridden, new id = appended.
-export function loadRegistry({ seedFile, localFile, allowedHosts = [], demoRoot, tagIds }) {
+export function loadRegistry({ seedFile, localFile, allowedHosts = [], demoRoot, tagIds, now }) {
   const seed = readJson(seedFile, 'data/demos.json');
   if (!seed) throw new RegistryError([`seed registry not found: ${seedFile}`]);
   const local = readJson(localFile, 'demos.local.json');
@@ -173,7 +197,7 @@ export function loadRegistry({ seedFile, localFile, allowedHosts = [], demoRoot,
     const k = key(d);
     byId.set(k, d && typeof d === 'object' ? { ...(byId.get(k) || {}), ...d } : d);
   }
-  return validateDemos([...byId.values()], { allowedHosts, demoRoot, tagIds });
+  return validateDemos([...byId.values()], { allowedHosts, demoRoot, tagIds, now });
 }
 
 // Problems with alsoCatalogIds across the cleaned demos: an id that is not a catalog row (a typo leaves the planned card showing), the

@@ -6,6 +6,7 @@ import { createInstallState } from './install.js';
 import { createPoller } from './poller.js';
 import { createPingProducts } from './pingProducts.js';
 import { hostedTags } from './tags.js';
+import { isNewDemo, NEW_WINDOW_HOURS } from './registry.js';
 
 const VERSION = JSON.parse(fs.readFileSync(new URL('../../package.json', import.meta.url), 'utf8')).version;
 
@@ -167,6 +168,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
   const byCatalogId = new Map(catalogItems.map((i) => [i.id, i]));
 
   async function shelf(results) {
+    const nowMs = (now || Date.now)();
     const inst = install.snapshot(); // cached; a stale one is refreshed in the background, never awaited here
     const pingNeeded = [...new Set(demos.flatMap((d) => d.pingProducts || []))];
     const pingStatuses = pingNeeded.length ? await checkPing(pingNeeded) : [];
@@ -181,6 +183,8 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
       composeFile: d.composeFile ?? null,
       startCommand: startCommand(d),
       description: d.description,
+      addedAt: d.addedAt ?? null,
+      isNew: isNewDemo(d.addedAt, nowMs),
       tags: d.tags ?? [],
       url: openUrl(d),
       proxyUrl: PROXY_PATHS[d.id] ? `https://local.ping-devops.com:8443${PROXY_PATHS[d.id]}` : null,
@@ -198,7 +202,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
       .map(({ id, name, kind, group, wave, seed }) => ({ id, name, kind, group, wave, seed, tags: catalogTags[id] ?? [], status: { state: 'planned' } }));
     // 'local' = the shelf runs Docker itself; 'up' / 'down' = the start agent a containerised shelf depends on.
     const agentState = agent ? await agent.ping() : 'local';
-    return { schema: 'demo-shelf/1', generatedAt: new Date().toISOString(), installPending: inst.pending, startEnabled: allowStart, agent: agentState, groups: catalog?.groups || {}, tagGroups: tags?.groups || [], demos: registered, planned };
+    return { schema: 'demo-shelf/1', generatedAt: new Date().toISOString(), installPending: inst.pending, startEnabled: allowStart, agent: agentState, newWindowHours: NEW_WINDOW_HOURS, groups: catalog?.groups || {}, tagGroups: tags?.groups || [], demos: registered, planned };
   }
 
   // Labs reachable through the lab-proxy (https://local.ping-devops.com:8443/<path>/).

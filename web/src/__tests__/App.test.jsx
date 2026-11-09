@@ -691,3 +691,68 @@ describe("tags", () => {
     expect(screen.getByText("Demo B")).toBeInTheDocument();
   });
 });
+
+describe("What's new", () => {
+  const withNew = () => shelf({ newWindowHours: 48, demos: shelf().demos.map((d) => ({ ...d, addedAt: d.id === "c" ? "2026-10-01" : "2026-11-09T07:06:25-06:00", isNew: d.id !== "c" })) });
+  it("shows a chip with the count of new demos; pressing it filters to them and pressing again shows all", async () => {
+    mockFetch(withNew());
+    render(<App />);
+    await screen.findByText("Demo A");
+    const chip = screen.getByRole("button", { name: /What's new/ });
+    expect(chip).toHaveTextContent("What's new · 2");
+    expect(chip).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(chip);
+    expect(chip).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("Demo A")).toBeInTheDocument();
+    expect(screen.getByText("Demo B")).toBeInTheDocument();
+    expect(screen.queryByText("Demo C")).toBeNull();
+    expect(screen.queryByText("Passwordless")).toBeNull();
+    fireEvent.click(chip);
+    expect(screen.getByText("Demo C")).toBeInTheDocument();
+    expect(screen.getByText("Passwordless")).toBeInTheDocument();
+  });
+  it("puts a New badge on the new cards only, and in their Details", async () => {
+    mockFetch(withNew());
+    render(<App />);
+    await screen.findByText("Demo A");
+    expect(cardOf("Demo A").getByText("New")).toBeInTheDocument();
+    expect(cardOf("Demo B").getByText("New")).toBeInTheDocument();
+    expect(cardOf("Demo C").queryByText("New")).toBeNull();
+    fireEvent.click(cardOf("Demo A").getByRole("button", { name: /Details/ }));
+    const drawer = within(screen.getByRole("dialog", { name: "Demo A details" }));
+    expect(drawer.getByText("New")).toBeInTheDocument();
+    expect(drawer.getByText("2026-11-09T07:06:25-06:00")).toBeInTheDocument();
+  });
+  it("the count follows the other filters, like a tag chip", async () => {
+    mockFetch(withNew());
+    render(<App />);
+    await screen.findByText("Demo A");
+    fireEvent.change(screen.getByRole("searchbox"), { target: { value: "mfa" } });
+    expect(screen.getByRole("button", { name: /What's new/ })).toHaveTextContent("What's new · 1");
+    fireEvent.change(screen.getByRole("searchbox"), { target: { value: "plain" } });
+    expect(screen.getByRole("button", { name: /What's new/ })).toBeDisabled();
+  });
+  it("is hidden when nothing is new", async () => {
+    mockFetch(shelf({ newWindowHours: 48 }));
+    render(<App />);
+    await screen.findByText("Demo A");
+    expect(screen.queryByRole("button", { name: /What's new/ })).toBeNull();
+    expect(screen.queryByText("New", { selector: ".box__new" })).toBeNull();
+  });
+  it("stays pressable with an empty-state line when the new demos roll out of the window while it is on", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    const f = mockFetch(withNew());
+    render(<App />);
+    await screen.findByText("Demo A");
+    fireEvent.click(screen.getByRole("button", { name: /What's new/ }));
+    f.mockImplementation(async (url) => (String(url) === "/api/info" ? { ok: true, json: async () => INFO } : { ok: true, json: async () => shelf({ newWindowHours: 48 }) }));
+    await act(async () => { vi.advanceTimersByTime(30000); });
+    await screen.findByText(/Nothing was added in the last 48 hours/);
+    const chip = screen.getByRole("button", { name: /What's new/ });
+    expect(chip).toHaveTextContent("What's new · 0");
+    expect(chip).not.toBeDisabled();
+    fireEvent.click(chip);
+    expect(screen.getByText("Demo C")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /What's new/ })).toBeNull();
+  });
+});

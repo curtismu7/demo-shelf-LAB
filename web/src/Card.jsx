@@ -161,7 +161,7 @@ export function Card({ item, startEnabled, present, busy, activeAction, starting
   return (
     <article className="box" data-state={s.state} data-kind={item.kind || "none"} data-install={inst} aria-label={label}>
       <h3>{item.name}</h3>
-      <span className="box__place">{place}</span>
+      <span className="box__place">{place}{item.isNew && <span className="box__new" title={item.addedAt ? `Added ${item.addedAt}` : undefined}>New</span>}</span>
       <StatusLight state={waiting ? "starting" : s.state} />
       <p className="box__desc">{item.description}</p>
       <TagPills item={item} tagInfo={tagInfo} picked={picked} onTag={onTag} />
@@ -216,7 +216,7 @@ export function Drawer({ item, present, onClose, closeRef, tagGroups = [] }) {
   return (
     <aside className="drawer" role="dialog" aria-label={`${item.name} details`} onKeyDown={(e) => e.key === "Escape" && onClose()}>
       <div className="drawer__head">
-        <h2>{item.name}</h2>
+        <h2>{item.name}{item.isNew && <span className="box__new">New</span>}</h2>
         <button type="button" ref={closeRef} onClick={onClose}>Close</button>
       </div>
       <p><StatusLight state={s.state} /></p>
@@ -228,6 +228,7 @@ export function Drawer({ item, present, onClose, closeRef, tagGroups = [] }) {
         {s.reason && (<><dt>Reason reported</dt><dd>{s.reason}</dd></>)}
         {s.demo?.version && (<><dt>Version</dt><dd>{s.demo.version}</dd></>)}
         {!item.planned && (<><dt>Registered URL</dt><dd className="mono">{item.url}</dd></>)}
+        {!item.planned && item.addedAt && (<><dt>Added to the shelf</dt><dd>{item.addedAt}</dd></>)}
         {!item.planned && item.repo && (<><dt>Repo</dt><dd className="mono">{item.repo}</dd></>)}
         {!present && item.install && item.install !== "unknown" && !item.planned && (<><dt>On this machine</dt><dd>{item.install === "not-installed" ? "Not installed" : item.imagesBuilt === false ? NOT_BUILT : "Installed"}</dd></>)}
         {!present && item.install === "not-installed" && cloneCommand(item.repo) && (<><dt>Clone command</dt><dd className="mono">{cloneCommand(item.repo)}</dd></>)}

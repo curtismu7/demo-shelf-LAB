@@ -12,6 +12,7 @@ The shelf lists the demos in two files, merged by `id`:
   "demos": [
     {
       "id": "id-jag-kit",
+      "addedAt": "2026-11-09",
       "name": "ID-JAG kit",
       "catalogId": "C1",
       "kind": "Demo",
@@ -30,6 +31,7 @@ The shelf lists the demos in two files, merged by `id`:
 | --- | --- | --- |
 | `id` | yes | Lower case letters, digits and `-`, 2 to 41 characters, unique. With `where: "both"`, `<id>-mock` is reserved for the generated mock card. |
 | `name`, `description` | yes | Up to 300 characters. |
+| `addedAt` | no (set it on every new entry) | When the app joined the shelf: `YYYY-MM-DD` (read as UTC midnight) or a full ISO timestamp with `Z` or an offset (for example `2026-11-09T07:06:25-06:00`). Must be a real calendar date and not in the future. New apps set it to the date their registry PR merges. `/api/shelf` returns it with `isNew: true` when it is within the last `newWindowHours` (48, rolling, from the server's clock), which drives the What's new chip and the New badge. The seed was backfilled from git: the commit that first put the id on `main`. Allowed in `.data/demos.local.json` too. |
 | `url` | yes (not for `where: "mock"`) | `http` or `https` origin only: no path, query, fragment or credentials. Host must be `localhost`, `127.0.0.1` or `[::1]`, or listed in `SHELF_ALLOWED_HOSTS`. |
 | `where` | no | `installed` (default), `mock` or `both`. Where the demo runs: on this machine, as a mock-only copy hosted, or both. `both` shows two cards, the second with the id `<id>-mock`. |
 | `mockUrl` | when `where` is `mock` or `both` | `http` or `https` origin, optionally with a plain path prefix for a shared SE host (for example `https://mocks.<host>/<mock-name>`); no query, fragment or credentials. The health path is joined under the prefix. A non-loopback host must be in `SHELF_ALLOWED_HOSTS` (or the built-in SE list). The Mock card opens it and its status light polls `healthPath` there. Mock cards have no Start / Stop. |
