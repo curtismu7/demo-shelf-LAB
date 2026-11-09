@@ -1541,6 +1541,28 @@
         "real"
       ],
       "where": "installed"
+    },
+    {
+      "id": "pingcli-lab",
+      "name": "PingCLI Lab",
+      "catalogId": "D126",
+      "kind": "Demo",
+      "description": "Watch an admin automate PingOne with Ping CLI: 14 allow-listed, read-only pingcli commands streamed to the browser, an install -> init -> auth -> run guide, and an easy-read table. Mock plays canned output offline; Real runs pinned pingcli 1.2.0 against your own environment.",
+      "url": "http://localhost:7806",
+      "healthPath": "/api/health",
+      "composeFile": "pingcli-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: ./scripts/run.sh (port 7806). Docker: docker compose up --build -d (published on 127.0.0.1 only). Mock needs no tenant and no credentials. Real: PINGONE_ENVIRONMENT_ID, PINGONE_REGION, PINGONE_CLIENT_ID, PINGONE_CLIENT_SECRET in ~/Development/.env (host) or passed through compose (Docker). Derived from the AI-DEMO2 /pingcli page. Catalog id D126 (owner, 2026-11-09).",
+      "tags": [
+        "pingone",
+        "learning",
+        "simulated",
+        "real"
+      ],
+      "repo": "https://github.com/curtismu7/pingcli-LAB",
+      "alsoCatalogIds": [],
+      "where": "installed"
     }
   ]
 }

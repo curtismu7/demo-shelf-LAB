@@ -226,6 +226,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'pingfederate-lab': '/pingfederate-lab/',
     'pingone-lab': '/pingone-lab/',
     'pingone-events-lab': '/pingone-events-lab/',
+    'pingcli-lab': '/pingcli/',
     'aggregate-entitlement-lab': '/aggregate-entitlement-lab/',
     'privilege-demo': '/privilege-demo/',
     'token-workbench': '/token-workbench/',
