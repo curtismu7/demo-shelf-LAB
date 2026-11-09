@@ -7,7 +7,7 @@ describe('packed port range for new apps', () => {
     const demos = (await import('../../data/demos.json', { with: { type: 'json' } })).default.demos;
     const ports = demos.filter((d) => d.url).map((d) => Number(new URL(d.url).port));
     // Apps that were placed by the allocator live inside the range; every older app is below it.
-    const allocated = new Set([7800, 7801, 7802, 7803, 7804, 7805, 7806]); // observability-lab, privilege-logging-lab, aggregate-entitlement-lab, pingone-events-lab, field-notes-lab, env-map-lab, pingcli-lab
+    const allocated = new Set([7800, 7801, 7802, 7803, 7804, 7805, 7806, 7807]); // observability-lab, privilege-logging-lab, aggregate-entitlement-lab, pingone-events-lab, field-notes-lab, env-map-lab, pingcli-lab, mcp-skills-lab
     expect(Math.max(...ports.filter((p) => p < 8000 && !allocated.has(p)))).toBeLessThan(PACKED_RANGE.lo);
   });
   it('hands out the lowest free ports in order and skips used ones', () => {
