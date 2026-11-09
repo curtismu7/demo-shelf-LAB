@@ -294,6 +294,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'progressive-trust-ladder': '/progressive-trust-ladder/',
     'chatgpt-mcp-flow': '/chatgpt-mcp-flow/',
     'mock-authorize': '/mock-authorize/',
+    'agent-audit-trail-lab': '/agent-audit-trail-lab/',
   };
   app.get('/api/shelf', async (req, res, next) => {
     try { res.set('Cache-Control', 'no-store').json({ ...(await shelf(await poller.get())), shelfUrl: shelfOrigin(req) }); } catch (e) { next(e); }
