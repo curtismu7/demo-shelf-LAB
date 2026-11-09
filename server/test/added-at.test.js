@@ -29,7 +29,10 @@ describe('addedAt in the registry', () => {
     }
   });
   it('refuses a date in the future', () => {
-    expect(errs({ ...ok, addedAt: '2026-11-10' })).toMatch(/addedAt 2026-11-10 is in the future/);
+    expect(errs({ ...ok, addedAt: '2026-11-11' })).toMatch(/addedAt 2026-11-11 is in the future/);
+    // A date-only value may run up to 14 h ahead of UTC (it is someone's local today): 2026-11-10 is 12 h ahead here.
+    expect(errs({ ...ok, addedAt: '2026-11-10' })).toBe('');
+    expect(() => validateDemos([{ ...ok, addedAt: '2026-11-10' }], { now: () => Date.parse('2026-11-09T09:59:59Z') })).toThrow(/in the future/);
     expect(errs({ ...ok, addedAt: '2026-11-09T12:00:01Z' })).toMatch(/in the future/);
     expect(errs({ ...ok, addedAt: '2026-11-09T12:00:00Z' })).toBe('');
   });

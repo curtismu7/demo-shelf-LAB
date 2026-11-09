@@ -61,7 +61,8 @@ describe("shelf page", () => {
     const sum = screen.getByRole("region", { name: "Summary by status" });
     expect(within(sum).getByText("Running").closest("span")).toHaveTextContent("2"); // Demo A (ready) + Demo C (up, no contract)
     expect(within(sum).getByText("Offline").closest("span")).toHaveTextContent("1"); // Demo B (down)
-    expect(within(sum).getByText("New").closest("span")).toHaveTextContent("1");     // Passwordless (planned)
+    expect(within(sum).getByText("Not deployed").closest("span")).toHaveTextContent("1"); // Passwordless (planned)
+    expect(within(sum).queryByText("New")).toBeNull(); // "New" is only the recently-added badge
     expect(within(screen.getByText("Demo A").closest("article")).getByRole("link", { name: /Open/ })).toHaveAttribute("target", "_blank");
     expect(within(screen.getByText("Demo B").closest("article")).queryByRole("link")).toBeNull();
   });

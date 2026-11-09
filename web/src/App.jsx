@@ -76,7 +76,7 @@ async function copyText(text) {
 
 function toItems(data) {
   // Bucket per the owner's four statuses. A demo that answers health is Running;
-  // one in the catalog/GitHub but not deployed here is New; everything else
+  // one in the catalog/GitHub but not deployed here is Not deployed; everything else
   // (cloned/installed but not answering) is Offline. "Deployed" counts every
   // installed demo (Running + Offline are its live subsets).
   const reg = data.demos.map((d) => {

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- `addedAt` in the seed is now each repo's GitHub creation date, so apps that were only moved into the seed (muse, ciba-hitl-lab, agentcore-pingone-demo-lab, meridian-a2a-hop, gateway-suite-lab) no longer show as new. Entries with no repo, or a repo URL that redirects to a renamed repo, keep the git-history date. A date-only `addedAt` may be up to 14 hours ahead of UTC. The vendored `scripts/shelf-register.mjs` stamps `addedAt` when it adds an entry.
+- The status summary bucket for demos that are not on this machine is now called **Not deployed** (was New), so New means only the recently-added badge.
 - What's new: a chip beside the Where filter shows how many demos were added in the last 48 hours (`What's new · 3`) and narrows the shelf to them; their cards and Details carry a New badge. The window is rolling and computed by the server (`isNew` per demo and `newWindowHours: 48` in `/api/shelf`), so every view agrees. It is hidden when nothing is new. New optional registry field `addedAt` (date or ISO timestamp, a real date, not in the future); every seed entry was backfilled from the commit that first put it on `main`.
 - customer-agent-lab is registered at port 5603, the port its Docker compose publishes (5600 is the host-run port). The shelf was probing 5600, so a running container showed as Down.
 - The running limit never stops ai-guard-sidecar to make room. It still counts toward the limit, but when Start has to stop the oldest demo it skips it; Stop and Stop all still stop it. If every other running demo is one of these, Start is refused (`no-demo-to-stop`) instead of stopping anything.

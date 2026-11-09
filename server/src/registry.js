@@ -111,7 +111,7 @@ export function validateDemos(demos, { allowedHosts = [], demoRoot, tagIds, now 
     if (d.addedAt !== undefined) {
       const ms = parseAddedAt(d.addedAt);
       if (ms === null) errors.push(`${at}: addedAt must be a date (YYYY-MM-DD) or an ISO timestamp with Z or an offset`);
-      else if (ms > now()) errors.push(`${at}: addedAt ${d.addedAt} is in the future`);
+      else if (ms > now() + (d.addedAt.length === 10 ? 14 * 3600 * 1000 : 0)) errors.push(`${at}: addedAt ${d.addedAt} is in the future`);
     }
     for (const f of ['catalogId', 'kind']) {
       if (d[f] !== undefined && (typeof d[f] !== 'string' || d[f].length > 40)) errors.push(`${at}: ${f} must be a short string`);
