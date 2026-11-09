@@ -887,7 +887,8 @@
         "simulated",
         "real",
         "oauth"
-      ]
+      ],
+      "repo": "https://github.com/curtismu7/p1az-inspector-LAB"
     },
     {
       "id": "agent-gateway-inspector",
@@ -909,7 +910,8 @@
         "simulated",
         "real",
         "mcp"
-      ]
+      ],
+      "repo": "https://github.com/curtismu7/agent-gateway-inspector-LAB"
     },
     {
       "id": "pingone-mcp-inspector",
@@ -929,7 +931,8 @@
         "simulated",
         "real",
         "mcp"
-      ]
+      ],
+      "repo": "https://github.com/curtismu7/pingone-mcp-inspector-LAB"
     },
     {
       "id": "agent-audit-trail-lab",
@@ -948,7 +951,8 @@
         "audit-observability",
         "agent-identity",
         "simulated"
-      ]
+      ],
+      "repo": "https://github.com/curtismu7/agent-audit-trail-LAB"
     },
     {
       "id": "progressive-trust-ladder",
@@ -971,6 +975,7 @@
         "pingid",
         "pingone"
       ],
+      "repo": "https://github.com/curtismu7/progressive-trust-ladder-LAB",
       "pingProducts": [
         "pingone"
       ]
@@ -994,6 +999,7 @@
         "oauth",
         "mcp"
       ],
+      "repo": "https://github.com/curtismu7/chatgpt-mcp-flow-LAB",
       "pingProducts": [
         "pingone"
       ]
@@ -1015,7 +1021,8 @@
         "authorization-policy",
         "simulated",
         "oauth"
-      ]
+      ],
+      "repo": "https://github.com/curtismu7/mock-authorize-LAB"
     },
     {
       "id": "stolen-token-lab",
@@ -1037,6 +1044,7 @@
         "pingone",
         "pingfederate"
       ],
+      "repo": "https://github.com/curtismu7/stolen-token-LAB",
       "pingProducts": [
         "pingfederate"
       ]
@@ -1058,7 +1066,8 @@
         "simulated",
         "mcp",
         "pingone-privilege"
-      ]
+      ],
+      "repo": "https://github.com/curtismu7/mcp-elicitation-LAB"
     },
     {
       "id": "mcp-tools",
