@@ -288,6 +288,9 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'p1-third-party-exchange': '/p1-third-party-exchange/',
     'personal-agent-demo': '/personal-agent-demo/',
     'ping-gateway-route-lab': '/ping-gateway-route-lab/',
+    // Lab fixes merged 2026-11-09 (mock-authorize-LAB#4, progressive-trust-ladder-LAB#5).
+    'mock-authorize': '/mock-authorize/',
+    'progressive-trust-ladder': '/progressive-trust-ladder/',
   };
   app.get('/api/shelf', async (req, res, next) => {
     try { res.set('Cache-Control', 'no-store').json({ ...(await shelf(await poller.get())), shelfUrl: shelfOrigin(req) }); } catch (e) { next(e); }
