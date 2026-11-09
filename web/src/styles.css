@@ -222,6 +222,10 @@ html[data-present] {
   font-size: 0.8rem;
 }
 
+.chip--new {
+  border-left: 4px solid var(--accent);
+}
+
 .tag-filters__bar {
   display: flex;
   gap: 12px;
@@ -677,4 +681,19 @@ html[data-present] {
 .top__version {
   color: var(--muted);
   font-weight: 600;
+}
+
+/* "New" badge: the demo was added within the server's rolling window (isNew). */
+.box__new {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
 }

@@ -157,6 +157,8 @@ Real mode (owner-run): add `CENTRAL_AGENT_A2A_URL` + `CENTRAL_AGENT_A2A_BEARER` 
 
 `data/demos.json` is the committed seed: the -LAB apps. Put your own entries or overrides in `.data/demos.local.json`, merged over the seed by `id`. Details in [docs/registry.md](docs/registry.md).
 
+Each entry carries `addedAt`, the date (or full ISO timestamp) the app joined the shelf. A new app sets it to its registry PR's merge date. The **What's new** chip next to the Where filter shows how many demos were added in the last 48 hours (rolling, from the server's clock) and narrows the shelf to them; those cards carry a **New** badge. With nothing new, the chip is hidden.
+
 Each demo is either installed (runs on your machine, the default), mock (a hosted mock-only copy at `mockUrl`), or both. The page has an All / Installed / Mock filter. No mock copy is registered today, so Mock is empty.
 
 `data/catalog.json` is curated: only standalone apps and accepted proposals. To parse the whole plan into a scratch file instead (deterministic, never over the curated one):

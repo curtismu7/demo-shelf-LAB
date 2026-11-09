@@ -119,6 +119,8 @@ export default function App() {
   const [where, setWhere] = useState("all");
   const [text, setText] = useState(() => fromAddress().q);
   const [picked, setPicked] = useState(() => fromAddress().tags);
+  // "What's new": only demos the server marks isNew (added within its rolling newWindowHours).
+  const [newOnly, setNewOnly] = useState(false);
   const [present, setPresent] = useState(false);
   const [tagsOpen, setTagsOpen] = useState(false);
   const [theme, setTheme] = useState(() => {
@@ -422,16 +424,20 @@ export default function App() {
     const mine = g.tags.filter((t) => picked.has(t.id));
     return !mine.length || mine.some((t) => i.tags?.includes(t.id));
   });
-  const shown = useMemo(() => items.filter((i) => passesBase(i) && passesTags(i)), [items, where, text, picked, tagGroups]); // eslint-disable-line react-hooks/exhaustive-deps
+  const passesNew = (i) => !newOnly || i.isNew === true;
+  const shown = useMemo(() => items.filter((i) => passesBase(i) && passesTags(i) && passesNew(i)), [items, where, text, picked, tagGroups, newOnly]); // eslint-disable-line react-hooks/exhaustive-deps
+  // The What's new chip counts like a tag chip: every other filter applied, its own left out.
+  const newTotal = items.filter((i) => i.isNew === true).length;
+  const newCount = useMemo(() => items.filter((i) => i.isNew === true && passesBase(i) && passesTags(i)).length, [items, where, text, picked, tagGroups]); // eslint-disable-line react-hooks/exhaustive-deps
   // How many cards each chip would give, with every other filter (and the other tag groups) applied.
   const tagCounts = useMemo(() => {
     const out = {};
     for (const g of tagGroups) {
-      const pool = items.filter((i) => passesBase(i) && passesTags(i, g.id));
+      const pool = items.filter((i) => passesBase(i) && passesTags(i, g.id) && passesNew(i));
       for (const t of g.tags) out[t.id] = pool.filter((i) => i.tags?.includes(t.id)).length;
     }
     return out;
-  }, [items, where, text, picked, tagGroups]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [items, where, text, picked, tagGroups, newOnly]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Registered demos stand on the first shelf. Planned ideas follow, one shelf per catalog group.
   const byPlan = (a, b) => (a.wave ?? 99) - (b.wave ?? 99) || String(a.catalogId).localeCompare(String(b.catalogId), undefined, { numeric: true });
@@ -545,6 +551,13 @@ export default function App() {
                   <button key={v} type="button" className="chip" aria-pressed={where === v} onClick={() => setWhere(v)}>{label}</button>
                 ))}
               </div>
+              {(newTotal > 0 || newOnly) && (
+                <div role="group" aria-label="What's new" className="filters__where">
+                  <button type="button" className="chip tag-chip chip--new" aria-pressed={newOnly} disabled={!newOnly && newCount === 0} title={`Apps added to the shelf in the last ${data.newWindowHours ?? 48} hours`} onClick={() => setNewOnly((v) => !v)} data-testid="whats-new">
+                    What's new · <small>{newCount}</small>
+                  </button>
+                </div>
+              )}
               {productGroup && (
                 <label>Ping products
                   <select value={productPick} onChange={(e) => setProductPick(e.target.value)}>
@@ -584,7 +597,9 @@ export default function App() {
             )}
             {sections.length === 0 && (
               <p className="empty">
-                {where === "mock" && !items.some((i) => i.where === "mock")
+                {newOnly && newCount === 0
+                  ? `Nothing was added in the last ${data.newWindowHours ?? 48} hours. Press What's new again to see every demo.`
+                  : where === "mock" && !items.some((i) => i.where === "mock")
                   ? "No mock copies yet."
                   : picked.size ? "Nothing matches these tags and filters. Planned ideas carry no Simulated or Real tag, so picking one of those hides them." : "Nothing matches these filters."}
               </p>
