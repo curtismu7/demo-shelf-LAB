@@ -1640,6 +1640,28 @@
       "repo": "https://github.com/curtismu7/pingcli-LAB",
       "alsoCatalogIds": [],
       "where": "installed"
+    },
+    {
+      "id": "mcp-skills-lab",
+      "addedAt": "2026-11-09",
+      "name": "MCP Skills LAB",
+      "kind": "Tester",
+      "description": "Tests the MCP Skills extension (io.modelcontextprotocol/skills, SEP-2640): a skills server (Mock or Real), 23 hostile cases a correct host must catch, and a host verifier that checks digests, sizes, frontmatter, approvals and origins. Nothing is executed or fetched.",
+      "url": "http://localhost:7807",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-skills-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: npm start (port 7807). Docker: docker compose up --build -d (published on 127.0.0.1 only). Mock by default; Real reads SKILLS_DIR (read-only mount). No tenant, no credentials, no outbound call. No catalog row matches yet, so no catalogId; the owner assigns one with the board row (the lab's own docs/shelf-entry.json carries TBD). UNVERIFIED against a vendor gateway.",
+      "tags": [
+        "mcp",
+        "mcp-security",
+        "tool-poisoning",
+        "simulated",
+        "real"
+      ],
+      "repo": "https://github.com/curtismu7/mcp-skills-LAB",
+      "where": "installed"
     }
   ]
 }
