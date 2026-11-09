@@ -41,6 +41,14 @@ async function call(path, method = "GET", jsonBody) {
 }
 
 // Minimal markdown for the release notes: bold, inline code, bullets, headings.
+const UPDATE_COMMAND = "curl -fsSL https://raw.githubusercontent.com/curtismu7/AI-DEMO-Standalone/main/scripts/install.sh | bash";
+// "added 5 hours ago" for the Updates banner's new-lab list.
+function hoursAgo(at) {
+  const h = Math.floor((Date.now() - Date.parse(at)) / 3600000);
+  if (!(h >= 1)) return "less than an hour ago";
+  return h === 1 ? "1 hour ago" : `${h} hours ago`;
+}
+
 function mdToNodes(md) {
   const inline = (t) => t
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -107,8 +115,12 @@ export default function App() {
   // Which card action is in flight, as "id/action", so that card can show a spinner while it waits.
   const [activeAction, setActiveAction] = useState(null);
   const [note, setNote] = useState(null);
-  // Update notice from the family's UPDATES.md: { notice, updateCommand } or null.
-  const [updateNotice, setUpdateNotice] = useState(null);
+  // The Updates banner: labs added to the family in the last 48 hours (/api/new-apps) plus the UPDATES.md notice
+  // (/api/notice). null until both answered. Closing it stores what it showed; it comes back when that changes.
+  const [updates, setUpdates] = useState(null);
+  const [updatesDismissed, setUpdatesDismissed] = useState(() => {
+    try { return window.localStorage.getItem("shelf-updates-dismissed"); } catch { return null; }
+  });
   // Release notes: { version, notes, updateCommand } from /api/releases.
   // Open by default when `version` differs from the last one the user dismissed;
   // the dismissal persists in localStorage until the next version appears.
@@ -175,12 +187,21 @@ export default function App() {
     return () => { clearInterval(t); document.removeEventListener("visibilitychange", tick); };
   }, [load]);
 
-  // Update notice: fetched once per page load; the server caches upstream for 5 min.
+  // Updates banner: fetched once per page load; the server caches upstream (notice 5 min, new apps 10 min).
   useEffect(() => {
-    fetch("/api/notice").then((r) => r.json()).then((b) => {
-      if (b && b.notice) setUpdateNotice(b);
-    }).catch(() => { /* no notice is fine */ });
+    const get = (u) => fetch(u).then((r) => r.json()).catch(() => null);
+    Promise.all([get("/api/new-apps"), get("/api/notice")]).then(([n, b]) => {
+      const apps = Array.isArray(n?.apps) ? n.apps.filter((a) => a && typeof a.id === "string" && typeof a.name === "string") : [];
+      const notice = b && typeof b.notice === "string" && b.notice.trim() ? b.notice : null;
+      setUpdates({ apps, notice, updateCommand: (b && typeof b.updateCommand === "string" && b.updateCommand) || UPDATE_COMMAND });
+    });
   }, []);
+  const updatesKey = updates ? JSON.stringify({ apps: updates.apps.map((a) => a.id).sort(), notice: updates.notice }) : null;
+  const showUpdates = Boolean(updates && (updates.apps.length || updates.notice) && updatesKey !== updatesDismissed);
+  const dismissUpdates = () => {
+    setUpdatesDismissed(updatesKey);
+    try { window.localStorage.setItem("shelf-updates-dismissed", updatesKey); } catch { /* private mode */ }
+  };
 
   // Release notes: open automatically when a NEW version appears (one the user
   // has not dismissed); stay closed once dismissed until the version changes.
@@ -501,20 +522,33 @@ export default function App() {
             <p style={{ marginTop: 6, marginBottom: 0 }}>Run it in a terminal to get these updates. Safe to re-run. This panel stays closed until the next release.</p>
           </div>
         )}
-        {updateNotice && (
+        {showUpdates && (
           <div className="note" data-state="warn" role="status">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
               <strong>Updates available.</strong>
-              <button type="button" aria-label="Dismiss update banner" onClick={() => { setUpdateNotice(null); dismissNotes(); }}>Close</button>
+              <button type="button" aria-label="Dismiss update banner" onClick={() => { dismissUpdates(); dismissNotes(); }}>Close</button>
             </div>
-            <div dangerouslySetInnerHTML={{ __html: mdToNodes(updateNotice.notice) }} style={{ marginTop: 4 }} />
+            {updates.apps.length > 0 && (
+              <>
+                <p className="note__lead">New labs in the last 48 hours:</p>
+                <ul className="note__list" aria-label="New labs in the last 48 hours">
+                  {updates.apps.map((a) => (
+                    <li key={a.id}>
+                      <b>{a.name}</b> <span className="note__meta">added {hoursAgo(a.addedAt)}</span>
+                      {" · "}{a.onThisMachine ? "on your shelf" : "run the update command to get it"}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+            {updates.notice && <div dangerouslySetInnerHTML={{ __html: mdToNodes(updates.notice) }} style={{ marginTop: 4 }} />}
             {/* One update command on screen at a time: the What's-new panel owns it
                 while open; the banner shows its own copy only when the panel is closed. */}
             {!notesOpen && (
               <>
                 <div style={{ marginTop: 8, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-                  <code style={{ fontSize: "0.85em", wordBreak: "break-all" }}>{updateNotice.updateCommand}</code>
-                  <button type="button" onClick={() => { copyText(updateNotice.updateCommand); setAnnounce("Update command copied"); }}>Copy</button>
+                  <code style={{ fontSize: "0.85em", wordBreak: "break-all" }}>{updates.updateCommand}</code>
+                  <button type="button" onClick={() => { copyText(updates.updateCommand); setAnnounce("Update command copied"); }}>Copy</button>
                 </div>
                 <p style={{ marginTop: 6, marginBottom: 0 }}>Run it in a terminal — it updates the demos and keeps everything else. Safe to re-run.</p>
               </>

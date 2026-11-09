@@ -756,3 +756,69 @@ describe("What's new", () => {
     expect(screen.queryByRole("button", { name: /What's new/ })).toBeNull();
   });
 });
+
+describe("Updates available banner", () => {
+  const hrs = (h) => new Date(Date.now() - h * 3600000).toISOString();
+  const withUpdates = ({ apps = [], notice = null } = {}) => {
+    const base = mockFetch(shelf());
+    const f = vi.fn(async (url, init) => {
+      if (String(url) === "/api/new-apps") return { ok: true, json: async () => ({ windowHours: 48, since: hrs(48), apps }) };
+      if (String(url) === "/api/notice") return { ok: true, json: async () => ({ notice, updateCommand: "curl -fsSL https://example.invalid/install.sh | bash" }) };
+      if (String(url) === "/api/releases") return { ok: true, json: async () => null };
+      return base(url, init);
+    });
+    vi.stubGlobal("fetch", f);
+    return f;
+  };
+  const A = { id: "a-lab", dir: "a-LAB", name: "Alpha Lab", description: "", addedAt: hrs(5.5), onThisMachine: true };
+  const B = { id: "b-lab", dir: "b-LAB", name: "Beta Lab", description: "", addedAt: hrs(30), onThisMachine: false };
+  // jsdom under Node 26 here has no window.localStorage; give the page a fresh in-memory one per test.
+  beforeEach(() => {
+    const m = new Map();
+    vi.stubGlobal("localStorage", { getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: (k) => m.delete(k), clear: () => m.clear() });
+  });
+
+  it("lists the new labs with their age and whether they are on this shelf, and keeps the UPDATES.md notice under them", async () => {
+    withUpdates({ apps: [A, B], notice: "Re-run the installer for **new labs**." });
+    render(<App />);
+    const list = await screen.findByRole("list", { name: "New labs in the last 48 hours" });
+    const items = within(list).getAllByRole("listitem");
+    expect(items[0]).toHaveTextContent("Alpha Lab added 5 hours ago · on your shelf");
+    expect(items[1]).toHaveTextContent("Beta Lab added 30 hours ago · run the update command to get it");
+    expect(screen.getByText("new labs").tagName).toBe("STRONG");
+    expect(screen.getByText("curl -fsSL https://example.invalid/install.sh | bash")).toBeInTheDocument();
+  });
+
+  it("shows the notice alone when no lab is new, and no banner when neither part has content", async () => {
+    withUpdates({ notice: "Just a notice." });
+    const { unmount } = render(<App />);
+    expect(await screen.findByText("Just a notice.")).toBeInTheDocument();
+    expect(screen.queryByRole("list", { name: "New labs in the last 48 hours" })).toBeNull();
+    unmount();
+    withUpdates();
+    render(<App />);
+    await screen.findByText("Demo A");
+    await act(async () => {});
+    expect(screen.queryByText("Updates available.")).toBeNull();
+  });
+
+  it("stays dismissed for the same set, and comes back when a new lab is added", async () => {
+    withUpdates({ apps: [A] });
+    const first = render(<App />);
+    fireEvent.click(await screen.findByRole("button", { name: "Dismiss update banner" }));
+    expect(screen.queryByText("Updates available.")).toBeNull();
+    first.unmount();
+
+    withUpdates({ apps: [A] });
+    const second = render(<App />);
+    await screen.findByText("Demo A");
+    await act(async () => {});
+    expect(screen.queryByText("Updates available.")).toBeNull();
+    second.unmount();
+
+    withUpdates({ apps: [B, A] });
+    render(<App />);
+    expect(await screen.findByText("Beta Lab")).toBeInTheDocument();
+    expect(screen.getByText("Updates available.")).toBeInTheDocument();
+  });
+});

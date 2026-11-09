@@ -4,6 +4,7 @@ import express from 'express';
 import { composeArgs, createControlRouter } from './control.js';
 import { createInstallState } from './install.js';
 import { createPoller } from './poller.js';
+import { createNewApps } from './newApps.js';
 import { createPingProducts } from './pingProducts.js';
 import { hostedTags } from './tags.js';
 import { isNewDemo, NEW_WINDOW_HOURS } from './registry.js';
@@ -158,6 +159,13 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     }
     res.set('Cache-Control', 'no-store');
     res.json({ notice: noticeCache.body || null, updateCommand: 'curl -fsSL https://raw.githubusercontent.com/curtismu7/AI-DEMO-Standalone/main/scripts/install.sh | bash' });
+  });
+
+  // Labs added to the family in the last 48 hours (rolling), for the Updates banner. See newApps.js for the GitHub budget.
+  const newApps = createNewApps({ registry, fetchFn, now });
+  app.get('/api/new-apps', async (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    res.json(await newApps.get());
   });
 
   const poller = createPoller({ getDemos: () => demos, fetchFn, now, random, wait });

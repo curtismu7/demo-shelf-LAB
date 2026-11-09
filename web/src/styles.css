@@ -138,6 +138,24 @@ html[data-present] {
   background: var(--surface);
 }
 
+/* The update banner's list of labs added in the last 48 hours. */
+.note__lead {
+  margin: 6px 0 2px;
+}
+
+.note__list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.note__list li {
+  margin: 2px 0;
+}
+
+.note__meta {
+  color: var(--muted);
+}
+
 .howto {
   margin: 0;
   color: var(--muted);
