@@ -48,12 +48,12 @@ function startShelf(demos) {
 }
 const stopShelf = ({ child, dir }) => { child.removeAllListeners('exit'); child.kill(); fs.rmSync(dir, { recursive: true, force: true }); };
 
-const cardOf = (page, name) => page.locator('article.card[data-state]', { has: page.getByRole('heading', { name, exact: true }) });
+const cardOf = (page, name) => page.locator('article.box[data-state]', { has: page.getByRole('heading', { name, exact: true }) });
 
 async function open(browser) {
   const page = await (await browser.newContext({ viewport: { width: 1280, height: 900 } })).newPage();
   await page.goto(BASE);
-  await page.locator('article.card[data-state]').first().waitFor({ timeout: 15000 }).catch(async (e) => { console.error((await page.locator('body').innerText()).slice(0, 400)); throw e; });
+  await page.locator('article.box[data-state]').first().waitFor({ timeout: 15000 }).catch(async (e) => { console.error((await page.locator('body').innerText()).slice(0, 400)); throw e; });
   return page;
 }
 
@@ -88,14 +88,14 @@ async function fakesRun(browser) {
     await fakes['goes-down'].stop();
     await sleep(2300);
     await page.getByRole('button', { name: 'Refresh' }).click();
-    await page.locator('article.card[data-state="down"]', { has: page.getByRole('heading', { name: 'Fake goes-down' }) }).waitFor({ timeout: 8000 });
+    await page.locator('article.box[data-state="down"]', { has: page.getByRole('heading', { name: 'Fake goes-down' }) }).waitFor({ timeout: 8000 });
     check('goes-down: Ready -> Down after Refresh', true);
     check('summary counts follow (2 Down: hung + goes-down)', (await page.locator('.chip[data-state="down"]').innerText()).trim().startsWith('2'));
     check('screen-reader announcement names the change', (await page.locator('[role=status].sr').innerText()).includes('Fake goes-down is now Down'));
 
     // Status filter and present mode.
     await page.locator('.chip[data-state="needs-setup"]').click();
-    check('status chip filters the page to one card', (await page.locator('article.card[data-state]').count()) === 1);
+    check('status chip filters the page to one card', (await page.locator('article.box[data-state]').count()) === 1);
     await page.locator('.chip[data-state="needs-setup"]').click();
     await page.getByRole('button', { name: 'Present' }).click();
     check('Present mode switches on', (await page.locator('html[data-present="1"]').count()) === 1);
