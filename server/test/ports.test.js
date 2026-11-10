@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { PACKED_RANGE, nextFreePorts, packedRangeSummary } from '../../scripts/ports-lib.mjs';
+import { PACKED_RANGE, RESERVED_PORTS, nextFreePorts, packedRangeSummary } from '../../scripts/ports-lib.mjs';
 
 describe('packed port range for new apps', () => {
   it('is 7800-7999, above every app that predates the allocator', async () => {
@@ -23,6 +23,12 @@ describe('packed port range for new apps', () => {
     expect(() => nextFreePorts(full)).toThrow(/only 0 free/);
     expect(nextFreePorts(full.slice(0, 199))).toEqual([7999]);
     expect(() => nextFreePorts(full.slice(0, 199), 2)).toThrow(/only 1 free/);
+  });
+  it('never hands out a port reserved by shared infrastructure (7809: ping-shared PingGateway)', () => {
+    expect(Object.keys(RESERVED_PORTS)).toEqual(['7809']);
+    const used = Array.from({ length: 9 }, (_, i) => 7800 + i); // 7800-7808 taken by apps
+    expect(nextFreePorts(used)).toEqual([7810]);
+    expect(nextFreePorts(used, 2)).toEqual([7810, 7811]);
   });
   it('summarises use of the range', () => {
     expect(packedRangeSummary([4510, 7800, 7801, 7999])).toEqual({ size: 200, inUse: 3, free: 197 });

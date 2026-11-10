@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadRegistry } from '../server/src/registry.js';
-import { PACKED_RANGE, nextFreePorts, packedRangeSummary } from './ports-lib.mjs';
+import { PACKED_RANGE, RESERVED_PORTS, nextFreePorts, packedRangeSummary } from './ports-lib.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const demos = loadRegistry({
@@ -49,6 +49,14 @@ const out = [
   `New standalone apps take ports ${PACKED_RANGE.lo}-${PACKED_RANGE.hi}, one at a time: run \`npm run ports -- --next\` for the next free one, then register the app in data/demos.json. Declare only the ports the app really uses, not a block. Existing apps keep the ports they have.`,
   '',
   `Packed range: ${packed.inUse} of ${packed.size} in use, ${packed.free} free.`,
+  '',
+  '## Reserved by shared infrastructure',
+  '',
+  'Not shelf apps, so not in the registry; the allocator skips them.',
+  '',
+  '| Port | Used by |',
+  '| --- | --- |',
+  ...Object.entries(RESERVED_PORTS).map(([port, who]) => `| ${port} | ${who} |`),
   '',
   '## Taken',
   '',

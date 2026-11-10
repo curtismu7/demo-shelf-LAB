@@ -8,6 +8,14 @@ New standalone apps take ports 7800-7999, one at a time: run `npm run ports -- -
 
 Packed range: 9 of 200 in use, 191 free.
 
+## Reserved by shared infrastructure
+
+Not shelf apps, so not in the registry; the allocator skips them.
+
+| Port | Used by |
+| --- | --- |
+| 7809 | ping-shared PingGateway (shared infrastructure) |
+
 ## Taken
 
 | Port | App | Catalog | |
