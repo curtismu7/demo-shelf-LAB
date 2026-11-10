@@ -165,7 +165,9 @@
         "pingone-privilege",
         "simulated",
         "agent-gateway",
-        "pingone"
+        "pingone",
+        "pingone-authorize",
+        "pingone-protect"
       ],
       "where": "installed",
       "repo": "https://github.com/curtismu7/agent-mcp-door-demo-LAB",
@@ -275,7 +277,8 @@
         "agent-identity",
         "simulated",
         "pingone",
-        "real"
+        "real",
+        "pingone-authorize"
       ],
       "where": "installed",
       "repo": "https://github.com/curtismu7/customer-agent-LAB"
@@ -567,7 +570,8 @@
         "oauth",
         "mcp",
         "simulated",
-        "pingfederate"
+        "pingfederate",
+        "pingone-authorize"
       ],
       "repo": "https://github.com/curtismu7/personal-agent-demo-LAB",
       "pingProducts": [
@@ -1300,7 +1304,8 @@
         "agent-controls",
         "human-in-the-loop",
         "ai-agent-security",
-        "simulated"
+        "simulated",
+        "pingone-protect"
       ],
       "repo": "https://github.com/curtismu7/agent-preferences-lab-LAB"
     },
@@ -1534,7 +1539,9 @@
         "agent-gateway",
         "agent-identity",
         "ai-agent-security",
-        "simulated"
+        "simulated",
+        "pingone-authorize",
+        "pingone-protect"
       ],
       "where": "installed"
     },

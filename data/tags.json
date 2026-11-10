@@ -18,6 +18,10 @@
           "label": "PingOne Authorize"
         },
         {
+          "id": "pingone-protect",
+          "label": "PingOne Protect"
+        },
+        {
           "id": "pingone-davinci",
           "label": "PingOne DaVinci"
         },
