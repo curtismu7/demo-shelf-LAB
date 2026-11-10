@@ -269,7 +269,7 @@
       "healthPath": "/api/health",
       "composeFile": "customer-agent-LAB/docker-compose.yml",
       "composeOverlays": [],
-      "notes": "Host-run: ./scripts/run.sh (port 5600). Docker: HOST_PORT=5603 docker compose up --build -d (published on 127.0.0.1 only). Mock needs no tenant and no credentials. Settings: the app's own .env beside docker-compose.yml (copy .env.example; Docker reads it with env_file, optional). Live (host-run only, owner opt-in: CAL_ALLOW_LIVE=1, IDP=pingone, PINGONE_ENVIRONMENT_ID, PINGONE_REGION, PINGONE_CLIENT_ID, PINGONE_CLIENT_SECRET in that .env) makes two real calls to one PingOne environment. Live was owner-verified 2026-11-05 with the old shared settings file; it is UNVERIFIED after the move to the app's own .env until the owner re-checks it. Catalog id D24.",
+      "notes": "Host-run: ./scripts/run.sh (port 5600). Docker: HOST_PORT=5603 docker compose up --build -d (published on 127.0.0.1 only). Mock needs no tenant and no credentials. Settings: the app's own .env beside docker-compose.yml (copy .env.example; Docker takes only SHELF_URL, CAL_LAB_MODE and LAB_ALLOWED_HOSTS from it, never the PingOne settings). Live (host-run only, owner opt-in: CAL_ALLOW_LIVE=1, IDP=pingone, PINGONE_ENVIRONMENT_ID, PINGONE_REGION, PINGONE_CLIENT_ID, PINGONE_CLIENT_SECRET in that .env) makes two real calls to one PingOne environment. Live was owner-verified 2026-11-05 with the old shared settings file; it is UNVERIFIED after the move to the app's own .env until the owner re-checks it. Catalog id D24.",
       "tags": [
         "ai-agent-security",
         "agent-identity",
