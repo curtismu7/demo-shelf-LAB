@@ -129,8 +129,10 @@ export default function App() {
   // A refused Start / Stop / Deploy, shown on that card until its next action: { [id]: "Start did not run: ..." }.
   const [cardErrors, setCardErrors] = useState({});
   // The Updates banner: labs added to the family in the last 48 hours (/api/new-apps) plus the UPDATES.md notice
-  // (/api/notice). null until both answered. Closing it stores what it showed; it comes back when that changes.
+  // (/api/notice). null until both answered. Closing it stores what it showed and leaves a one-line strip
+  // (Show re-opens it for this visit only); it opens again by itself when that content changes.
   const [updates, setUpdates] = useState(null);
+  const [updatesExpanded, setUpdatesExpanded] = useState(false);
   const [updatesDismissed, setUpdatesDismissed] = useState(() => {
     try { return window.localStorage.getItem("shelf-updates-dismissed"); } catch { return null; }
   });
@@ -210,8 +212,10 @@ export default function App() {
     });
   }, []);
   const updatesKey = updates ? JSON.stringify({ apps: updates.apps.map((a) => a.id).sort(), notice: updates.notice }) : null;
-  const showUpdates = Boolean(updates && (updates.apps.length || updates.notice) && updatesKey !== updatesDismissed);
+  const hasUpdates = Boolean(updates && (updates.apps.length || updates.notice));
+  const showUpdates = hasUpdates && (updatesKey !== updatesDismissed || updatesExpanded);
   const dismissUpdates = () => {
+    setUpdatesExpanded(false);
     setUpdatesDismissed(updatesKey);
     try { window.localStorage.setItem("shelf-updates-dismissed", updatesKey); } catch { /* private mode */ }
   };
@@ -538,6 +542,18 @@ export default function App() {
               <button type="button" onClick={() => { copyText(releases.updateCommand); setAnnounce("Update command copied"); }}>Copy</button>
             </div>
             <p style={{ marginTop: 6, marginBottom: 0 }}>Run it in a terminal to get these updates. Safe to re-run. This panel stays closed until the next release.</p>
+          </div>
+        )}
+        {!notesOpen && releases && (
+          <div className="note note--strip" data-state="info" role="region" aria-label="Release notes">
+            <strong>What's new — {releaseVersion}</strong>
+            <button type="button" aria-label="Show release notes" onClick={() => setNotesOpen(true)}>Show</button>
+          </div>
+        )}
+        {hasUpdates && !showUpdates && (
+          <div className="note note--strip" data-state="warn" role="status">
+            <strong>Updates available.</strong>
+            <button type="button" aria-label="Show update banner" onClick={() => setUpdatesExpanded(true)}>Show</button>
           </div>
         )}
         {showUpdates && (

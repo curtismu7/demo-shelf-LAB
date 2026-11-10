@@ -903,23 +903,26 @@ describe("Updates available banner", () => {
     expect(screen.queryByText("Updates available.")).toBeNull();
   });
 
-  it("stays dismissed for the same set, and comes back when a new lab is added", async () => {
+  it("folds to a one-line strip when closed, stays folded for the same set, and opens again when a new lab is added", async () => {
     withUpdates({ apps: [A] });
     const first = render(<App />);
     fireEvent.click(await screen.findByRole("button", { name: "Dismiss update banner" }));
-    expect(screen.queryByText("Updates available.")).toBeNull();
+    expect(screen.queryByRole("list", { name: "New labs in the last 48 hours" })).toBeNull();
+    expect(screen.getByText("Updates available.")).toBeInTheDocument();
     first.unmount();
 
     withUpdates({ apps: [A] });
     const second = render(<App />);
     await screen.findByText("Demo A");
     await act(async () => {});
-    expect(screen.queryByText("Updates available.")).toBeNull();
+    expect(screen.queryByRole("list", { name: "New labs in the last 48 hours" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Show update banner" }));
+    expect(screen.getByRole("list", { name: "New labs in the last 48 hours" })).toBeInTheDocument();
     second.unmount();
 
     withUpdates({ apps: [B, A] });
     render(<App />);
     expect(await screen.findByText("Beta Lab")).toBeInTheDocument();
-    expect(screen.getByText("Updates available.")).toBeInTheDocument();
+    expect(screen.getByRole("list", { name: "New labs in the last 48 hours" })).toBeInTheDocument();
   });
 });

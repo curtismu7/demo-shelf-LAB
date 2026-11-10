@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Closing the What's new panel or the Updates available banner folds it to a one-line strip with a Show button instead of hiding it, so it takes little screen space. It stays folded across reloads until a new release or a new lab appears; Show re-opens it for that visit only.
 - Running demos are listed first on the shelf, ahead of the stopped ones; the plan order holds inside each group, and it applies under every filter and What's new.
 - A refused Start, Stop or Deploy now shows its reason on the card that was pressed (role=alert), until that card's next action: the agent's own words for the running limit ("13 demos are running and the limit is 10..."), the network-pool fix and compose errors, and the plain-words reason for the token, agent-down and OrbStack-context refusals. The buttons no longer look dead when the agent says no.
 - The summary row shows the running count against the limit (`13 running · limit 10`). The count and limit come from the start agent's new read-only `GET /v1/running` (the same count Start checks); an agent started before this change has no such route, so the shelf shows just the limit it knows (`Limit 10 running`) until the agent is restarted. `docker-compose.yml` passes `SHELF_MAX_RUNNING` to the container so that fallback matches the agent.
