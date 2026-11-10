@@ -264,16 +264,18 @@
       "name": "Customer Agent LAB",
       "catalogId": "D24",
       "kind": "Demo",
-      "description": "The customer-facing AI agent with all 87 of its use cases in eight tracks: delegation with an act claim, authorize decisions, step-up and human approval, gateway attacks and refusals. A simulation: a mock engine produces every token and hop offline.",
+      "description": "The customer-facing AI agent with all 87 use cases, each routed Here, Here + go deeper, Hand off or Guide. AI-DEMO2-depth movie reel, sequence view and step detail in movable cards; hand-offs to 30 labs whose Back strip resumes the chat; an A2A page; Scripted or llama.cpp brain. Mock runs offline.",
       "url": "http://127.0.0.1:5603",
       "healthPath": "/api/health",
       "composeFile": "customer-agent-LAB/docker-compose.yml",
       "composeOverlays": [],
+      "notes": "Host-run: ./scripts/run.sh (port 5600). Docker: HOST_PORT=5603 docker compose up --build -d (published on 127.0.0.1 only). Mock needs no tenant and no credentials. Settings: the app's own .env beside docker-compose.yml (copy .env.example; Docker reads it with env_file, optional). Live (host-run only, owner opt-in: CAL_ALLOW_LIVE=1, IDP=pingone, PINGONE_ENVIRONMENT_ID, PINGONE_REGION, PINGONE_CLIENT_ID, PINGONE_CLIENT_SECRET in that .env) makes two real calls to one PingOne environment. Live was owner-verified 2026-11-05 with the old shared settings file; it is UNVERIFIED after the move to the app's own .env until the owner re-checks it. Catalog id D24.",
       "tags": [
         "ai-agent-security",
         "agent-identity",
         "simulated",
-        "pingone"
+        "pingone",
+        "real"
       ],
       "where": "installed",
       "repo": "https://github.com/curtismu7/customer-agent-LAB"
