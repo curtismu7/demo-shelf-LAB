@@ -571,7 +571,8 @@
         "mcp",
         "simulated",
         "pingfederate",
-        "pingone-authorize"
+        "pingone-authorize",
+        "pingone-protect"
       ],
       "repo": "https://github.com/curtismu7/personal-agent-demo-LAB",
       "pingProducts": [
@@ -1681,6 +1682,26 @@
         "mcp-server-built"
       ],
       "repo": "https://github.com/curtismu7/mcp-skills-LAB",
+      "where": "installed"
+    },
+    {
+      "id": "demo-map-lab",
+      "addedAt": "2026-11-10T12:56:31Z",
+      "name": "Demo Map",
+      "kind": "Tool",
+      "description": "A one-page map of the demo family: a row for the Personal Agent demo, the Digital Worker agent and each Ping product, with the standalone apps that belong in it and the AI-DEMO2 pages for it. Mock uses a made-up sample; Real reads your local shelf.",
+      "url": "http://localhost:7808",
+      "healthPath": "/api/health",
+      "composeFile": "demo-map-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: ./scripts/run.sh (port 7808). Docker: HOST_PORT=7808 docker compose up --build -d (published on 127.0.0.1 only; Mock only). Real: copy .env.example to .env, set AI_DEMO2_URL (SHELF_URL defaults to http://127.0.0.1:4400) and run on the host. Rows are data/rows.json. No catalog row matches, so no catalogId; the owner assigns one with the board row.",
+      "repo": "https://github.com/curtismu7/demo-map-LAB",
+      "tags": [
+        "learning",
+        "simulated",
+        "real"
+      ],
       "where": "installed"
     }
   ]

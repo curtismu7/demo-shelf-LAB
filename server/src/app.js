@@ -296,6 +296,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'mcp-scanner': '/mcp-tools/',
     'field-notes-lab': '/field-notes-lab/',
     'env-map-lab': '/env-map-lab/',
+    'demo-map-lab': '/demo-map-lab/',
     'ping-services-stub': '/ping-services-stub/',
     'muse': '/muse/',
     'agent-mcp-door-demo': '/agent-mcp-door-demo/',
