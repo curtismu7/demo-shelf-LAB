@@ -191,6 +191,8 @@ html[data-present] {
 .chip[data-state="offline"]  { border-left: 4px solid var(--muted); }
 .chip[data-state="new"]      { border-left: 4px solid var(--accent); }
 .chip[data-state="all"]      { border-left: 4px solid var(--border); }
+.chip--limit[data-state="room"] { border-left: 4px solid var(--status-ok); }
+.chip--limit[data-state="full"] { border-left: 4px solid var(--status-warn); }
 .chip[aria-pressed="true"] {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
@@ -643,6 +645,18 @@ html[data-present] {
 .box__install {
   color: var(--text-body);
   font-size: 0.78rem;
+}
+
+/* A refused Start / Stop / Deploy, on the card that was pressed. */
+.box__error {
+  margin: 0;
+  padding: 6px 10px;
+  border-left: 4px solid var(--accent);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--danger-text);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
 }
 
 /* Shared Ping products this demo needs (rule 20). A warning list; nothing renders when all are ready. */

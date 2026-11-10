@@ -136,7 +136,7 @@ function PingProducts({ products, live }) {
   );
 }
 
-export function Card({ item, startEnabled, present, busy, activeAction, starting, onAction, onCopy, onDetails, tagInfo, picked, onTag }) {
+export function Card({ item, startEnabled, present, busy, activeAction, starting, error, onAction, onCopy, onDetails, tagInfo, picked, onTag }) {
   const s = item.status;
   if (item.planned) {
     return (
@@ -178,6 +178,7 @@ export function Card({ item, startEnabled, present, busy, activeAction, starting
       {!waiting && !stalled && inst === "not-installed" && <p className="box__install"><span className="box__tag">Not installed</span> {NOT_INSTALLED_HINT}</p>}
       {!waiting && !stalled && inst === "not-built" && <p className="box__install">{NOT_BUILT}.</p>}
       {!waiting && !stalled && inst === "stopped" && <p className="box__install">Installed, not answering.</p>}
+      {error && <p className="box__error" role="alert" data-testid="card-error">{error}</p>}
       {(item.pingProducts || []).length > 0 && <PingProducts products={item.pingProducts} live={item.status?.state !== "down"} />}
       <div className="box__actions">
         {!present && startEnabled && item.where !== "mock" && (() => {

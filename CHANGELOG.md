@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Running demos are listed first on the shelf, ahead of the stopped ones; the plan order holds inside each group, and it applies under every filter and What's new.
+- A refused Start, Stop or Deploy now shows its reason on the card that was pressed (role=alert), until that card's next action: the agent's own words for the running limit ("13 demos are running and the limit is 10..."), the network-pool fix and compose errors, and the plain-words reason for the token, agent-down and OrbStack-context refusals. The buttons no longer look dead when the agent says no.
+- The summary row shows the running count against the limit (`13 running · limit 10`). The count and limit come from the start agent's new read-only `GET /v1/running` (the same count Start checks); an agent started before this change has no such route, so the shelf shows just the limit it knows (`Limit 10 running`) until the agent is restarted. `docker-compose.yml` passes `SHELF_MAX_RUNNING` to the container so that fallback matches the agent.
 - jev-lab, obo-lab, jit-lab, agent-preferences-lab and diagram-prove-lab point at their current `-LAB` repos (the old URLs only redirected), so Repo and Copy clone command go straight there, and their `addedAt` is the repo's creation date like every other entry with a repo.
 - `addedAt` in the seed is now each repo's GitHub creation date, so apps that were only moved into the seed (muse, ciba-hitl-lab, agentcore-pingone-demo-lab, meridian-a2a-hop, gateway-suite-lab) no longer show as new. Entries with no repo, or a repo URL that redirects to a renamed repo, keep the git-history date. A date-only `addedAt` may be up to 14 hours ahead of UTC. The vendored `scripts/shelf-register.mjs` stamps `addedAt` when it adds an entry.
 - The status summary bucket for demos that are not on this machine is now called **Not deployed** (was New), so New means only the recently-added badge.

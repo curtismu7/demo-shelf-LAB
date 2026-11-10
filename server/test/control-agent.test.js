@@ -75,3 +75,37 @@ describe('Start / Stop through the start agent (the shelf in a container)', () =
     expect(local.body.agent).toBe('local');
   });
 });
+
+describe('the running count on /api/shelf', () => {
+  const get = (app) => request(app).get('/api/shelf').set('Host', 'localhost:4400');
+  it('passes the agent\'s count and limit through', async () => {
+    const agent = agentStub({ running: vi.fn(async () => ({ running: 13, max: 10 })) });
+    expect((await get(mk(agent, { maxRunningDemos: 10 }))).body.runningLimit).toEqual({ running: 13, max: 10 });
+  });
+  it('an older agent without the count still shows the limit the shelf knows', async () => {
+    expect((await get(mk(agentStub(), { maxRunningDemos: 7 }))).body.runningLimit).toEqual({ running: null, max: 7 });
+    expect((await get(mk(agentStub({ running: vi.fn(async () => null) }), { maxRunningDemos: 7 }))).body.runningLimit).toEqual({ running: null, max: 7 });
+  });
+  it('is null when Start / Stop is off', async () => {
+    expect((await get(mk(agentStub(), { allowStart: false, maxRunningDemos: 10 }))).body.runningLimit).toBe(null);
+  });
+  it('host-run: counts with docker compose ls itself', async () => {
+    const exec = vi.fn(async (file, args) => (args[1] === 'ls'
+      ? { stdout: JSON.stringify([{ Name: 'a', Status: 'running(2)', ConfigFiles: '/h/a/docker-compose.yml' }]), stderr: '' }
+      : { stdout: '', stderr: '' }));
+    const app = createApp({ demos, catalog: { items: [] }, fetchFn, wait: async () => {}, allowStart: true, exec, maxRunningDemos: 10, pingProductsCheck: async () => [] });
+    expect((await get(app)).body.runningLimit).toEqual({ running: 1, max: 10 });
+  });
+});
+
+describe('a refused Start / Deploy reaches the page with the agent\'s words', () => {
+  const refusal = { ok: false, error: 'too-many-running:13:10', output: '13 demos are running and the limit is 10. Stop some first (Stop all stops every one).' };
+  it.each(['start', 'deploy'])('%s: passes the 409 and its output through unchanged', async (action) => {
+    const agent = agentStub({ run: vi.fn(async () => ({ status: 409, body: refusal })) });
+    const app = createApp({ demos: [{ ...demos[0], repo: 'https://github.com/curtismu7/a-LAB' }], catalog: { items: [] }, fetchFn, wait: async () => {}, allowStart: true, agent, inDocker: true, demoRoot: '/h' });
+    const r = await post(app, `/api/demos/a/${action}`);
+    expect(r.status).toBe(409);
+    expect(r.body).toEqual(refusal);
+    expect(agent.run).toHaveBeenCalledWith('a', action);
+  });
+});

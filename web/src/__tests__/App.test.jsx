@@ -203,7 +203,7 @@ describe("shelf page", () => {
     render(<App />);
     await screen.findByRole("heading", { name: "Demo A" });
     fireEvent.click(cardOf("Demo A").getByRole("button", { name: /^Stop (?!all)/ }));
-    expect(await screen.findByText(/that entry is the shelf itself/)).toBeInTheDocument();
+    expect(await cardOf("Demo A").findByText(/that entry is the shelf itself/)).toBeInTheDocument();
   });
   it("hides Start and Stop unless the server enables them, on mock cards, and in Present mode", async () => {
     mockFetch(shelf());
@@ -240,7 +240,7 @@ describe("shelf page", () => {
     render(<App />);
     await screen.findByRole("heading", { name: "Demo B" });
     fireEvent.click(cardOf("Demo B").getByRole("button", { name: /^Start/ }));
-    expect(await screen.findByText(/did not run: the start agent is not running\. In the demo-shelf-LAB folder run: npm run agent/)).toBeInTheDocument();
+    expect(await cardOf("Demo B").findByText(/did not run: the start agent is not running\. In the demo-shelf-LAB folder run: npm run agent/)).toBeInTheDocument();
   });
   it("tells you when the agent refuses the token, and keeps Start disabled", async () => {
     const body = shelf({ startEnabled: true, agent: "token-rejected" });
@@ -271,7 +271,7 @@ describe("shelf page", () => {
     render(<App />);
     await screen.findByRole("heading", { name: "Demo B" });
     fireEvent.click(cardOf("Demo B").getByRole("button", { name: /^Start/ }));
-    expect(await screen.findByText(text)).toBeInTheDocument();
+    expect(await cardOf("Demo B").findByText(text)).toBeInTheDocument();
   });
   it("copies the exact start command", async () => {
     mockFetch(shelf());
@@ -479,6 +479,106 @@ describe("shelf page", () => {
       render(<App />);
       await pressStart();
       await waitFor(() => expect(document.querySelector(".note").textContent).toMatch(/did not run: 24 demos are running and the limit is 10/));
+    });
+  });
+  describe("a refused action shows on its card", () => {
+    const MSG = "13 demos are running and the limit is 10. Stop some first (Stop all stops every one).";
+    const shelfB = (over = {}) => shelf({ startEnabled: true, agent: "up", demos: [{ ...shelf().demos[1], canStart: true, composeFile: "/x/c.yml", repo: "https://github.com/curtismu7/x-LAB" }, shelf().demos[0]], ...over });
+    const replies = (byPath, body = shelfB()) => {
+      const f = vi.fn(async (url, init = {}) => {
+        const u = String(url);
+        if (u === "/api/info") return { ok: true, json: async () => INFO };
+        if (init.method === "POST" && byPath[u]) { const [status, b] = byPath[u](); return { ok: status === 200, status, json: async () => b }; }
+        return { ok: true, json: async () => body };
+      });
+      vi.stubGlobal("fetch", f);
+      return f;
+    };
+    it.each(["start", "deploy"])("a 409 too-many-running from %s puts the agent's words on the card as an alert", async (action) => {
+      replies({ [`/api/demos/b/${action}`]: () => [409, { ok: false, error: "too-many-running:13:10", output: MSG }] });
+      render(<App />);
+      await screen.findByText("Demo B");
+      fireEvent.click(cardOf("Demo B").getByRole("button", { name: new RegExp(`^${action}`, "i") }));
+      const alert = await cardOf("Demo B").findByRole("alert");
+      expect(alert).toHaveTextContent(`${action[0].toUpperCase()}${action.slice(1)} did not run: ${MSG}`);
+      expect(cardOf("Demo A").queryByRole("alert")).toBeNull(); // only on the card that was pressed
+    });
+    it.each([
+      ["network-pool-nearly-full:29", "Docker has too many networks (29 >= limit 28). Fix: docker network prune -f", /Docker has too many networks \(29 >= limit 28\)/],
+      ["compose-failed", "service x: port is already allocated", /docker compose failed\. Its output: service x: port is already allocated/],
+      ["agent-token-rejected", undefined, /rejected the shelf's token/],
+      ["docker-context-not-orbstack", undefined, /Docker's context is not OrbStack/],
+      ["agent-not-running", undefined, /the start agent is not running/],
+    ])("%s shows on the card", async (error, output, text) => {
+      replies({ "/api/demos/b/start": () => [error === "agent-not-running" ? 503 : 409, { ok: false, error, ...(output ? { output } : {}) }] });
+      render(<App />);
+      await screen.findByText("Demo B");
+      fireEvent.click(cardOf("Demo B").getByRole("button", { name: /^Start/ }));
+      expect(await cardOf("Demo B").findByRole("alert")).toHaveTextContent(text);
+    });
+    it("a reply with no body still says what happened", async () => {
+      vi.stubGlobal("fetch", vi.fn(async (url, init = {}) => (init.method === "POST" && String(url) === "/api/demos/b/start" ? { ok: false, status: 502, json: async () => { throw new Error("not json"); } } : { ok: true, json: async () => (String(url) === "/api/info" ? INFO : shelfB()) })));
+      render(<App />);
+      await screen.findByText("Demo B");
+      fireEvent.click(cardOf("Demo B").getByRole("button", { name: /^Start/ }));
+      expect(await cardOf("Demo B").findByRole("alert")).toHaveTextContent("Start did not run: HTTP 502");
+    });
+    it("the message stays until that card's next action, which clears it", async () => {
+      let n = 0;
+      replies({ "/api/demos/b/start": () => (++n === 1 ? [409, { ok: false, error: "too-many-running:13:10", output: MSG }] : [200, { ok: true, id: "b", action: "start", output: "" }]) });
+      render(<App />);
+      await screen.findByText("Demo B");
+      fireEvent.click(cardOf("Demo B").getByRole("button", { name: /^Start/ }));
+      await cardOf("Demo B").findByRole("alert");
+      await waitFor(() => expect(cardOf("Demo B").getByRole("button", { name: /^Start/ })).toBeEnabled());
+      fireEvent.click(cardOf("Demo B").getByRole("button", { name: /^Start/ }));
+      await waitFor(() => expect(cardOf("Demo B").queryByRole("alert")).toBeNull());
+    });
+    it("shows the running count against the limit, and only the limit when the count is unknown", async () => {
+      mockFetch(shelfB({ runningLimit: { running: 13, max: 10 } }));
+      const { unmount } = render(<App />);
+      await screen.findByText("Demo B");
+      expect(screen.getByTestId("running-limit")).toHaveTextContent("13 running · limit 10");
+      expect(screen.getByTestId("running-limit")).toHaveAttribute("data-state", "full");
+      unmount();
+      mockFetch(shelfB({ runningLimit: { running: null, max: 7 } }));
+      render(<App />);
+      await screen.findByText("Demo B");
+      expect(screen.getByTestId("running-limit")).toHaveTextContent("Limit 7 running");
+    });
+    it("no limit line when the server sends none", async () => {
+      mockFetch(shelfB());
+      render(<App />);
+      await screen.findByText("Demo B");
+      expect(screen.queryByTestId("running-limit")).toBeNull();
+    });
+  });
+  describe("running demos come first", () => {
+    const order = () => screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent);
+    const mixed = () => shelf({ demos: [
+      { id: "d1", name: "Down One", catalogId: "A1", wave: 0, url: "http://localhost:4601", status: st("down") },
+      { id: "r1", name: "Run One", catalogId: "A5", wave: 2, url: "http://localhost:4602", status: st("ready"), isNew: true, addedAt: "2026-11-09" },
+      { id: "d2", name: "Down Two", catalogId: "A2", wave: 1, url: "http://localhost:4603", status: st("down"), isNew: true, addedAt: "2026-11-09" },
+      { id: "r2", name: "Run Two", catalogId: "A3", wave: 1, url: "http://localhost:4604", status: st("needs-setup") },
+      { id: "r3", name: "Run Three", catalogId: "A4", wave: 1, url: "http://localhost:4605", status: st("up-no-contract") },
+    ] });
+    it("lists every running card first, keeping the plan order inside each group; planned ideas stay after", async () => {
+      mockFetch(mixed());
+      render(<App />);
+      await screen.findByText("Run One");
+      expect(order()).toEqual(["Run Two", "Run Three", "Run One", "Down One", "Down Two", "Passwordless"]);
+    });
+    it("keeps running first under a filter and under What's new, with the New badges", async () => {
+      mockFetch(mixed());
+      render(<App />);
+      await screen.findByText("Run One");
+      fireEvent.click(screen.getByTestId("whats-new"));
+      await waitFor(() => expect(order()).toEqual(["Run One", "Down Two"]));
+      expect(cardOf("Run One").getByText("New")).toBeInTheDocument();
+      expect(cardOf("Down Two").getByText("New")).toBeInTheDocument();
+      fireEvent.click(screen.getByTestId("whats-new"));
+      fireEvent.change(screen.getByLabelText("Search"), { target: { value: "One" } });
+      await waitFor(() => expect(order()).toEqual(["Run One", "Down One"]));
     });
   });
   it("banner on first load failure", async () => {

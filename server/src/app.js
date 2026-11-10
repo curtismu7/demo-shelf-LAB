@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import express from 'express';
-import { composeArgs, createControlRouter } from './control.js';
+import { composeArgs, createControlRouter, defaultExec, runningDemos } from './control.js';
 import { createInstallState } from './install.js';
 import { createPoller } from './poller.js';
 import { createNewApps } from './newApps.js';
@@ -175,6 +175,22 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
   const catalogItems = catalog?.items || [];
   const byCatalogId = new Map(catalogItems.map((i) => [i.id, i]));
 
+  // { running, max } for the "13 running · limit 10" line: the agent's own count and limit (it is the one that refuses), or this
+  // process's when the shelf runs Docker itself. running is null when it cannot be told (an older agent): the page then shows the limit.
+  let runningCache = { at: 0, value: null };
+  async function runningCount() {
+    if (agent) {
+      const v = typeof agent.running === 'function' ? await agent.running() : null;
+      if (v && v.max !== null) return v;
+      return maxRunningDemos ? { running: v ? v.running : null, max: maxRunningDemos } : null;
+    }
+    if (!maxRunningDemos) return null;
+    if (Date.now() - runningCache.at < 5000) return runningCache.value;
+    const list = await runningDemos(demos.filter((d) => d.where === 'installed'), exec || defaultExec, shelfDir).catch(() => null);
+    runningCache = { at: Date.now(), value: { running: list ? list.length : null, max: maxRunningDemos } };
+    return runningCache.value;
+  }
+
   async function shelf(results) {
     const nowMs = (now || Date.now)();
     const inst = install.snapshot(); // cached; a stale one is refreshed in the background, never awaited here
@@ -210,7 +226,8 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
       .map(({ id, name, kind, group, wave, seed }) => ({ id, name, kind, group, wave, seed, tags: catalogTags[id] ?? [], status: { state: 'planned' } }));
     // 'local' = the shelf runs Docker itself; 'up' / 'down' = the start agent a containerised shelf depends on.
     const agentState = agent ? await agent.ping() : 'local';
-    return { schema: 'demo-shelf/1', generatedAt: new Date().toISOString(), installPending: inst.pending, startEnabled: allowStart, agent: agentState, newWindowHours: NEW_WINDOW_HOURS, groups: catalog?.groups || {}, tagGroups: tags?.groups || [], demos: registered, planned };
+    const runningLimit = allowStart ? await runningCount() : null;
+    return { schema: 'demo-shelf/1', generatedAt: new Date().toISOString(), installPending: inst.pending, startEnabled: allowStart, agent: agentState, runningLimit, newWindowHours: NEW_WINDOW_HOURS, groups: catalog?.groups || {}, tagGroups: tags?.groups || [], demos: registered, planned };
   }
 
   // Labs reachable through the lab-proxy (https://local.ping-devops.com:8443/<path>/).
