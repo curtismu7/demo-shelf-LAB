@@ -126,6 +126,19 @@ html[data-present] {
   letter-spacing: 0.01em;
 }
 
+/* Closed banners fold to one slim line; Show opens them again. */
+.note--strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 14px;
+}
+
+.note--strip button {
+  padding: 2px 12px;
+}
+
 .note[data-state="warn"] strong { color: var(--status-warn); }
 .note[data-state="info"] strong { color: var(--status-ok); }
 
