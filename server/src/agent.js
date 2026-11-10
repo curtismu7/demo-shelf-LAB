@@ -5,7 +5,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import express from 'express';
-import { isLoopbackAddr, runCompose } from './control.js';
+import { defaultExec, isLoopbackAddr, runCompose, runningDemos } from './control.js';
 import { ensureRepo } from './deploy.js';
 import { createInstallChecker } from './install.js';
 
@@ -49,6 +49,14 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
   });
 
   app.get('/v1/health', (req, res) => res.json({ ok: true, schema: 'shelf-agent/1' }));
+
+  // Read-only. How many registered demos run now (the same count Start checks against the limit) and the limit itself, so the shelf
+  // can show "13 running · limit 10" before anyone clicks. running is null when Docker could not tell; max is null with no limit.
+  app.get('/v1/running', async (req, res) => {
+    let list;
+    try { list = await runningDemos(getDemos(), exec || defaultExec, shelfDir); } catch { list = null; }
+    res.json({ ok: true, schema: 'shelf-agent-running/1', running: list ? list.length : null, max: cap ? cap.max : null });
+  });
 
   // Read-only. For each registered demo with a compose file: is the file there, and are its images built. Enum values only: no
   // paths, no command output, no error text. Nothing in the request is used (not even the query).

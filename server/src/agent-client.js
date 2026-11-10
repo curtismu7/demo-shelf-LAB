@@ -11,6 +11,7 @@ export function createAgentClient({ url, token, fetchFn = fetch, now = () => Dat
   const base = url.replace(/\/+$/, '');
   const headers = { authorization: `Bearer ${token}` };
   let ping = null; // { at, state }
+  let running = null; // { at, value }
 
   return {
     // Returns { status, body } in the same shape as runCompose, so the control router treats both the same way.
@@ -41,6 +42,19 @@ export function createAgentClient({ url, token, fetchFn = fetch, now = () => Dat
       } catch {
         return null;
       }
+    },
+    // { running, max } from the agent, or null (not running, an older agent without /v1/running, bad reply). Cached like ping.
+    async running() {
+      if (running && now() - running.at < PING_CACHE_MS) return running.value;
+      let value = null;
+      try {
+        const res = await fetchFn(`${base}/v1/running`, { headers, signal: AbortSignal.timeout(INSTALLS_TIMEOUT_MS) });
+        const body = res.ok ? await res.json() : null;
+        const okNum = (n) => n === null || (Number.isInteger(n) && n >= 0);
+        if (body && okNum(body.running) && okNum(body.max)) value = { running: body.running, max: body.max };
+      } catch { /* not running */ }
+      running = { at: now(), value };
+      return value;
     },
     // 'up', 'down' (nothing answers) or 'token-rejected' (it answers but refuses our token). Cached for a few seconds so many open tabs do not multiply the checks.
     async ping() {

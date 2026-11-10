@@ -92,6 +92,9 @@ async function fakesRun(browser) {
     check('goes-down: Ready -> Down after Refresh', true);
     // Since 40343d6 (owner, 2026-11-05) the summary is four buckets; Offline = installed but not answering (broken, hung, goes-down).
     check('summary counts follow (3 Offline: broken + hung + goes-down)', (await page.locator('.lights .chip[data-state="offline"] b').innerText()).trim() === '3');
+    // Running cards (Ready, Needs setup, Unknown, Up no contract) are listed before the ones that are not (Broken, Down).
+    const order = await page.locator('article.box[data-state]').evaluateAll((els) => els.map((e) => !['down', 'broken'].includes(e.dataset.state)));
+    check('running cards come first', order.indexOf(false) > 0 && order.lastIndexOf(true) < order.indexOf(false), JSON.stringify(order));
     check('screen-reader announcement names the change', (await page.locator('[role=status].sr').innerText()).includes('Fake goes-down is now Down'));
 
     // Filter and present mode. The status chips are a summary now (40343d6), so filter with the search box.

@@ -275,3 +275,35 @@ describe('last-running + restore-last', () => {
     fs.rmSync(file, { force: true });
   });
 });
+
+describe('running count against the limit', () => {
+  const lsExec = (files) => vi.fn(async (file, args) => {
+    if (args[0] === 'compose' && args[1] === 'ls') return { stdout: JSON.stringify(files.map((f, i) => ({ Name: `p${i}`, Status: 'running(1)', ConfigFiles: f }))), stderr: '' };
+    return { stdout: 'orbstack\n', stderr: '' };
+  });
+  it('GET /v1/running counts the registered demos docker compose has up, with the limit; token required', async () => {
+    const app = mk({ exec: lsExec(['/x/a/docker-compose.yml', '/elsewhere/other.yml']), maxRunningDemos: 10 });
+    const r = await call(app, 'get', '/v1/running');
+    expect(r.status).toBe(200);
+    expect(r.body).toEqual({ ok: true, schema: 'shelf-agent-running/1', running: 1, max: 10 });
+    expect((await call(app, 'get', '/v1/running', { token: null })).status).toBe(401);
+  });
+  it('says null when Docker cannot tell, or when there is no limit', async () => {
+    const broken = vi.fn(async () => { throw new Error('no docker'); });
+    expect((await call(mk({ exec: broken, maxRunningDemos: 10 }), 'get', '/v1/running')).body).toMatchObject({ running: null, max: 10 });
+    expect((await call(mk({ exec: lsExec([]) }), 'get', '/v1/running')).body).toMatchObject({ running: 0, max: null });
+  });
+  it('the client reads it, caches it, and gives null for an older agent without the route', async () => {
+    let t = 0;
+    const f = vi.fn(async () => ({ ok: true, status: 200, json: async () => ({ ok: true, running: 13, max: 10 }) }));
+    const c = createAgentClient({ url: 'http://x:1', token: TOKEN, fetchFn: f, now: () => t });
+    expect(await c.running()).toEqual({ running: 13, max: 10 });
+    expect(await c.running()).toEqual({ running: 13, max: 10 });
+    expect(f).toHaveBeenCalledTimes(1);
+    expect(f.mock.calls[0][0]).toBe('http://x:1/v1/running');
+    const old = createAgentClient({ url: 'http://x:1', token: TOKEN, fetchFn: async () => ({ ok: false, status: 404, json: async () => ({ ok: false, error: 'not-found' }) }) });
+    expect(await old.running()).toBe(null);
+    const odd = createAgentClient({ url: 'http://x:1', token: TOKEN, fetchFn: async () => ({ ok: true, status: 200, json: async () => ({ running: '13', max: 10 }) }) });
+    expect(await odd.running()).toBe(null);
+  });
+});

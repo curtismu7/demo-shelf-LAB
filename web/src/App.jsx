@@ -28,7 +28,18 @@ const WHY = {
   "git-fetch-failed": "could not fetch the repo (network?). Try again, or update the folder from a terminal",
   "deploy-dir-not-a-repo": "the deploy folder exists but is not a git clone. Remove or rename it, then press Deploy again",
   "deploy-needs-host-shelf": "Deploy works when the shelf runs on the host (npm start), not in the container",
+  "compose-failed": "docker compose failed. Its output:",
+  "agent-bad-reply": "the start agent gave an answer the shelf could not read. Restart it: npm run agent",
+  internal: "the shelf hit an internal error. Check its logs (docker compose logs)",
 };
+
+// The words for a refused action: the plain-words reason for the error code (codes like too-many-running:13:10 match on the part
+// before the first colon), then the agent's own output when it sent one (the limit refusal, the network-pool fix, compose errors).
+function whyText(e) {
+  const reason = WHY[e.message] || WHY[String(e.message).split(":")[0]];
+  const parts = [reason, e.output].filter(Boolean);
+  return parts.length ? parts.join(" ") : e.message;
+}
 
 async function call(path, method = "GET", jsonBody) {
   const res = await fetch(path, {
@@ -115,6 +126,8 @@ export default function App() {
   // Which card action is in flight, as "id/action", so that card can show a spinner while it waits.
   const [activeAction, setActiveAction] = useState(null);
   const [note, setNote] = useState(null);
+  // A refused Start / Stop / Deploy, shown on that card until its next action: { [id]: "Start did not run: ..." }.
+  const [cardErrors, setCardErrors] = useState({});
   // The Updates banner: labs added to the family in the last 48 hours (/api/new-apps) plus the UPDATES.md notice
   // (/api/notice). null until both answered. Closing it stores what it showed; it comes back when that changes.
   const [updates, setUpdates] = useState(null);
@@ -268,6 +281,7 @@ export default function App() {
     setBusy(true);
     setActiveAction(`${id}/${action}`);
     setNote(`${action} ${id}...`);
+    setCardErrors((m) => { const { [id]: _old, ...rest } = m; return rest; });
     try {
       const r = await call(`/api/demos/${encodeURIComponent(id)}/${action}`, "POST");
       const bumped = r.stopped?.length ? ` Stopped ${r.stopped.map((d) => d.name).join(", ")} (the oldest) to stay within ${r.limit} running.` : "";
@@ -278,7 +292,9 @@ export default function App() {
         return action === "stop" ? rest : { ...rest, [id]: { at: Date.now(), stalled: false } };
       });
     } catch (e) {
-      setNote(`${id}: ${action} did not run: ${WHY[e.message] || e.output || e.message}`);
+      const why = whyText(e);
+      setNote(`${id}: ${action} did not run: ${why}`);
+      setCardErrors((m) => ({ ...m, [id]: `${action[0].toUpperCase()}${action.slice(1)} did not run: ${why}` }));
     }
     setBusy(false);
     setActiveAction(null);
@@ -465,7 +481,9 @@ export default function App() {
   const sections = useMemo(() => {
     const groups = data?.groups || {};
     const letters = [...Object.keys(groups).sort(), "other"];
-    const mine = shown.filter((i) => !i.planned).sort(byPlan);
+    // Running demos come first; the plan order holds inside the running group and inside the rest.
+    const sorted = shown.filter((i) => !i.planned).sort(byPlan);
+    const mine = [...sorted.filter((i) => i.bucket === "running"), ...sorted.filter((i) => i.bucket !== "running")];
     const planned = letters.map((g) => ({
       key: g,
       title: g === "other" ? "Planned · Other" : `Planned · ${g} · ${groups[g]}`,
@@ -577,6 +595,12 @@ export default function App() {
                   <b>{counts[b.id] || 0}</b> {b.label}
                 </span>
               ))}
+              {data.runningLimit && !present && (
+                <span className="chip chip--limit" data-state={data.runningLimit.running != null && data.runningLimit.running >= data.runningLimit.max ? "full" : "room"} role="status" data-testid="running-limit"
+                  title="How many demos Docker has up against the start agent's limit. At the limit, Start stops the oldest; over it, Start is refused until you stop some.">
+                  {data.runningLimit.running != null ? <><b>{data.runningLimit.running}</b> running · limit {data.runningLimit.max}</> : <>Limit {data.runningLimit.max} running</>}
+                </span>
+              )}
             </section>
             <form className="filters" role="search" onSubmit={(e) => e.preventDefault()}>
               <label>Search<input type="search" value={text} onChange={(e) => setText(e.target.value)} placeholder="Name, id, description or tag" /></label>
@@ -644,7 +668,7 @@ export default function App() {
                 <div className="shelf__row">
                   {sec.rows.map((i) => (
                     <Card key={`${i.planned ? "p" : "r"}-${i.id}`} item={i} present={present} startEnabled={data.startEnabled} busy={busy || data.agent === "down" || data.agent === "token-rejected"}
-                      starting={starting[i.id] ? (starting[i.id].stalled ? "stalled" : "starting") : null}
+                      starting={starting[i.id] ? (starting[i.id].stalled ? "stalled" : "starting") : null} error={i.planned ? null : cardErrors[i.id]}
                       activeAction={activeAction === `${i.id}/start` ? "start" : activeAction === `${i.id}/stop` ? "stop" : activeAction === `${i.id}/deploy` ? "deploy" : null}
                       onAction={act} onCopy={copy} onDetails={showDetails} tagInfo={tagInfo} picked={picked} onTag={toggleTag} />
                   ))}
