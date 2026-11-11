@@ -1729,22 +1729,26 @@
       "id": "ai-demo-standalone",
       "name": "AI Demo Standalone",
       "kind": "Demo",
-      "description": "The whole AI-DEMO2 dashboard as one mock app: all 87 use cases in a single catalog with per-UC detail, product roles and tech-proof API hops. One mock PDP (token -> gateway -> policy) behind every track; the directory is read on EVERY decision. Stage 1 runs foundations + controls live.",
-      "url": "http://localhost:7710",
+      "description": "A mock of the AI-DEMO2 dashboard: all 87 use cases in one catalog, run against one mock PDP (token, gateway, policy; directory groups read on every decision). The foundations and controls tracks are wired; the other tracks are listed. Mock only; Real is reserved.",
+      "url": "http://localhost:7810",
       "healthPath": "/api/health",
       "composeFile": "ai-demo-standalone-LAB/docker-compose.yml",
       "composeOverlays": [],
       "pingProducts": [],
-      "notes": "Host-run: ./scripts/run.sh (port 7710). Mock needs no tenant and no credentials. Docker: HOST_PORT=7710 docker compose up --build -d (published on 127.0.0.1 only). Catalog id D123 (assigned 2026-11-11).",
+      "notes": "Host-run: ./scripts/run.sh (port 7810). Mock needs no tenant and no credentials. Docker: HOST_PORT=7810 docker compose up --build -d (published on 127.0.0.1 only). Catalog id D128.",
       "repo": "https://github.com/curtismu7/ai-demo-standalone-LAB",
-      "catalogId": "D123",
+      "catalogId": "D128",
+      "alsoCatalogIds": [],
       "addedAt": "2026-11-11T01:00:00Z",
       "tags": [
         "agent-gateway",
         "ai-agent-security",
+        "agent-identity",
+        "authorization-policy",
         "agent-controls",
         "simulated"
-      ]
+      ],
+      "where": "installed"
     }
   ]
 }

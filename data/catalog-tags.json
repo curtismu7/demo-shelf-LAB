@@ -323,11 +323,11 @@
       "agent-controls",
       "a2a"
     ],
-    "D123": [
+    "D128": [
       "ai-agent-security",
+      "agent-identity",
       "agent-controls",
-      "authorization-policy",
-      "a2a"
+      "authorization-policy"
     ]
   },
   "D110": [
