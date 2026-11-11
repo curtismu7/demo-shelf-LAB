@@ -258,6 +258,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'pingone-lab': '/pingone-lab/',
     'pingone-events-lab': '/pingone-events-lab/',
     'pingcli-lab': '/pingcli/',
+    'privilege-owasp-lab': '/privilege-owasp-lab/',
     'mcp-skills-lab': '/mcp-skills-lab/',
     'aggregate-entitlement-lab': '/aggregate-entitlement-lab/',
     'privilege-demo': '/privilege-demo/',
