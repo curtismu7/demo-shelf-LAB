@@ -737,7 +737,7 @@
       "name": "Coding Agents LAB",
       "catalogId": "D102",
       "kind": "Demo",
-      "description": "Inspection inside Claude Code, Cursor, Codex, Gemini CLI, GitHub Copilot and Antigravity: hooks as the enforcement point, the outcome follows the risk. Opens in Real mode — every decision is the live Privilege AI Guard on our tenant; Mock and Live are the offline rehearsal.",
+      "description": "Inspection inside Claude Code, Cursor, Codex, Gemini CLI, GitHub Copilot and Antigravity: hooks as the enforcement point, the outcome follows the risk. Opens in Real mode \u2014 every decision is the live Privilege AI Guard on our tenant; Mock and Live are the offline rehearsal.",
       "url": "http://localhost:7150",
       "healthPath": "/api/health",
       "composeFile": "coding-agents-LAB/docker-compose.yml",
@@ -1297,7 +1297,7 @@
       "addedAt": "2026-11-06T12:23:33Z",
       "name": "Agent Preferences Lab",
       "kind": "Demo",
-      "description": "The user sets what their AI agent may do — allowed action tiers, a spend cap, what happens when Protect detects an AI agent — enforced at a mock MCP tool boundary: permit, human approval (HITL) or deny. Standalone mock of the AI-DEMO2 agentPreferences feature. Mock only.",
+      "description": "The user sets what their AI agent may do \u2014 allowed action tiers, a spend cap, what happens when Protect detects an AI agent \u2014 enforced at a mock MCP tool boundary: permit, human approval (HITL) or deny. Standalone mock of the AI-DEMO2 agentPreferences feature. Mock only.",
       "url": "http://localhost:7660",
       "healthPath": "/api/health",
       "composeFile": "agent-preferences-lab/docker-compose.yml",
@@ -1507,7 +1507,7 @@
       "name": "CIBA HITL Lab",
       "catalogId": "C1",
       "kind": "Demo",
-      "description": "Twenty-four steps from scope to tool with a human in the loop: one login, one token exchange, an OBO token that keeps the full scope set; a write is denied with a CIBA identifier, the gateway rewrites the 403 into a JSON-RPC 2.0 error, the human approves, the agent replays, Authorize verifies…",
+      "description": "Twenty-four steps from scope to tool with a human in the loop: one login, one token exchange, an OBO token that keeps the full scope set; a write is denied with a CIBA identifier, the gateway rewrites the 403 into a JSON-RPC 2.0 error, the human approves, the agent replays, Authorize verifies\u2026",
       "url": "http://localhost:7580",
       "healthPath": "/api/health",
       "composeFile": "ciba-hitl-lab/docker-compose.yml",
@@ -1577,7 +1577,7 @@
       "name": "Meridian Pay A2A hop lab",
       "catalogId": "D110",
       "kind": "Demo",
-      "description": "Walk a delegated agent token chain one hop at a time: sign in, hand the job to a platform-signed external agent, exchange tokens (RFC 8693, third-party subject and actor), and call MCP tools through Privilege doors. Every hop shows sub/act/aud/scope, and refusals are demoed on purpose. Runs…",
+      "description": "Walk a delegated agent token chain one hop at a time: sign in, hand the job to a platform-signed external agent, exchange tokens (RFC 8693, third-party subject and actor), and call MCP tools through Privilege doors. Every hop shows sub/act/aud/scope, and refusals are demoed on purpose. Runs\u2026",
       "url": "http://127.0.0.1:7720",
       "healthPath": "/api/health",
       "composeFile": "meridian-a2a-hop-LAB/docker-compose.yml",
@@ -1703,6 +1703,27 @@
         "real"
       ],
       "where": "installed"
+    },
+    {
+      "id": "privilege-k8-kits",
+      "addedAt": "2026-11-10",
+      "name": "Agent Privilege K8 Kits",
+      "kind": "Tool",
+      "description": "Download hub for the Agent Privilege Gateway Kubernetes deployment kits: the single-gateway quick-start package and the multi-gateway HA package (shared Redis, integrated load balancer), plus the shared 18-page deployment guide served inline. Read-only artifact server, offline.",
+      "url": "http://127.0.0.1:7809",
+      "healthPath": "/api/health",
+      "composeFile": "privilege-k8-kits-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "port": 7809,
+      "catalogId": null,
+      "tags": [
+        "pingone-privilege",
+        "simulated",
+        "learning"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/privilege-k8-kits-LAB",
+      "pingProducts": []
     }
   ]
 }

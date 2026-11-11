@@ -234,6 +234,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
   // Keyed by shelf id; keep in sync with shared/lab-proxy/nginx.conf routes.
   const PROXY_PATHS = {
     'ai-gateway-client': '/ai-gateway-client/',
+    'privilege-k8-kits': '/privilege-k8-kits/',
     'ai-guard-sidecar': '/ai-guard-sidecar/',
     'agentcore-pingone-demo-lab': '/agentcore-pingone/',
     'ciba-hitl-lab': '/ciba-hitl-lab/',
