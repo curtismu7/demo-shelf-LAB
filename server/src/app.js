@@ -241,6 +241,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'hitl-mfa-lab': '/hitl-mfa-lab/',
     'delegation-lab': '/delegation-lab/',
     'a2a-lab': '/a2a-lab/',
+    'ai-demo-standalone': '/ai-demo-standalone/',
     'agent-preferences-lab': '/agent-preferences-lab/',
     'demo-field-guide': '/demo-field-guide/',
     'diagram-prove-lab': '/diagram-prove-lab/',

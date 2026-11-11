@@ -542,7 +542,7 @@
       "name": "Delegation & entitlement",
       "kind": "Demo",
       "group": "D",
-      "oneLiner": "Consent mints act={agent}; the directory decides \u2014 group gate, then tier expansion.",
+      "oneLiner": "Consent mints act={agent}; the directory decides — group gate, then tier expansion.",
       "status": "active"
     },
     {
@@ -559,6 +559,14 @@
       "kind": "Demo",
       "group": "D",
       "oneLiner": "Generalist hands off to a specialist: nested act chain, scope narrowed per hop, gateway admits only a registered specialist.",
+      "status": "active"
+    },
+    {
+      "id": "D123",
+      "name": "AI Demo Standalone (whole dashboard)",
+      "kind": "Demo",
+      "group": "D",
+      "oneLiner": "The whole AI-DEMO2 dashboard as one mock app: 87 use cases, one PDP, per-UC product roles and tech-proof hops.",
       "status": "active"
     }
   ]
