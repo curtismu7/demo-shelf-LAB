@@ -234,6 +234,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
   // Keyed by shelf id; keep in sync with shared/lab-proxy/nginx.conf routes.
   const PROXY_PATHS = {
     'ai-gateway-client': '/ai-gateway-client/',
+    'pf-privilege-obo-lab': '/pf-privilege-obo-lab/',
     'privilege-k8-kits': '/privilege-k8-kits/',
     'ai-guard-sidecar': '/ai-guard-sidecar/',
     'agentcore-pingone-demo-lab': '/agentcore-pingone/',
@@ -258,6 +259,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'pingone-lab': '/pingone-lab/',
     'pingone-events-lab': '/pingone-events-lab/',
     'pingcli-lab': '/pingcli/',
+    'privilege-owasp-lab': '/privilege-owasp-lab/',
     'mcp-skills-lab': '/mcp-skills-lab/',
     'aggregate-entitlement-lab': '/aggregate-entitlement-lab/',
     'privilege-demo': '/privilege-demo/',

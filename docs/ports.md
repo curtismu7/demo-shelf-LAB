@@ -20,6 +20,7 @@ Not shelf apps, so not in the registry; the allocator skips them.
 
 | Port | App | Catalog | |
 | --- | --- | --- | --- |
+| 4400 | demo-shelf-lab | E2 |  |
 | 4510 | privilege-demo | D1 |  |
 | 4701 | hostile-mcp | D6 |  |
 | 4720 | id-jag-standalone | C1 |  |
@@ -82,12 +83,13 @@ Not shelf apps, so not in the registry; the allocator skips them.
 | 7580 | ciba-hitl-lab | C1 |  |
 | 7590 | demo-field-guide | D115 |  |
 | 7601 | agentcore-pingone-demo-lab | D114 |  |
-| 7660 | agent-preferences-lab |  |  |
-| 7670 | mcp-gateway-lab |  |  |
+| 7660 | agent-preferences-lab | D117 |  |
+| 7670 | mcp-gateway-lab | D116 |  |
 | 7680 | hitl-mfa-lab | D119 |  |
 | 7690 | delegation-lab | D120 |  |
 | 7700 | a2a-lab | D122 |  |
-| 7710 | diagram-prove-lab |  |  |
+| 7710 | ai-demo-standalone | D123 | **CLASH** with diagram-prove-lab |
+| 7710 | diagram-prove-lab | E3 | **CLASH** with ai-demo-standalone |
 | 7720 | meridian-a2a-hop | D110 |  |
 | 7800 | observability-lab | D123 |  |
 | 7801 | privilege-logging-lab |  |  |
@@ -99,7 +101,7 @@ Not shelf apps, so not in the registry; the allocator skips them.
 | 7807 | mcp-skills-lab | D127 |  |
 | 7808 | demo-map-lab |  |  |
 | 7809 | privilege-k8-kits |  |  |
-| 7810 | ai-demo-standalone | D128 |  |
+| 7811 | privilege-owasp-lab | D000 |  |
 | 8081 | mcp-resource-server | D0 |  |
 
 ## Blocks of 50 (4500-7999)
@@ -170,9 +172,9 @@ Not shelf apps, so not in the registry; the allocator skips them.
 | 7550-7599 | jev-lab, obo-lab, jit-lab, ciba-hitl-lab, demo-field-guide |
 | 7600-7649 | agentcore-pingone-demo-lab |
 | 7650-7699 | agent-preferences-lab, mcp-gateway-lab, hitl-mfa-lab, delegation-lab |
-| 7700-7749 | a2a-lab, diagram-prove-lab, meridian-a2a-hop |
+| 7700-7749 | a2a-lab, ai-demo-standalone, diagram-prove-lab, meridian-a2a-hop |
 | 7750-7799 | **open** |
-| 7800-7849 | observability-lab, privilege-logging-lab, aggregate-entitlement-lab, pingone-events-lab, field-notes-lab, env-map-lab, pingcli-lab, mcp-skills-lab, demo-map-lab, privilege-k8-kits, ai-demo-standalone |
+| 7800-7849 | observability-lab, privilege-logging-lab, aggregate-entitlement-lab, pingone-events-lab, field-notes-lab, env-map-lab, pingcli-lab, mcp-skills-lab, demo-map-lab, privilege-k8-kits, privilege-owasp-lab |
 | 7850-7899 | **open** |
 | 7900-7949 | **open** |
 | 7950-7999 | **open** |
