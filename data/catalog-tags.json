@@ -327,7 +327,9 @@
       "ai-agent-security",
       "agent-identity",
       "agent-controls",
-      "authorization-policy"
+      "authorization-policy",
+      "human-in-the-loop",
+      "a2a"
     ]
   },
   "D110": [

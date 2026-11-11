@@ -566,7 +566,7 @@
       "name": "AI Demo Standalone (dashboard mock)",
       "kind": "Demo",
       "group": "D",
-      "oneLiner": "A mock of the AI-DEMO2 dashboard: 87 use cases, one mock PDP, per-use-case product roles and tech-proof hops; foundations and controls wired.",
+      "oneLiner": "A mock of the AI-DEMO2 dashboard: 87 use cases, one mock PDP, per-use-case product roles and tech-proof hops; foundations, controls, HITL and A2A hand-off wired.",
       "status": "active"
     }
   ]
