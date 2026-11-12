@@ -1827,6 +1827,31 @@
         "simulated",
         "real"
       ]
+    },
+    {
+      "id": "mfa-admin-mcp",
+      "addedAt": "2026-11-12T20:00:00Z",
+      "name": "MFA Admin MCP LAB",
+      "catalogId": "D132",
+      "kind": "Tester",
+      "description": "Administer PingOne's MFA administration MCP tool set: MFA settings, device-auth and FIDO passkey policies, notification policies, OATH tokens, and email/phone/WhatsApp delivery settings. Safety classes, confirm gate, metadata scan. Mock by default; Live is owner-run.",
+      "url": "http://localhost:7815",
+      "healthPath": "/api/health",
+      "composeFile": "mfa-admin-mcp-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: npm ci && npm run build && npm start (port 7815). Mock needs no tenant and no credentials. Docker: HOST_PORT=7815 docker compose up --build -d (published on 127.0.0.1 only). Live: MFA_ADMIN_MCP_MODE=live plus a connection (worker app or interactive PKCE admin sign-in); owner-verified. Repo: curtismu7/mfa-admin-mcp-LAB. Fork of pingone-mcp-inspector-LAB. Catalog id D132 (assigned 2026-11-12).",
+      "repo": "https://github.com/curtismu7/mfa-admin-mcp-LAB",
+      "proxyPath": "/mfa-admin-mcp/",
+      "tags": [
+        "pingone",
+        "pingone-mcp",
+        "mcp",
+        "sign-in-and-mfa",
+        "simulated",
+        "real"
+      ]
     }
+
   ]
 }
