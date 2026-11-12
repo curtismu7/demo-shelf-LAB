@@ -368,6 +368,37 @@ export default function App() {
     load(true);
   }
 
+  // Starter sets: named groups from the server (data/starter-sets.json). Start every demo in
+  // the picked set, serially, through the same /start route as the card buttons.
+  const starterSets = data?.starterSets || [];
+  const [pickedSet, setPickedSet] = useState("");
+  const [setRunning, setSetRunning] = useState(false);
+  async function startSet() {
+    const set = starterSets.find((s) => s.id === pickedSet);
+    if (!data || !set || setRunning) return;
+    const targets = set.demos.map((id) => data.demos.find((d) => d.id === id)).filter(Boolean);
+    const todo = targets.filter((d) => !d.isShelf && d.canStart && d.status?.state !== "up");
+    if (!todo.length) { setAnnounce(`${set.label}: already up`); setNote(`Nothing to start — every demo in "${set.label}" is already up.`); return; }
+    setSetRunning(true);
+    let okCount = 0; const failed = [];
+    for (const d of todo) {
+      setNote(`${set.label}: ${d.name} (${okCount}/${todo.length} done)...`);
+      try {
+        await call(`/api/demos/${encodeURIComponent(d.id)}/start`, "POST");
+        okCount += 1;
+      } catch (e) {
+        failed.push(d.name);
+        setNote(`${set.label}: ${d.name} failed — continuing (${WHY[e.message] || e.message})`);
+      }
+    }
+    setSetRunning(false);
+    setAnnounce(`${set.label} finished: ${okCount} started, ${failed.length} failed`);
+    setNote(failed.length
+      ? `${set.label}: ${okCount} started, ${failed.length} failed (${failed.join(", ")}).`
+      : `${set.label}: all ${okCount} demos are up.`);
+    load(true);
+  }
+
   // Restore last set: start the demos that were running before the machine restarted,
   // most recent set first (the server caps and orders them). Skips the shelf itself.
   const [restoreRunning, setRestoreRunning] = useState(false);
@@ -515,6 +546,17 @@ export default function App() {
             </select>
           </label>
           <button type="button" aria-pressed={present} onClick={() => setPresent((p) => !p)}>Present</button>
+          {starterSets.length > 0 && (
+            <span className="inline" role="group" aria-label="Start a set">
+              <select value={pickedSet} onChange={(e) => setPickedSet(e.target.value)} data-testid="starter-set" aria-label="Starter set">
+                <option value="">Start a set…</option>
+                {starterSets.map((s) => <option key={s.id} value={s.id}>{s.label} ({s.demos.length})</option>)}
+              </select>
+              <button type="button" onClick={startSet} disabled={busy || setRunning || !pickedSet || stopAllRunning || deployAllRunning || restoreRunning} aria-busy={setRunning || undefined} title="Starts every demo in the picked set, one at a time">
+                {setRunning && <span className="spin" aria-hidden="true" />}Start
+              </button>
+            </span>
+          )}
           <button type="button" onClick={restoreLast} disabled={busy || restoreRunning || stopAllRunning || deployAllRunning} aria-busy={restoreRunning || undefined} title="Starts the demos that were running before the last restart (up to 10, most recent set)">
             {restoreRunning && <span className="spin" aria-hidden="true" />}Restore last set
           </button>

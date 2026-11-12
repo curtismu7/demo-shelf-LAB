@@ -1,0 +1,28 @@
+{
+  "sets": [
+    {
+      "id": "token",
+      "label": "Token & OAuth",
+      "description": "Token inspection, rejection, OBO, delegation, ID-JAG and third-party exchange labs.",
+      "demos": ["token-workbench", "stolen-token-lab", "p1-third-party-exchange", "obo-lab", "delegation-lab", "id-jag-standalone", "idjag-runner"]
+    },
+    {
+      "id": "agent",
+      "label": "Agents & A2A",
+      "description": "Hostile-agent testing, MCP skills, customer agent, agentcore and personal agent labs.",
+      "demos": ["hostile-a2a", "hostile-mcp", "mcp-skills-lab", "customer-agent-lab", "personal-agent-demo", "agentcore-pingone-demo-lab"]
+    },
+    {
+      "id": "maps",
+      "label": "Maps & Inspectors",
+      "description": "Topology maps and inspector tools across the demo family.",
+      "demos": ["demo-map-lab", "privilege-map", "env-map-lab", "p1az-inspector", "pingone-mcp-inspector"]
+    },
+    {
+      "id": "mock",
+      "label": "Mock Infrastructure",
+      "description": "Shared Ping product stubs and mock authorize servers other demos lean on.",
+      "demos": ["ping-services-stub", "mock-authorize", "pingone-lab", "pingfederate-lab"]
+    }
+  ]
+}

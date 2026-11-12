@@ -40,6 +40,28 @@ export function startScript({ composeFile, composeOverlays = [], url, openPath, 
 
 export const startCommand = (d) => startScript(d);
 
+// Starter sets: data/starter-sets.json next to the registry. A set is { id, label, description?, demos }.
+// Unknown or duplicate demo ids are dropped (the registry is the truth); a set left empty is dropped;
+// duplicate set ids are dropped. Missing or corrupt file means no sets, never an error.
+export function loadStarterSets(shelfDir, demos) {
+  try {
+    const raw = JSON.parse(fs.readFileSync(path.join(shelfDir, 'data', 'starter-sets.json'), 'utf8'));
+    if (!Array.isArray(raw?.sets)) return [];
+    const known = new Set(demos.map((d) => d.id));
+    const seen = new Set();
+    const out = [];
+    for (const s of raw.sets) {
+      if (!s || typeof s.id !== 'string' || typeof s.label !== 'string' || !Array.isArray(s.demos)) continue;
+      if (seen.has(s.id)) continue;
+      seen.add(s.id);
+      const ids = [...new Set(s.demos)].filter((id) => known.has(id));
+      if (ids.length) out.push({ id: s.id, label: s.label, ...(s.description ? { description: String(s.description) } : {}), demos: ids });
+    }
+    return out;
+  } catch { /* missing or corrupt: no sets */ }
+  return [];
+}
+
 // One registry entry becomes one card per place it lives. A mock copy is polled and linked at mockUrl and
 // has no compose file, so Start / Stop never applies to it. A "both" demo gets a second, "-mock" card.
 export function expandWhere(demos) {
@@ -232,6 +254,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
 
   // Labs reachable through the lab-proxy (https://local.ping-devops.com:8443/<path>/).
   // Keyed by shelf id; keep in sync with shared/lab-proxy/nginx.conf routes.
+  const starterSets = loadStarterSets(shelfDir, registry);
   const PROXY_PATHS = {
     'ai-gateway-client': '/ai-gateway-client/',
     'pf-privilege-obo-lab': '/pf-privilege-obo-lab/',
@@ -319,7 +342,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'agent-audit-trail-lab': '/agent-audit-trail-lab/',
   };
   app.get('/api/shelf', async (req, res, next) => {
-    try { res.set('Cache-Control', 'no-store').json({ ...(await shelf(await poller.get())), shelfUrl: shelfOrigin(req) }); } catch (e) { next(e); }
+    try { res.set('Cache-Control', 'no-store').json({ ...(await shelf(await poller.get())), starterSets, shelfUrl: shelfOrigin(req) }); } catch (e) { next(e); }
   });
   app.post('/api/shelf/refresh', async (req, res, next) => {
     try {
@@ -341,6 +364,11 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
       res.set('Cache-Control', 'no-store').json({ ok: true, schema: 'shelf-last-running/1', ids: lastRunning.restoreIds(10) });
     });
   }
+  // Starter sets (data/starter-sets.json): named groups of demos the UI can start in one
+  // click and `scripts/labs` reads from the same file. Static data, no Start needed to list.
+  app.get('/api/starter-sets', (req, res) => {
+    res.set('Cache-Control', 'no-store').json({ ok: true, schema: 'shelf-starter-sets/1', sets: starterSets });
+  });
   if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: (id) => { poller.invalidate(); install.invalidate(id); }, exec, fileExists, agent, inDocker, shelfDir, demoRoot, lastRunning, networkLimit, maxRunningDemos }));
   app.use('/api', (req, res) => res.status(404).json({ error: 'not-found' }));
 
