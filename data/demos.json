@@ -1,1809 +1,1809 @@
 {
- "demos": [
-  {
-   "id": "ai-gateway-client",
-   "addedAt": "2026-11-04T23:13:48Z",
-   "name": "Agent Privilege Client LAB",
-   "catalogId": "D20",
-   "kind": "Tester",
-   "description": "A local, no-login test client for an OAuth-protected MCP gateway. Shows one tool call through the gateway and directly, so the policy difference is visible.",
-   "url": "http://127.0.0.1:6880",
-   "healthPath": "/api/health",
-   "composeFile": "ai-gateway-client-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "tags": [
-    "pingone-privilege",
-    "agent-gateway",
-    "oauth",
-    "mcp",
-    "real"
-   ],
-   "where": "installed",
-   "repo": "https://github.com/curtismu7/ai-gateway-client-LAB",
-   "pingProducts": [
-    "privilege-gateway"
-   ]
-  },
-  {
-   "id": "mcp-demo-client-privilege",
-   "addedAt": "2026-11-04T23:16:20Z",
-   "name": "MCP Demo Client for Privilege LAB",
-   "kind": "Demo",
-   "description": "Chat-first local MCP demo client for protected MCP demos behind a PingOne Privilege gateway.",
-   "url": "http://127.0.0.1:6884",
-   "healthPath": "/api/health",
-   "composeFile": "mcp-demo-client-privilege-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "catalogId": "D2",
-   "tags": [
-    "pingone-privilege",
-    "mcp",
-    "oauth",
-    "real",
-    "agent-gateway"
-   ],
-   "where": "installed",
-   "repo": "https://github.com/curtismu7/mcp-demo-client-privilege-LAB",
-   "pingProducts": [
-    "privilege-gateway"
-   ]
-  },
-  {
-   "id": "privilege-a2a-anthropic-demo",
-   "addedAt": "2026-11-04T23:19:14Z",
-   "name": "Privilege A2A Anthropic demo LAB",
-   "kind": "Demo",
-   "description": "Three Node processes that show an access review through A2A and MCP, on Anthropic or Google models.",
-   "url": "http://127.0.0.1:6881",
-   "healthPath": "/api/health",
-   "composeFile": "privilege-a2a-anthropic-demo-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "tags": [
-    "pingone-privilege",
-    "a2a",
-    "agent-identity",
-    "real",
-    "agent-gateway",
-    "pingone"
-   ],
-   "where": "installed",
-   "repo": "https://github.com/curtismu7/privilege-a2a-anthropic-demo-LAB",
-   "pingProducts": [
-    "privilege-gateway",
-    "pingone"
-   ],
-   "catalogId": "D121"
-  },
-  {
-   "id": "id-jag-standalone",
-   "addedAt": "2026-11-04T23:15:43Z",
-   "name": "ID-JAG Standalone LAB",
-   "catalogId": "C1",
-   "kind": "Demo",
-   "description": "Token exchange with ID-JAG, using a mock authorization server and a sample MCP server.",
-   "url": "http://localhost:4720",
-   "healthPath": "/api/health",
-   "composeFile": "id-jag-standalone-LAB/deploy/docker-compose.yml",
-   "composeOverlays": [],
-   "tags": [
-    "pingfederate",
-    "id-jag",
-    "token-exchange",
-    "oauth",
-    "agent-identity",
-    "simulated",
-    "real"
-   ],
-   "where": "installed",
-   "repo": "https://github.com/curtismu7/id-jag-standalone-LAB",
-   "pingProducts": [
-    "pingfederate"
-   ]
-  },
-  {
-   "id": "privilege-demo",
-   "addedAt": "2026-11-04T23:19:20Z",
-   "name": "Privilege demo LAB",
-   "kind": "Demo",
-   "description": "An AI agent's MCP tool calls pass a policy enforcement point that decides allow, deny or hold with Cedar. Runs offline in mock mode (in-process mock issuer and tool backends) or verifies Bearer tokens from your own PingFederate in live mode.",
-   "url": "http://127.0.0.1:4510",
-   "healthPath": "/api/health",
-   "composeFile": "privilege-demo-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "port": 4510,
-   "catalogId": "D1",
-   "tags": [
-    "authorization-policy",
-    "cedar",
-    "mcp",
-    "pingone-privilege",
-    "real",
-    "simulated",
-    "pingfederate",
-    "pingone"
-   ],
-   "where": "installed",
-   "repo": "https://github.com/curtismu7/privilege-demo-LAB",
-   "pingProducts": [
-    "pingfederate",
-    "pingone"
-   ]
-  },
-  {
-   "id": "privilege-map",
-   "addedAt": "2026-11-04T23:12:16Z",
-   "name": "Privilege Map LAB",
-   "kind": "Demo",
-   "description": "The PingOne Privilege Federated Identity model as ReactFlow diagrams you can drag and walk through, plus 21 Privilege feature cards, stories and a talk track. Mock only.",
-   "url": "http://127.0.0.1:5301",
-   "healthPath": "/api/health",
-   "composeFile": "privilege-map-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "tags": [
-    "pingone-privilege",
-    "authorization-policy",
-    "simulated"
-   ],
-   "where": "installed",
-   "repo": "https://github.com/curtismu7/privilege-map-LAB",
-   "pingProducts": [
-    "pingone-privilege"
-   ]
-  },
-  {
-   "id": "agent-mcp-door-demo",
-   "addedAt": "2026-11-04T23:13:29Z",
-   "name": "Agent Meets the MCP Door LAB",
-   "kind": "Demo",
-   "description": "A member's own AI agent reaches an enterprise MCP door: discover, register, consent, per-call token exchange, gateway, policy decision, human approval, audit. Movable React Flow sequence diagram with a payload or mock token under each message, talk track and presenter mode. Mock only.",
-   "url": "http://localhost:6850",
-   "healthPath": "/api/health",
-   "composeFile": "agent-mcp-door-demo-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "tags": [
-    "mcp",
-    "pingone-privilege",
-    "simulated",
-    "agent-gateway",
-    "pingone",
-    "pingone-authorize",
-    "pingone-protect"
-   ],
-   "where": "installed",
-   "repo": "https://github.com/curtismu7/agent-mcp-door-demo-LAB",
-   "pingProducts": [
-    "privilege-gateway",
-    "pingone"
-   ]
-  },
-  {
-   "id": "pingone-signin-lab",
-   "addedAt": "2026-11-04T23:19:02Z",
-   "name": "PingOne Sign-in LAB",
-   "kind": "Demo",
-   "description": "Sign-in behaviour, mock only: failures, lockout, replay, MFA, step-up (RFC 9470) and CIBA with a mock phone. For real PingOne response shapes and live tenant runs, see the pingone-LAB repo.",
-   "url": "http://127.0.0.1:6171",
-   "healthPath": "/api/health",
-   "composeFile": "pingone-signin-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "catalogId": "A11",
-   "alsoCatalogIds": [
-    "A4",
-    "A5"
-   ],
-   "tags": [
-    "pingone",
-    "sign-in-and-mfa",
-    "ciba",
-    "step-up",
-    "simulated",
-    "pingid"
-   ],
-   "where": "installed",
-   "repo": "https://github.com/curtismu7/pingone-signin-LAB",
-   "pingProducts": [
-    "pingone"
-   ]
-  },
-  {
-   "id": "pingone-lab",
-   "addedAt": "2026-11-04T23:18:49Z",
-   "name": "PingOne LAB",
-   "catalogId": "A29",
-   "kind": "Demo",
-   "description": "A card for each thing PingOne advertises in its discovery document: pi.flow sign-in, PKCE, PAR, JAR, client credentials, token lifecycle, Userinfo, device authorization, CIBA, token exchange, plus a playground. Mock PingOne by default, or your own environment.",
-   "url": "http://127.0.0.1:5500",
-   "healthPath": "/api/health",
-   "composeFile": "pingone-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "tags": [
-    "pingone",
-    "oauth",
-    "oidc",
-    "par",
-    "ciba",
-    "token-exchange",
-    "simulated",
-    "real"
-   ],
-   "where": "installed",
-   "repo": "https://github.com/curtismu7/pingone-LAB",
-   "pingProducts": [
-    "pingone"
-   ]
-  },
-  {
-   "id": "pingfederate-lab",
-   "addedAt": "2026-11-04T23:18:43Z",
-   "name": "PingFederate LAB",
-   "catalogId": "A28",
-   "kind": "Demo",
-   "description": "A card for each PingFederate feature behind AI agents: pi.flow sign-in, DCR, RAR with PAR, CIBA, DPoP, token exchange, Userinfo, PAR, PKCE and a protocol playground. Built-in mock PingFederate (offline) or your own PingFederate (live).",
-   "url": "http://127.0.0.1:5400",
-   "healthPath": "/api/health",
-   "composeFile": "pingfederate-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "tags": [
-    "pingfederate",
-    "oauth",
-    "oidc",
-    "par",
-    "ciba",
-    "dpop",
-    "token-exchange",
-    "simulated",
-    "real"
-   ],
-   "where": "installed",
-   "repo": "https://github.com/curtismu7/pingfederate-LAB",
-   "pingProducts": [
-    "pingfederate"
-   ]
-  },
-  {
-   "id": "customer-agent-lab",
-   "addedAt": "2026-11-04T23:14:42Z",
-   "name": "Customer Agent LAB",
-   "catalogId": "D24",
-   "kind": "Demo",
-   "description": "The customer-facing AI agent with all 87 use cases, each routed Here, Here + go deeper, Hand off or Guide. AI-DEMO2-depth movie reel, sequence view and step detail in movable cards; hand-offs to 30 labs whose Back strip resumes the chat; an A2A page; Scripted or llama.cpp brain. Mock runs offline.",
-   "url": "http://127.0.0.1:5603",
-   "healthPath": "/api/health",
-   "composeFile": "customer-agent-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "notes": "Host-run: ./scripts/run.sh (port 5600). Docker: HOST_PORT=5603 docker compose up --build -d (published on 127.0.0.1 only). Mock needs no tenant and no credentials. Settings: the app's own .env beside docker-compose.yml (copy .env.example; Docker takes only SHELF_URL, CAL_LAB_MODE and LAB_ALLOWED_HOSTS from it, never the PingOne settings). Live (host-run only, owner opt-in: CAL_ALLOW_LIVE=1, IDP=pingone, PINGONE_ENVIRONMENT_ID, PINGONE_REGION, PINGONE_CLIENT_ID, PINGONE_CLIENT_SECRET in that .env) makes two real calls to one PingOne environment. Live was owner-verified 2026-11-05 with the old shared settings file; it is UNVERIFIED after the move to the app's own .env until the owner re-checks it. Catalog id D24.",
-   "tags": [
-    "ai-agent-security",
-    "agent-identity",
-    "simulated",
-    "pingone",
-    "real",
-    "pingone-authorize"
-   ],
-   "where": "installed",
-   "repo": "https://github.com/curtismu7/customer-agent-LAB"
-  },
-  {
-   "id": "agent-kill-switch",
-   "addedAt": "2026-11-04T23:13:23Z",
-   "name": "Agent Kill Switch",
-   "catalogId": "D14",
-   "kind": "Demo",
-   "description": "How an organization stops a runaway AI agent: rate and cost caps that trip automatically, an operator kill switch that revokes access, and the next call failing. Fully mocked; nothing real is touched.",
-   "url": "http://localhost:6550",
-   "healthPath": "/api/health",
-   "composeFile": "agent-kill-switch-LAB/docker-compose.yml",
-   "tags": [
-    "agent-gateway",
-    "ai-agent-security",
-    "agent-controls",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/agent-kill-switch-LAB"
-  },
-  {
-   "id": "agent-registry-demo",
-   "addedAt": "2026-11-04T23:13:36Z",
-   "name": "Agent Registry Lifecycle",
-   "catalogId": "D11",
-   "kind": "Demo",
-   "description": "Register an AI agent as a non-human identity, grant it to a tool, rotate it by replacement, retire it, and watch the gateway refuse it (401/403/429). Mock only. Optional owner-run live checks compare with a real Privilege console.",
-   "url": "http://localhost:5010",
-   "healthPath": "/api/health",
-   "composeFile": "agent-registry-demo-LAB/docker-compose.yml",
-   "tags": [
-    "agent-identity",
-    "ai-agent-security",
-    "pingone-privilege",
-    "real",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/agent-registry-demo-LAB",
-   "pingProducts": [
-    "pingone-privilege"
-   ]
-  },
-  {
-   "id": "ai-guard-sidecar",
-   "addedAt": "2026-11-04T23:13:55Z",
-   "name": "AI Guard Sidecar",
-   "catalogId": "D12",
-   "kind": "Demo",
-   "description": "How an external guardrail sidecar plugs into an agent gateway: a stand-in detector, per-category block thresholds, PII rails, a fail-closed toggle and a fault injector. Contract unverified; offline.",
-   "url": "http://localhost:6500",
-   "healthPath": "/api/health",
-   "composeFile": "ai-guard-sidecar-LAB/docker-compose.yml",
-   "tags": [
-    "agent-gateway",
-    "ai-agent-security",
-    "agent-controls",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/ai-guard-sidecar-LAB"
-  },
-  {
-   "id": "attack-gallery",
-   "addedAt": "2026-11-04T23:14:09Z",
-   "name": "Agent attack gallery",
-   "catalogId": "D33",
-   "kind": "Tester",
-   "description": "Ten named attacks, including MCP authorization attacks, each run ungoverned and governed against an in-process mock stack: see what the attacker gets, then the control that refuses it.",
-   "url": "http://localhost:5181",
-   "healthPath": "/api/health",
-   "composeFile": "attack-gallery-LAB/docker-compose.yml",
-   "tags": [
-    "ai-agent-security",
-    "mcp-security",
-    "mcp",
-    "oauth",
-    "simulated",
-    "pingone-privilege"
-   ],
-   "repo": "https://github.com/curtismu7/attack-gallery-LAB"
-  },
-  {
-   "id": "cimd-lab",
-   "addedAt": "2026-11-04T23:14:29Z",
-   "name": "CIMD Lab",
-   "catalogId": "D36",
-   "kind": "Demo",
-   "description": "Teaches OAuth Client ID Metadata Documents both ways: real PingFederate as the authorization server (owner-run, no mock), and the lab's own teaching server with a tester that breaks the document in a dozen ways. PingFederate acting as a CIMD client is UNVERIFIED.",
-   "url": "http://localhost:5250",
-   "healthPath": "/api/health",
-   "composeFile": "cimd-LAB/docker-compose.yml",
-   "tags": [
-    "cimd",
-    "mcp",
-    "mcp-security",
-    "oauth",
-    "simulated",
-    "real",
-    "pingone",
-    "pingfederate"
-   ],
-   "repo": "https://github.com/curtismu7/cimd-LAB",
-   "pingProducts": [
-    "pingfederate"
-   ]
-  },
-  {
-   "id": "diagram-studio",
-   "addedAt": "2026-11-04T23:15:06Z",
-   "name": "Diagram Studio",
-   "catalogId": "E3",
-   "kind": "Tool",
-   "description": "Pick or edit a flow diagram stored as data: move boxes, Simulate the arrows, change the speed, Reset, undo, tidy, present, embed, and export as JSON, SVG, PNG or one offline HTML file.",
-   "url": "http://localhost:6001",
-   "healthPath": "/api/health",
-   "composeFile": "diagram-studio-LAB/docker-compose.yml",
-   "tags": [
-    "learning",
-    "simulated",
-    "poc-patterns",
-    "pingone"
-   ],
-   "repo": "https://github.com/curtismu7/diagram-studio-LAB"
-  },
-  {
-   "id": "gateway-claims-lab",
-   "addedAt": "2026-11-04T23:15:19Z",
-   "name": "Gateway Claims Lab",
-   "catalogId": "D99",
-   "kind": "Demo",
-   "description": "What gateway v1.261024 added, in mock: a nested-claim gate (client_id + act.sub via RequiredClaims, including the act-as-text trap) and an AgentCore gateway posture view (shape only, values invented), plus two H2 2026 release tabs (on-behalf-of RFC 8693 exchange, AgentCore gateway governance...",
-   "url": "http://localhost:5150",
-   "healthPath": "/api/health",
-   "composeFile": "gateway-claims-LAB/docker-compose.yml",
-   "tags": [
-    "agent-gateway",
-    "agent-identity",
-    "authorization-policy",
-    "aws",
-    "aws-agentcore",
-    "aws-bedrock",
-    "oauth",
-    "pingone-privilege",
-    "simulated",
-    "token-exchange",
-    "pinggateway",
-    "pingfederate"
-   ],
-   "repo": "https://github.com/curtismu7/gateway-claims-LAB",
-   "pingProducts": [
-    "pinggateway",
-    "pingfederate"
-   ]
-  },
-  {
-   "id": "hostile-a2a",
-   "addedAt": "2026-11-04T23:15:32Z",
-   "name": "Hostile A2A / poisoned Agent Card",
-   "catalogId": "D7",
-   "kind": "Demo",
-   "description": "A deliberately hostile A2A agent, an offline delegating generalist, and a pinned-card client shown side by side with an ungoverned one: the card told my agent to include my token.",
-   "url": "http://localhost:4750",
-   "healthPath": "/api/health",
-   "composeFile": "hostile-a2a-LAB/docker-compose.yml",
-   "tags": [
-    "ai-agent-security",
-    "tool-poisoning",
-    "a2a",
-    "simulated",
-    "pingone-privilege"
-   ],
-   "repo": "https://github.com/curtismu7/hostile-a2a-LAB"
-  },
-  {
-   "id": "hostile-mcp",
-   "addedAt": "2026-11-04T23:15:38Z",
-   "name": "Hostile MCP / rug-pull",
-   "catalogId": "D6",
-   "kind": "Demo",
-   "description": "A deliberately hostile MCP server, an offline victim, and a pinned client shown side by side with an ungoverned one: the tool that changed overnight.",
-   "url": "http://localhost:4701",
-   "healthPath": "/api/health",
-   "composeFile": "hostile-mcp-LAB/docker-compose.yml",
-   "tags": [
-    "ai-agent-security",
-    "mcp-security",
-    "tool-poisoning",
-    "mcp",
-    "simulated",
-    "mcp-server-built",
-    "pingone-privilege"
-   ],
-   "repo": "https://github.com/curtismu7/hostile-mcp-LAB"
-  },
-  {
-   "id": "mcp-auth-conformance-lab",
-   "addedAt": "2026-11-04T23:16:13Z",
-   "name": "MCP Auth Conformance Lab",
-   "catalogId": "D35",
-   "kind": "Tester",
-   "description": "Score a mock MCP server with selectable defects (or, in a gated read-only probe, one URL you type) against the MCP authorization expectations, with a sourced reference of what ChatGPT and other clients need.",
-   "url": "http://localhost:4901",
-   "healthPath": "/api/health",
-   "composeFile": "mcp-auth-conformance-LAB/docker-compose.yml",
-   "tags": [
-    "mcp",
-    "mcp-security",
-    "oauth",
-    "simulated",
-    "pingone"
-   ],
-   "repo": "https://github.com/curtismu7/mcp-auth-conformance-LAB"
-  },
-  {
-   "id": "mcp-discovery",
-   "addedAt": "2026-11-04T23:16:26Z",
-   "name": "MCP Discovery",
-   "catalogId": "D5",
-   "kind": "Tester",
-   "description": "Read-only MCP discovery: finds MCP servers, probes tool metadata, flags poisoned or changed metadata (rug-pull). Demo mode: fixtures and stubs only; live mode points at a server you name. Plus simulated Ping H2 2026 claims (private network, slide 44 personal agents), UNVERIFIED on our tenant.",
-   "url": "http://localhost:5310",
-   "healthPath": "/api/health",
-   "composeFile": "mcp-discovery-LAB/docker-compose.yml",
-   "tags": [
-    "mcp",
-    "mcp-security",
-    "real",
-    "simulated",
-    "tool-poisoning",
-    "pingone"
-   ],
-   "repo": "https://github.com/curtismu7/mcp-discovery-LAB"
-  },
-  {
-   "id": "no-tool-no-promise",
-   "addedAt": "2026-11-04T23:17:54Z",
-   "name": "No tool, no promise",
-   "catalogId": "D31",
-   "kind": "Demo",
-   "description": "A support agent can only commit the company through a tool. Same scripted agent, two tool sets, and a commitment ledger that only tools can write. Mock only: no tenant, no LLM.",
-   "url": "http://localhost:5350",
-   "healthPath": "/api/health",
-   "composeFile": "no-tool-no-promise-LAB/docker-compose.yml",
-   "tags": [
-    "ai-agent-security",
-    "agent-controls",
-    "simulated",
-    "pingone"
-   ],
-   "repo": "https://github.com/curtismu7/no-tool-no-promise-LAB"
-  },
-  {
-   "id": "p1-third-party-exchange",
-   "addedAt": "2026-11-04T23:18:05Z",
-   "name": "P1 Third-Party Exchange",
-   "catalogId": "D98",
-   "kind": "Demo",
-   "description": "PingOne token exchange (RFC 8693) that accepts a third-party signed JWT (PingFederate, another PingOne environment, Okta, Auth0, RFC 9068, Microsoft) as the actor token: trusted issuer, assignment, claim mapping, the checks and PingOne's measured refusal texts. Mock only.",
-   "url": "http://localhost:5200",
-   "healthPath": "/api/health",
-   "composeFile": "p1-third-party-exchange-LAB/docker-compose.yml",
-   "tags": [
-    "pingone",
-    "token-exchange",
-    "oauth",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/p1-third-party-exchange-LAB",
-   "pingProducts": [
-    "pingone"
-   ]
-  },
-  {
-   "id": "personal-agent-demo",
-   "addedAt": "2026-11-04T23:18:18Z",
-   "name": "Personal Agent Flow",
-   "catalogId": "D21",
-   "kind": "Demo",
-   "description": "How an AI assistant reaches a member's benefits through an MCP gateway in twelve steps: discovery, CIMD, consent, signed code exchange, gateway check, policy decision. React Flow sequence diagram, mock token JSON, simulated approval modal, talk track. Mock only.",
-   "url": "http://localhost:6900",
-   "healthPath": "/api/health",
-   "composeFile": "personal-agent-demo-LAB/docker-compose.yml",
-   "tags": [
-    "agent-gateway",
-    "agent-identity",
-    "mcp-security",
-    "cimd",
-    "oauth",
-    "mcp",
-    "simulated",
-    "pingfederate",
-    "pingone-authorize",
-    "pingone-protect"
-   ],
-   "repo": "https://github.com/curtismu7/personal-agent-demo-LAB",
-   "pingProducts": [
-    "pingfederate"
-   ]
-  },
-  {
-   "id": "ping-gateway-route-lab",
-   "addedAt": "2026-11-04T23:18:24Z",
-   "name": "PingGateway Route Lab (simulated)",
-   "catalogId": "A19",
-   "kind": "Demo",
-   "description": "Simulated evaluator, not real PingGateway: which route a request matches and why, the empty-first-param WWW-Authenticate bug, RFC 9728 metadata lint and an RFC 7662 introspection stub. Mock only.",
-   "url": "http://localhost:5050",
-   "healthPath": "/api/health",
-   "composeFile": "ping-gateway-route-LAB/docker-compose.yml",
-   "tags": [
-    "pinggateway",
-    "mcp-security",
-    "rfc9728",
-    "mcp",
-    "oauth",
-    "simulated",
-    "pingfederate"
-   ],
-   "repo": "https://github.com/curtismu7/ping-gateway-route-LAB",
-   "pingProducts": [
-    "pinggateway",
-    "pingfederate"
-   ]
-  },
-  {
-   "id": "token-workbench",
-   "addedAt": "2026-11-04T23:20:01Z",
-   "name": "Token Workbench",
-   "catalogId": "C2",
-   "kind": "Demo",
-   "description": "Mock-only token workbench: decode and trace a token, test wrong-token rejection, check stub authorization servers against OAuth rules (FAPI 2.0 pack UNVERIFIED), compare PAR/RAR/DPoP/mTLS/JAR/PKCE (simulation).",
-   "url": "http://localhost:5910",
-   "healthPath": "/api/health",
-   "composeFile": "token-workbench-LAB/docker-compose.yml",
-   "tags": [
-    "token-security",
-    "learning",
-    "oauth",
-    "fapi",
-    "simulated",
-    "pingone",
-    "pingfederate"
-   ],
-   "repo": "https://github.com/curtismu7/token-workbench-LAB",
-   "pingProducts": [
-    "pingone",
-    "pingfederate"
-   ]
-  },
-  {
-   "id": "worker-demo",
-   "addedAt": "2026-11-04T23:20:08Z",
-   "name": "Worker Agent Demo",
-   "catalogId": "D22",
-   "kind": "Demo",
-   "description": "A worker agent acting for a person: attended, delegated (agent to agent) and unattended runs, every tool call through a policy enforcement point that allows, denies or holds for approval; plus an H2 2026 section simulating AgentCard discovery and A2A scope separation (Ping release claims,...",
-   "url": "http://localhost:6700",
-   "healthPath": "/api/health",
-   "composeFile": "worker-demo-LAB/docker-compose.yml",
-   "tags": [
-    "agent-identity",
-    "ai-agent-security",
-    "authorization-policy",
-    "simulated",
-    "pingone"
-   ],
-   "repo": "https://github.com/curtismu7/worker-demo-LAB"
-  },
-  {
-   "id": "session-lab",
-   "addedAt": "2026-11-04T23:19:47Z",
-   "name": "Session Lab: PingOne and DaVinci sessions and cookies",
-   "catalogId": "A30",
-   "kind": "Demo",
-   "description": "See the session cookie, the DaVinci sessionToken and the tokens apps hold, then change the session (revoke, shorten idle timeout, require mfa step-up, reuse a sessionToken in a widget) and watch what each app does. React Flow diagram, talk track and presenter mode. Mock only.",
-   "url": "http://localhost:6890",
-   "healthPath": "/api/health",
-   "composeFile": "session-LAB/docker-compose.yml",
-   "tags": [
-    "pingone",
-    "pingone-davinci",
-    "sign-in-and-mfa",
-    "simulated",
-    "pingid"
-   ],
-   "repo": "https://github.com/curtismu7/session-LAB",
-   "pingProducts": [
-    "pingone"
-   ]
-  },
-  {
-   "id": "intent-par-inspector",
-   "addedAt": "2026-11-04T23:15:49Z",
-   "name": "Intent / PAR Inspector",
-   "catalogId": "C40",
-   "kind": "Demo",
-   "description": "Push an authorization request to a mock server (RFC 9126), watch the intent get bound into the request_uri, consent and token, and see tampering, replay and expiry refused.",
-   "url": "http://localhost:4771",
-   "healthPath": "/api/health",
-   "composeFile": "intent-par-inspector-LAB/docker-compose.yml",
-   "tags": [
-    "par",
-    "oauth",
-    "authorization-policy",
-    "simulated",
-    "pingone",
-    "pingfederate"
-   ],
-   "repo": "https://github.com/curtismu7/intent-par-inspector-LAB",
-   "pingProducts": [
-    "pingfederate"
-   ]
-  },
-  {
-   "id": "poppy-agent-tester",
-   "addedAt": "2026-11-04T23:19:09Z",
-   "name": "Poppy Agent Tester",
-   "catalogId": "D100",
-   "kind": "Demo",
-   "description": "Play the personal agent from the Personal Agent Protocol (Poppy, Draft 0.3): read a Company's poppy.json, sign in to a real PingFederate with a URL as the client id and PKCE, then call the Company API with a signed Poppy-Session. Every request and token is shown raw.",
-   "url": "http://localhost:5450",
-   "healthPath": "/api/health",
-   "composeFile": "poppy-agent-tester-LAB/docker-compose.yml",
-   "tags": [
-    "pingfederate",
-    "agent-identity",
-    "oauth",
-    "simulated",
-    "real"
-   ],
-   "repo": "https://github.com/curtismu7/poppy-agent-tester-LAB"
-  },
-  {
-   "id": "intent-purpose-behaviour-lab",
-   "addedAt": "2026-11-04T23:15:55Z",
-   "name": "Intent, Purpose and Behaviour Lab",
-   "catalogId": "D101",
-   "kind": "Demo",
-   "description": "Three signals asked of every call (intent, purpose, behaviour), plus on-behalf-of and ID-JAG flows, modelling the 2026-11-02 Ping release claims. Mock reads tables; Live signs for real (RS256) locally; a Privilege check sends the call through the live AI Guard on our tenant.",
-   "url": "http://localhost:7100",
-   "healthPath": "/api/health",
-   "composeFile": "intent-purpose-behaviour-LAB/docker-compose.yml",
-   "tags": [
-    "pingone-privilege",
-    "ai-agent-security",
-    "token-exchange",
-    "id-jag",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/intent-purpose-behaviour-LAB"
-  },
-  {
-   "id": "coding-agents-lab",
-   "addedAt": "2026-11-04T23:14:36Z",
-   "name": "Coding Agents LAB",
-   "catalogId": "D102",
-   "kind": "Demo",
-   "description": "Inspection inside Claude Code, Cursor, Codex, Gemini CLI, GitHub Copilot and Antigravity: hooks as the enforcement point, the outcome follows the risk. Opens in Real mode — every decision is the live Privilege AI Guard on our tenant; Mock and Live are the offline rehearsal.",
-   "url": "http://localhost:7150",
-   "healthPath": "/api/health",
-   "composeFile": "coding-agents-LAB/docker-compose.yml",
-   "tags": [
-    "pingone-privilege",
-    "ai-agent-security",
-    "agent-controls",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/coding-agents-LAB"
-  },
-  {
-   "id": "data-protection-lab",
-   "addedAt": "2026-11-04T23:14:48Z",
-   "name": "Data Protection LAB",
-   "catalogId": "D103",
-   "kind": "Demo",
-   "description": "AIGuard content inspection in and out with graduated outcomes, your own gitleaks rules, personal-data kinds with checksums, Agent Insights, the OWASP Agentic Top 10, and sealed prompt logging. Mock reads tables; Live runs locally; a Privilege check sends the text through the live AI Guard.",
-   "url": "http://localhost:7200",
-   "healthPath": "/api/health",
-   "composeFile": "data-protection-LAB/docker-compose.yml",
-   "tags": [
-    "pingone-privilege",
-    "ai-agent-security",
-    "audit-observability",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/data-protection-LAB"
-  },
-  {
-   "id": "saas-access-lab",
-   "addedAt": "2026-11-04T23:19:32Z",
-   "name": "SaaS Access LAB",
-   "catalogId": "D104",
-   "kind": "Demo",
-   "description": "Just-in-time, time-bound access to six platforms (GitHub, GitLab, Salesforce, Snowflake, Databricks, Google Workspace): approval chains, blocked self-approval, expiry, receipts, drift. Mock is read-only; Live runs real local state; a Privilege check sends the request through the live AI Guard.",
-   "url": "http://localhost:7250",
-   "healthPath": "/api/health",
-   "composeFile": "saas-access-LAB/docker-compose.yml",
-   "tags": [
-    "pingone-privilege",
-    "agent-identity",
-    "authorization-policy",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/saas-access-LAB"
-  },
-  {
-   "id": "agent-governance-lab",
-   "addedAt": "2026-11-04T23:13:17Z",
-   "name": "Agent Governance LAB",
-   "catalogId": "D105",
-   "kind": "Demo",
-   "description": "AI Platform Agents: cross-cloud inventory of 13 sources, a five-level permission review, custodian approval before any action, remediation, a safe sync that never mistakes silence for deletion, AgentCore gateway governance and private-network discovery. Mock or Live. All product claims UNVERIFIED.",
-   "url": "http://localhost:7300",
-   "healthPath": "/api/health",
-   "composeFile": "agent-governance-LAB/docker-compose.yml",
-   "tags": [
-    "pingone-privilege",
-    "agent-identity",
-    "agent-controls",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/agent-governance-LAB"
-  },
-  {
-   "id": "mcp-surface-lab",
-   "addedAt": "2026-11-04T23:16:45Z",
-   "name": "MCP Surface LAB",
-   "catalogId": "D106",
-   "kind": "Demo",
-   "description": "The MCP gateway in front of every MCP server: aggregate policy caps, entitlement-aware discovery, OpenAPI to MCP, five backend credential modes, a verified-server catalog, OAuth 2.1 with PKCE and CIMD, approval-gated creation. Simulates the 2026-11-02 release claims. Mock or Live. UNVERIFIED.",
-   "url": "http://localhost:7350",
-   "healthPath": "/api/health",
-   "composeFile": "mcp-surface-LAB/docker-compose.yml",
-   "tags": [
-    "pingone-privilege",
-    "mcp-security",
-    "mcp",
-    "simulated",
-    "mcp-server-built"
-   ],
-   "repo": "https://github.com/curtismu7/mcp-surface-LAB"
-  },
-  {
-   "id": "federated-identity-lab",
-   "addedAt": "2026-11-04T23:15:12Z",
-   "name": "Federated Identity LAB",
-   "catalogId": "D107",
-   "kind": "Demo",
-   "description": "Simulates the 2026-11-02 Ping release claims for Federated Identity (short-lived tokens, issuer, subject and audience binding, lifetimes, key refresh, revocation) and Self-Hosted Agents, with real local RS256 verification. Mock tables or a Live local engine. Every product claim is UNVERIFIED.",
-   "url": "http://localhost:7400",
-   "healthPath": "/api/health",
-   "composeFile": "federated-identity-LAB/docker-compose.yml",
-   "tags": [
-    "pingone-privilege",
-    "agent-identity",
-    "token-security",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/federated-identity-LAB"
-  },
-  {
-   "id": "secrets-vault-lab",
-   "addedAt": "2026-11-04T23:19:39Z",
-   "name": "Secrets Vault LAB",
-   "catalogId": "D108",
-   "kind": "Demo",
-   "description": "A per-user credential vault (self-service, no administrator override, real AES-256-GCM, injected by a simulated gateway) and secret store management over five mock providers (AWS, GCP, Azure, Delinea, CyberArk). Mock or Live mode. Every product claim is UNVERIFIED on our tenant.",
-   "url": "http://localhost:7450",
-   "healthPath": "/api/health",
-   "composeFile": "secrets-vault-LAB/docker-compose.yml",
-   "tags": [
-    "pingone-privilege",
-    "ai-agent-security",
-    "agent-identity",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/secrets-vault-LAB"
-  },
-  {
-   "id": "ai-policies-lab",
-   "addedAt": "2026-11-04T23:14:02Z",
-   "name": "AI Policies LAB",
-   "catalogId": "D109",
-   "kind": "Demo",
-   "description": "Scope and HITL: four layered scope checks (surface, application, action, end user) on a real RS256 token you mint locally, a call held for a person, single-use approvals bound to the exact call, fail closed. Simulates release claims, all UNVERIFIED. Mock tables or a Live local engine.",
-   "url": "http://localhost:7500",
-   "healthPath": "/api/health",
-   "composeFile": "ai-policies-LAB/docker-compose.yml",
-   "tags": [
-    "pingone-privilege",
-    "authorization-policy",
-    "human-in-the-loop",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/ai-policies-LAB"
-  },
-  {
-   "id": "p1az-inspector",
-   "addedAt": "2026-11-02T13:46:42-06:00",
-   "name": "P1AZ Inspector LAB",
-   "kind": "Tester",
-   "description": "Send decisions to PingOne Authorize and see the verdict, statements and the exact call. One UI runs the offline Mock engine or, owner-run, your own PingOne environment or on-prem PingAuthorize (Live).",
-   "url": "http://localhost:4840",
-   "healthPath": "/api/health",
-   "composeFile": "p1az-inspector-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "catalogId": "B2",
-   "notes": "Host-run: npm start (port 4840). Docker: docker compose up --build -d (publishes 127.0.0.1:4840 only). Catalog B2 is a stand-in (the nearest row, Authorize policy playground): the catalog has no exact row. Mock needs no setup. Live is owner-run and is set up on the Settings page; request and response shapes are UNVERIFIED.",
-   "tags": [
-    "pingone-authorize",
-    "authorization-policy",
-    "simulated",
-    "real",
-    "oauth"
-   ],
-   "repo": "https://github.com/curtismu7/p1az-inspector-LAB"
-  },
-  {
-   "id": "agent-gateway-inspector",
-   "addedAt": "2026-11-02T13:46:42-06:00",
-   "name": "Agent Gateway Inspector LAB",
-   "catalogId": "D54",
-   "kind": "Tester",
-   "description": "Inspector for an AI/agent gateway (PingOne Privilege) that allows, denies or holds agent tool calls for a human, with a decision buffer and a verifiable audit trail. Driven by an in-process stub gateway; nothing real is touched. Mock only: Live is refused.",
-   "url": "http://localhost:5850",
-   "healthPath": "/api/health",
-   "composeFile": "agent-gateway-inspector-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "notes": "Host-run: npm ci && npm run build && npm start (port 5850; npm run doctor checks it). Or: HOST_PORT=5850 docker compose up --build -d (published on 127.0.0.1 only). Mock mode only, loopback-only, zero outbound calls; the Live toggle is refused. The composeFile is relative to the folder the demo repos sit in.",
-   "tags": [
-    "pingone-privilege",
-    "agent-gateway",
-    "agent-controls",
-    "human-in-the-loop",
-    "simulated",
-    "real",
-    "mcp"
-   ],
-   "repo": "https://github.com/curtismu7/agent-gateway-inspector-LAB"
-  },
-  {
-   "id": "pingone-mcp-inspector",
-   "addedAt": "2026-11-02T13:46:42-06:00",
-   "name": "PingOne MCP Inspector LAB",
-   "catalogId": "D3",
-   "kind": "Tester",
-   "description": "Connect to PingOne's hosted MCP server (worker or interactive admin sign-in) or any MCP server, list its tools with a safety class, and call them read-only by default. Mock by default; Live is owner-run.",
-   "url": "http://localhost:5201",
-   "healthPath": "/api/health",
-   "composeFile": "pingone-mcp-inspector-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "notes": "Host-run: npm ci && npm run build && npm start (port 5201; npm run doctor checks it). Or: HOST_PORT=5201 docker compose up --build -d (published on 127.0.0.1 only). Mock mode needs no setup; Live is refused until the owner sets PINGONE_MCP_INSPECTOR_MODE=live. Not tested against a real tenant. The composeFile is relative to the folder the demo repos sit in.",
-   "tags": [
-    "pingone-mcp",
-    "mcp-security",
-    "simulated",
-    "real",
-    "mcp"
-   ],
-   "repo": "https://github.com/curtismu7/pingone-mcp-inspector-LAB"
-  },
-  {
-   "id": "agent-audit-trail-lab",
-   "addedAt": "2026-11-02T13:46:42-06:00",
-   "name": "Agent Audit Trail LAB",
-   "kind": "Demo",
-   "description": "Who did what through which agent: seeded synthetic events from six sources, a read-only audit tool surface, and a correlation join into one timeline per action, with a tamper-evident hash chain. Fully mock; Live is refused.",
-   "url": "http://localhost:6600",
-   "healthPath": "/api/health",
-   "composeFile": "agent-audit-trail-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "catalogId": "D17",
-   "notes": "Host-run: npm ci && npm run build && npm start (port 6600; npm run doctor checks it). Or: docker compose up --build -d (publishes 127.0.0.1:6600 only; HOST_PORT changes it, and the shelf's Start button does not set HOST_PORT). Mock only: the Live toggle explains why it is not available.",
-   "tags": [
-    "pingone-privilege",
-    "audit-observability",
-    "agent-identity",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/agent-audit-trail-LAB"
-  },
-  {
-   "id": "progressive-trust-ladder",
-   "addedAt": "2026-11-02T13:46:42-06:00",
-   "name": "Progressive trust ladder LAB",
-   "catalogId": "D29",
-   "kind": "Demo",
-   "description": "A personal agent climbs four rungs of trust as risk and amount rise: sign-in, step-up, then a CIBA approval on a mock phone. Mock only, simulated, no tenant. Live is refused: the lab has no live provider.",
-   "url": "http://127.0.0.1:6211",
-   "healthPath": "/api/health",
-   "composeFile": "progressive-trust-ladder-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "notes": "Host-run: npm ci, npm run build, npm start (port 6211, PTL_PORT to change within 6200-6249). Docker: docker compose up --build -d (published on 127.0.0.1:6211 only). Mock only: no tenant, no credentials, no outbound network. composeFile is relative to the shelf's demo root (the folder that holds the demo repos).",
-   "tags": [
-    "agent-controls",
-    "sign-in-and-mfa",
-    "simulated",
-    "ciba",
-    "step-up",
-    "pingid",
-    "pingone"
-   ],
-   "repo": "https://github.com/curtismu7/progressive-trust-ladder-LAB",
-   "pingProducts": [
-    "pingone"
-   ]
-  },
-  {
-   "id": "chatgpt-mcp-flow",
-   "addedAt": "2026-11-02T13:46:42-06:00",
-   "name": "AI assistant to MCP authorization flow LAB",
-   "catalogId": "D25",
-   "kind": "Demo",
-   "description": "How a remote MCP server behind an enterprise front door is authorized when a public AI assistant calls it for a signed-in user: connector catalog, PKCE, resource indicators, IdP hand-off, RFC 8693 exchange. 20 messages backed by real mock exchanges. Mock only; product claims UNVERIFIED.",
-   "url": "http://localhost:6650",
-   "healthPath": "/api/health",
-   "composeFile": "chatgpt-mcp-flow-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "notes": "Host-run: npm ci && npm run build && npm start (port 6650; mock actors on 6651-6655, MCP_FLOW_STUB_BASE moves them; npm run doctor checks it). Docker: HOST_PORT=6650 docker compose up --build -d (published on 127.0.0.1 only). Mock only; Live is refused. Catalog id D25 is carried over from the old repo and is still a placeholder (to confirm).",
-   "tags": [
-    "pingone",
-    "mcp-security",
-    "real",
-    "oauth",
-    "mcp"
-   ],
-   "repo": "https://github.com/curtismu7/chatgpt-mcp-flow-LAB",
-   "pingProducts": [
-    "pingone"
-   ]
-  },
-  {
-   "id": "mock-authorize",
-   "addedAt": "2026-11-02T13:46:42-06:00",
-   "name": "Mock Authorize LAB",
-   "catalogId": "G4",
-   "kind": "Tester",
-   "description": "A local stand-in for PingOne Authorize: editable rules, a Try page, a decision log, and a PingOne-shaped token, decision and recent-decisions API that clients like the P1AZ Inspector can call. Simulated.",
-   "url": "http://localhost:4850",
-   "healthPath": "/api/health",
-   "composeFile": "mock-authorize-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "notes": "Host-run: npm start (port 4850). Docker: HOST_PORT=4850 docker compose up --build -d (published on 127.0.0.1 only). Mock is the only mode; there is no live mode. Point the P1AZ Inspector's Live mode at http://127.0.0.1:4850/pingone (see Connect).",
-   "tags": [
-    "pingone-authorize",
-    "authorization-policy",
-    "simulated",
-    "oauth"
-   ],
-   "repo": "https://github.com/curtismu7/mock-authorize-LAB"
-  },
-  {
-   "id": "stolen-token-lab",
-   "addedAt": "2026-11-02T13:46:42-06:00",
-   "name": "Stolen-token LAB",
-   "catalogId": "C22",
-   "kind": "Tester",
-   "description": "Replay a captured access token through a mock gateway and see what stops it: nothing (bearer), audience binding, DPoP (RFC 9449), or mTLS certificate binding (RFC 8705, simulated). Mock mode only; Live is refused.",
-   "url": "http://localhost:4950",
-   "healthPath": "/api/health",
-   "composeFile": "stolen-token-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "notes": "Host-run: ./scripts/run.sh (port 4950). Mock only: no tenant, no credentials. Docker: HOST_PORT=4950 docker compose up --build -d (published on 127.0.0.1 only). composeFile is relative to the demo root (the folder above this checkout).",
-   "tags": [
-    "token-security",
-    "simulated",
-    "dpop",
-    "mtls",
-    "pingone",
-    "pingfederate"
-   ],
-   "repo": "https://github.com/curtismu7/stolen-token-LAB",
-   "pingProducts": [
-    "pingfederate"
-   ]
-  },
-  {
-   "id": "mcp-elicitation-lab",
-   "addedAt": "2026-11-02T13:46:42-06:00",
-   "name": "MCP Elicitation LAB",
-   "catalogId": "D37",
-   "kind": "Tester",
-   "description": "An MCP server mid-tool-call asks the person for more: form mode and URL mode, accept / decline / cancel, -32042, and the spec's safety rules, with findings when a server breaks them. Mock server and mock client; nothing is fetched.",
-   "url": "http://localhost:6800",
-   "healthPath": "/api/health",
-   "composeFile": "mcp-elicitation-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "notes": "Host-run: npm start (port 6800). Docker: HOST_PORT=6800 docker compose up --build -d (published on 127.0.0.1 only). Mock only: no tenant, no credentials, no outbound call. composeFile is relative to the folder that holds the clone (a placeholder the shelf resolves). Targets MCP spec 2025-11-25; the draft differs (see the page's Spec basis).",
-   "tags": [
-    "mcp-security",
-    "simulated",
-    "mcp",
-    "pingone-privilege"
-   ],
-   "repo": "https://github.com/curtismu7/mcp-elicitation-LAB"
-  },
-  {
-   "id": "mcp-tools",
-   "addedAt": "2026-11-04T23:16:50Z",
-   "name": "MCP inspector",
-   "catalogId": "D3",
-   "kind": "Tester",
-   "description": "Connect to an MCP server, list its tools, resources and prompts, scan them, then call tools behind a confirm step. One app with the scanner (D4).",
-   "url": "http://localhost:4810",
-   "healthPath": "/api/health",
-   "composeFile": "mcp-tools-LAB/docker-compose.yml",
-   "tags": [
-    "mcp",
-    "mcp-security",
-    "tool-poisoning",
-    "simulated",
-    "real",
-    "mcp-server-built",
-    "pingone-privilege"
-   ],
-   "repo": "https://github.com/curtismu7/mcp-tools-LAB"
-  },
-  {
-   "id": "mcp-scanner",
-   "addedAt": "2026-11-04T23:16:50Z",
-   "name": "MCP scanner",
-   "catalogId": "D4",
-   "kind": "Tester",
-   "description": "Scan the metadata an MCP server serves, or a pasted tools/list snapshot, for tool poisoning before an agent reads it. Reports; never blocks. Same app as the inspector (D3).",
-   "url": "http://localhost:4810",
-   "healthPath": "/api/health",
-   "composeFile": "mcp-tools-LAB/docker-compose.yml",
-   "tags": [
-    "mcp",
-    "mcp-security",
-    "tool-poisoning",
-    "simulated",
-    "real",
-    "mcp-server-built",
-    "pingone-privilege"
-   ],
-   "repo": "https://github.com/curtismu7/mcp-tools-LAB"
-  },
-  {
-   "id": "mcp-resource-server",
-   "addedAt": "2026-11-04T23:16:38Z",
-   "name": "MCP resource server",
-   "catalogId": "D0",
-   "kind": "Tool",
-   "description": "A config-driven MCP resource server: banking and healthcare verticals defined by files, answered from bundled SQLite, token-protected (RFC 9728). Runs offline; loopback only.",
-   "url": "http://localhost:8081",
-   "healthPath": "/api/health",
-   "composeFile": "mcp-resource-server-LAB/docker-compose.yml",
-   "tags": [
-    "mcp",
-    "mcp-server-built",
-    "oauth",
-    "simulated",
-    "pingone"
-   ],
-   "repo": "https://github.com/curtismu7/mcp-resource-server-LAB"
-  },
-  {
-   "id": "deploy-test-lab",
-   "addedAt": "2026-11-04T23:15:00Z",
-   "name": "Deploy Test LAB",
-   "kind": "Tool",
-   "description": "Throwaway app that exists to exercise the shelf's one-click Deploy: clone, build, run. One page and a demo-health/1 endpoint. Not part of any demo story.",
-   "url": "http://localhost:5590",
-   "healthPath": "/api/health",
-   "composeFile": "deploy-test-LAB/docker-compose.yml",
-   "repo": "https://github.com/curtismu7/deploy-test-LAB",
-   "where": "installed",
-   "tags": [
-    "simulated",
-    "pingone"
-   ]
-  },
-  {
-   "id": "jev-lab",
-   "addedAt": "2026-11-04T23:16:01Z",
-   "name": "JEV Decision Model LAB",
-   "catalogId": "D113",
-   "kind": "Demo",
-   "description": "Judge an agent's decisions against a policy: attack/innocent/intent corpora, bake-offs between models, a threshold-policy slider. Mock engine or your own model endpoint.",
-   "url": "http://127.0.0.1:7550",
-   "healthPath": "/api/health",
-   "composeFile": "jev-lab-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "tags": [
-    "ai-agent-security",
-    "agent-identity",
-    "authorization-policy",
-    "oauth",
-    "learning",
-    "simulated",
-    "real",
-    "pingone"
-   ],
-   "where": "installed",
-   "repo": "https://github.com/curtismu7/jev-lab-LAB",
-   "pingProducts": [
-    "pingone"
-   ]
-  },
-  {
-   "id": "obo-lab",
-   "addedAt": "2026-11-04T23:17:59Z",
-   "name": "OBO Delegation Inspector LAB",
-   "catalogId": "D111",
-   "kind": "Demo",
-   "description": "Seven steps of RFC 8693 on-behalf-of delegation: sub kept, act added, aud+scope narrowed; downstream accepts the delegated token and refuses the person's own. Mock engine or your PingOne tenant.",
-   "url": "http://127.0.0.1:7560",
-   "healthPath": "/api/health",
-   "composeFile": "obo-lab-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "tags": [
-    "token-exchange",
-    "agent-identity",
-    "token-security",
-    "oauth",
-    "ai-agent-security",
-    "pingone",
-    "simulated",
-    "real"
-   ],
-   "where": "installed",
-   "repo": "https://github.com/curtismu7/obo-lab-LAB",
-   "pingProducts": [
-    "pingone"
-   ]
-  },
-  {
-   "id": "jit-lab",
-   "addedAt": "2026-11-04T23:16:06Z",
-   "name": "JIT Ephemeral Credentials LAB",
-   "catalogId": "D112",
-   "kind": "Demo",
-   "description": "Standing (30 d) vs just-in-time (300 s, tool-bound) agent credentials; replay the captured copy and watch one stay accepted and the other die; tool revocation. Mock or Real via the shared local PingFederate (rule 20) or your PingOne tenant.",
-   "url": "http://127.0.0.1:7570",
-   "healthPath": "/api/health",
-   "composeFile": "jit-lab-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "tags": [
-    "token-security",
-    "agent-identity",
-    "token-exchange",
-    "oauth",
-    "pingfederate",
-    "ai-agent-security",
-    "simulated",
-    "real"
-   ],
-   "where": "installed",
-   "repo": "https://github.com/curtismu7/jit-lab-LAB",
-   "pingProducts": [
-    "pingfederate"
-   ]
-  },
-  {
-   "id": "ping-services-stub",
-   "addedAt": "2026-11-04T23:18:31Z",
-   "name": "Ping Services Stub LAB",
-   "catalogId": "D114",
-   "kind": "Tester",
-   "description": "One stub exercising every shared Ping service the family deploys: shared local PingFederate, PingGateway, Privilege Agent Gateway, PingOne (SaaS), PingOne Privilege console, and the SE-K8s PingFederate. One real, read-only call per service; Mock/Real toggle; reuses shared infra (shared-first rule).",
-   "url": "http://127.0.0.1:6300",
-   "healthPath": "/api/health",
-   "composeFile": "ping-services-stub-LAB/deploy/docker-compose.yml",
-   "composeOverlays": [],
-   "tags": [
-    "pingfederate",
-    "pinggateway",
-    "pingone",
-    "pingone-privilege",
-    "real",
-    "simulated"
-   ],
-   "where": "installed",
-   "repo": "https://github.com/curtismu7/ping-services-stub-LAB",
-   "group": "C"
-  },
-  {
-   "id": "a2a-lab",
-   "addedAt": "2026-11-07T04:28:10Z",
-   "name": "A2A Lab",
-   "catalogId": "D122",
-   "kind": "Demo",
-   "description": "A generalist agent hands off to a specialist: two RFC 8693 exchanges build the nested act chain, scope narrowed per hop. The gateway routes the call only when the specialist is registered; an unregistered identity is denied. Mock of UC2/2.5/2.6/2.7.",
-   "url": "http://localhost:7700",
-   "healthPath": "/api/health",
-   "composeFile": "a2a-lab-LAB/docker-compose.yml",
-   "tags": [
-    "agent-gateway",
-    "ai-agent-security",
-    "agent-controls",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/a2a-lab-LAB"
-  },
-  {
-   "id": "idjag-runner",
-   "addedAt": "2026-11-06T11:27:11Z",
-   "name": "Tarun ID-JAG Runner",
-   "kind": "Tester",
-   "description": "Runs the PingFederate ID-JAG (cross-app access) demo without Postman: password grant + refresh, RFC 8693 exchange for the ID-JAG assertion, jwt-bearer redeem + introspection, four refusal cases, and a JWKS inspector. Real PingFederate 13.1+ only.",
-   "url": "http://localhost:4780",
-   "healthPath": "/api/health",
-   "composeFile": "idjag-runner-LAB/deploy/docker-compose.yml",
-   "tags": [
-    "pingfederate",
-    "id-jag",
-    "token-exchange",
-    "real"
-   ],
-   "repo": "https://github.com/curtismu7/idjag-runner-LAB"
-  },
-  {
-   "id": "agent-preferences-lab",
-   "addedAt": "2026-11-06T12:23:33Z",
-   "name": "Agent Preferences Lab",
-   "kind": "Demo",
-   "description": "The user sets what their AI agent may do — allowed action tiers, a spend cap, what happens when Protect detects an AI agent — enforced at a mock MCP tool boundary: permit, human approval (HITL) or deny. Standalone mock of the AI-DEMO2 agentPreferences feature. Mock only.",
-   "url": "http://localhost:7660",
-   "healthPath": "/api/health",
-   "composeFile": "agent-preferences-lab/docker-compose.yml",
-   "tags": [
-    "agent-controls",
-    "human-in-the-loop",
-    "ai-agent-security",
-    "simulated",
-    "pingone-protect"
-   ],
-   "repo": "https://github.com/curtismu7/agent-preferences-lab-LAB"
-  },
-  {
-   "id": "delegation-lab",
-   "addedAt": "2026-11-07T03:16:05Z",
-   "name": "Delegation Lab",
-   "catalogId": "D120",
-   "kind": "Demo",
-   "description": "Consent mints a delegated token with act={agent}; the gateway validates the chain (actor allow-list, no upstream audience). Directory groups are read EVERY decision: outside the group is denied regardless of scopes; premium expands tools and ceiling. Mock of UC1/UC9/UC9A/UC21.",
-   "url": "http://localhost:7690",
-   "healthPath": "/api/health",
-   "composeFile": "delegation-lab-LAB/docker-compose.yml",
-   "tags": [
-    "agent-gateway",
-    "ai-agent-security",
-    "agent-controls",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/delegation-lab-LAB"
-  },
-  {
-   "id": "demo-field-guide",
-   "addedAt": "2026-11-05T19:17:42Z",
-   "name": "Demo field guide LAB",
-   "catalogId": "D115",
-   "kind": "Tool",
-   "description": "A JSON-driven card-deck handoff page: edit data/cards.json (title, base URL, sections, cards) and the page renders it. Genericized from the AI-DEMO2 personal-agents handoff page; no baked-in routes or credentials. Each deployment points at its own demo surfaces.",
-   "url": "http://localhost:7590",
-   "healthPath": "/api/health",
-   "composeFile": "demo-field-guide-LAB/docker-compose.yml",
-   "tags": [
-    "learning",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/demo-field-guide-LAB"
-  },
-  {
-   "id": "diagram-prove-lab",
-   "addedAt": "2026-11-06T15:03:49Z",
-   "name": "Diagram Prove Lab",
-   "kind": "Tool",
-   "description": "Validated personal-agent (ChatGPT) and digital-assistant diagrams as diagram-studio data, with a Prove-it-live checklist: each token claim (RFC 8693 sub+act, scope narrowing, HITL) maps to a real prompt and its evidence. Movable boxes, Simulate, Reset, Mock/Real toggle.",
-   "url": "http://localhost:7710",
-   "healthPath": "/api/health",
-   "composeFile": "diagram-prove-lab/docker-compose.yml",
-   "tags": [
-    "learning",
-    "simulated",
-    "real"
-   ],
-   "repo": "https://github.com/curtismu7/diagram-prove-lab-LAB"
-  },
-  {
-   "id": "hitl-mfa-lab",
-   "addedAt": "2026-11-06T22:32:05Z",
-   "name": "HITL MFA Lab",
-   "catalogId": "D119",
-   "kind": "Demo",
-   "description": "An agent's money movement gated by a mock authorization policy: amount bands decide PERMIT, human consent (HITL), MFA step-up or DENY, and CIBA asks for out-of-band approval on the user's phone. Single-use, amount-bound receipts. Mock of the AI-DEMO2 HITL track (UC7/UC8/UC22).",
-   "url": "http://localhost:7680",
-   "healthPath": "/api/health",
-   "composeFile": "hitl-mfa-lab-LAB/docker-compose.yml",
-   "tags": [
-    "human-in-the-loop",
-    "ciba",
-    "step-up",
-    "agent-controls",
-    "simulated",
-    "real"
-   ],
-   "repo": "https://github.com/curtismu7/hitl-mfa-lab-LAB"
-  },
-  {
-   "id": "mcp-gateway-lab",
-   "addedAt": "2026-11-06T15:38:18Z",
-   "name": "MCP Gateway Lab",
-   "kind": "Demo",
-   "description": "A third-party weather MCP server scoped at an agent gateway: an admin-editable policy is enforced at the edge, so a denied call never reaches the backend and switching the policy flips the same call with no restart. Mock of the AI-DEMO2 weather-mcp showcase (UC30/31/32).",
-   "url": "http://localhost:7670",
-   "healthPath": "/api/health",
-   "composeFile": "mcp-gateway-lab-LAB/docker-compose.yml",
-   "tags": [
-    "mcp",
-    "mcp-security",
-    "agent-gateway",
-    "simulated",
-    "real"
-   ],
-   "repo": "https://github.com/curtismu7/mcp-gateway-lab-LAB"
-  },
-  {
-   "id": "observability-lab",
-   "addedAt": "2026-11-07T14:26:25Z",
-   "name": "Observability Lab",
-   "catalogId": "D123",
-   "kind": "Demo",
-   "description": "Follow a log line from PingOne, PingFederate and Ping Gateway to a searchable, alertable store, with Privilege sensor and MCP gateway lines too. Seeded mock logs, a query box, three alert rules and a label lab that shows the silent failure of a missing relabel rule. Real reads one loopback Loki.",
-   "url": "http://localhost:7800",
-   "healthPath": "/api/health",
-   "composeFile": "observability-LAB/docker-compose.yml",
-   "tags": [
-    "pingone",
-    "pingfederate",
-    "pinggateway",
-    "audit-observability",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/observability-LAB"
-  },
-  {
-   "id": "privilege-logging-lab",
-   "addedAt": "2026-11-07T21:35:14Z",
-   "name": "Privilege Logging Lab",
-   "kind": "Tester",
-   "description": "Drive each Privilege gateway use case and see what gets logged, scored on user, agent, tool and policy decision. Mock replays 17 transactions measured on 2026-11-07; Real (owner-run) sends them to your gateway and reads the log back. The gaps are listed, not hidden.",
-   "url": "http://localhost:7801",
-   "healthPath": "/api/health",
-   "composeFile": "privilege-logging-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "pingProducts": [],
-   "notes": "Host-run: ./scripts/run.sh (port 7801). Mock needs no tenant, key or network. Docker: HOST_PORT=7801 docker compose up --build -d (published on 127.0.0.1 only; Mock by default). Real: set PRIV_LOG_GATEWAY_URL and PRIV_LOG_AGENT_KEY (and optionally PRIV_LOG_SEARCH_URL, PRIV_LOG_SEARCH_INDEX) in ~/Development/.env, then use the Real toggle and confirm the origins. No catalog row matches yet, so no catalogId; the owner assigns one with the board row.",
-   "repo": "https://github.com/curtismu7/privilege-logging-LAB",
-   "tags": [
-    "pingone-privilege",
-    "agent-gateway",
-    "audit-observability",
-    "mcp-security",
-    "simulated",
-    "real"
-   ]
-  },
-  {
-   "id": "field-notes-lab",
-   "addedAt": "2026-11-08T03:12:08Z",
-   "name": "Field Notes",
-   "kind": "Tool",
-   "description": "A library of pages about our apps and what we learned: findings, how-tos and investigations, one Markdown file each. Mock shows the sanitized pages shipped in the repo; Real (owner-run, loopback only) shows a local folder of full notes.",
-   "url": "http://localhost:7804",
-   "healthPath": "/api/health",
-   "composeFile": "field-notes-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "pingProducts": [],
-   "notes": "Host-run: ./scripts/run.sh (port 7804). Docker: HOST_PORT=7804 docker compose up --build -d (published on 127.0.0.1 only; Mock only). Real: set FIELD_NOTES_DIR in ~/Development/.env to a folder of .md pages outside the repo and run on the host. No catalog row matches yet, so no catalogId; the owner assigns one with the board row.",
-   "repo": "https://github.com/curtismu7/field-notes-LAB",
-   "tags": [
-    "learning",
-    "simulated",
-    "real"
-   ],
-   "where": "installed"
-  },
-  {
-   "id": "aggregate-entitlement-lab",
-   "addedAt": "2026-11-08T05:04:20Z",
-   "name": "Aggregate entitlement lab",
-   "kind": "Tester",
-   "description": "See how an MCP aggregate lists only the tools each caller may use and refuses the rest by name: six checks, guided steps and a diagram. Mock simulates the Ping release claim (UNVERIFIED on our tenant); Real measures your own gateway's aggregate apps with your agent keys.",
-   "url": "http://localhost:7802",
-   "healthPath": "/api/health",
-   "composeFile": "aggregate-entitlement-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "pingProducts": [],
-   "notes": "Host-run: npm run build, then npm start (port 7802, loopback only). Docker: HOST_PORT=7802 docker compose up --build -d (publishes 127.0.0.1:7802 only). Mock needs nothing. Real: set AGG_ENT_GW_URL, AGG_ENT_GW_APPS and AGG_ENT_GW_KEY_<NAME> in ~/Development/.env, then use the Real toggle. Fork of mcp-tools-LAB (its Entitled listing page). Catalog id D125 (owner, 2026-11-08). composeFile is relative to the shelf's demo root.",
-   "repo": "https://github.com/curtismu7/aggregate-entitlement-LAB",
-   "catalogId": "D125",
-   "alsoCatalogIds": [],
-   "tags": [
-    "mcp",
-    "mcp-security",
-    "pingone-privilege",
-    "agent-gateway",
-    "simulated",
-    "real"
-   ],
-   "where": "installed"
-  },
-  {
-   "id": "pingone-events-lab",
-   "addedAt": "2026-11-08T03:55:13Z",
-   "name": "PingOne Events Lab",
-   "catalogId": "D124",
-   "kind": "Demo",
-   "description": "See what PingOne delivers through a webhook subscription: an events page, delivery health (including a site that answers 200 with a web page and silently discards events) and optional forwarding to Elasticsearch for Kibana. Mock needs nothing. Also runs on SE K8 so PingOne can reach it.",
-   "url": "http://localhost:7803",
-   "healthPath": "/api/health",
-   "composeFile": "pingone-events-LAB/docker-compose.yml",
-   "tags": [
-    "pingone",
-    "audit-observability",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/pingone-events-LAB"
-  },
-  {
-   "id": "ciba-hitl-lab",
-   "addedAt": "2026-11-04T23:14:23Z",
-   "name": "CIBA HITL Lab",
-   "catalogId": "C1",
-   "kind": "Demo",
-   "description": "Twenty-four steps from scope to tool with a human in the loop: one login, one token exchange, an OBO token that keeps the full scope set; a write is denied with a CIBA identifier, the gateway rewrites the 403 into a JSON-RPC 2.0 error, the human approves, the agent replays, Authorize verifies…",
-   "url": "http://localhost:7580",
-   "healthPath": "/api/health",
-   "composeFile": "ciba-hitl-lab/docker-compose.yml",
-   "composeOverlays": [],
-   "repo": "https://github.com/curtismu7/ciba-hitl-lab-LAB",
-   "tags": [
-    "ciba",
-    "token-exchange",
-    "authorization-policy",
-    "simulated",
-    "human-in-the-loop",
-    "pingfederate"
-   ],
-   "where": "installed"
-  },
-  {
-   "id": "muse",
-   "addedAt": "2026-11-04T23:17:09Z",
-   "name": "Muse",
-   "catalogId": "D21",
-   "kind": "Demo",
-   "description": "A personal agent (Muse) calls tools through a PingOne Privilege-shaped gateway, with a DaVinci-shaped detection flow in front. Simulated: no tenant, no OBO.",
-   "url": "http://127.0.0.1:5100",
-   "healthPath": "/api/health",
-   "composeFile": "muse-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "repo": "https://github.com/curtismu7/muse-LAB",
-   "tags": [
-    "pingone-privilege",
-    "agent-gateway",
-    "agent-identity",
-    "ai-agent-security",
-    "simulated",
-    "pingone-authorize",
-    "pingone-protect"
-   ],
-   "where": "installed"
-  },
-  {
-   "id": "agentcore-pingone-demo-lab",
-   "addedAt": "2026-11-04T23:13:42Z",
-   "name": "AgentCore PingOne LAB",
-   "catalogId": "D114",
-   "kind": "Demo",
-   "description": "An AI agent on AWS Bedrock AgentCore Runtime whose identity comes from PingOne, in mock only: the M2M flow (the agent's own token), the USER_FEDERATION 3LO flow (a human login through the agent, four measured shapes), and on-behalf-of delegation. Mock/Real toggle; Real ships disabled.",
-   "url": "http://localhost:7601",
-   "healthPath": "/api/health",
-   "composeFile": "agentcore-pingone-demo-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "repo": "https://github.com/curtismu7/agentcore-pingone-demo-LAB",
-   "tags": [
-    "pingone",
-    "agent-identity",
-    "token-exchange",
-    "oauth",
-    "ai-agent-security",
-    "simulated",
-    "real",
-    "aws",
-    "aws-agentcore"
-   ],
-   "where": "installed"
-  },
-  {
-   "id": "meridian-a2a-hop",
-   "addedAt": "2026-11-04T23:16:57Z",
-   "name": "Meridian Pay A2A hop lab",
-   "catalogId": "D110",
-   "kind": "Demo",
-   "description": "Walk a delegated agent token chain one hop at a time: sign in, hand the job to a platform-signed external agent, exchange tokens (RFC 8693, third-party subject and actor), and call MCP tools through Privilege doors. Every hop shows sub/act/aud/scope, and refusals are demoed on purpose. Runs…",
-   "url": "http://127.0.0.1:7720",
-   "healthPath": "/api/health",
-   "composeFile": "meridian-a2a-hop-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "repo": "https://github.com/curtismu7/meridian-a2a-hop-LAB",
-   "tags": [
-    "pingone-privilege",
-    "pingone",
-    "a2a",
-    "token-exchange",
-    "ai-agent-security",
-    "simulated",
-    "real"
-   ],
-   "where": "installed"
-  },
-  {
-   "id": "gateway-suite-lab",
-   "addedAt": "2026-11-04T23:15:25Z",
-   "name": "AI Gateway Suite LAB",
-   "catalogId": "D118",
-   "kind": "Demo",
-   "description": "Relayed agent chat: preset prompts (access review, prompt injection, jailbreak, exfiltration, PII, tool misuse) travel Main Agent -> AI Gateway (A2A) -> Worker Agent -> AI Gateway (MCP) -> MCP tool on a movable ReactFlow diagram with a per-hop trace and AI Guard blocks; a Personal Agent tab connects",
-   "url": "http://localhost:5750",
-   "healthPath": "/api/health",
-   "composeFile": "gateway-suite-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "repo": "https://github.com/curtismu7/gateway-suite-LAB",
-   "tags": [
-    "a2a",
-    "mcp",
-    "agent-gateway",
-    "ai-agent-security",
-    "agent-controls",
-    "simulated"
-   ],
-   "where": "installed"
-  },
-  {
-   "id": "env-map-lab",
-   "addedAt": "2026-11-08T16:44:20Z",
-   "name": "Where Everything Runs",
-   "kind": "Tool",
-   "description": "What is running now, high level to low: AI-DEMO2 by tier and the LAB apps as two systems, then every running server with its links and observed request counts, plus request paths for a sample Personal Agent and Digital Worker. Mock is a sanitized sample; Real reads a snapshot you collect.",
-   "url": "http://localhost:7805",
-   "openPath": "/#/diagram",
-   "healthPath": "/api/health",
-   "composeFile": "env-map-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "pingProducts": [],
-   "notes": "Host-run: ./scripts/run.sh (port 7805). Docker: HOST_PORT=7805 docker compose up --build -d (published on 127.0.0.1 only; Mock only). Real (host only): run scripts/collect.sh --running-only, then derive-links.mjs and derive-traces.mjs on the snapshot it wrote (outside the repo), set ENV_MAP_SNAPSHOT in ~/Development/.env, run on the host. Optional files beside the snapshot: env-map.owners.json (AI-DEMO2 vs LAB split), env-map.flows.json, env-map.links.json. Opens on the Landscape view (#/diagram). No catalog row matches yet, so no catalogId; the owner assigns one with the board row.",
-   "repo": "https://github.com/curtismu7/env-map-LAB",
-   "tags": [
-    "learning",
-    "simulated",
-    "real"
-   ],
-   "where": "installed"
-  },
-  {
-   "id": "pingcli-lab",
-   "addedAt": "2026-11-09T13:17:47Z",
-   "name": "PingCLI Lab",
-   "catalogId": "D126",
-   "kind": "Demo",
-   "description": "Watch an admin automate PingOne with Ping CLI: 14 allow-listed, read-only pingcli commands streamed to the browser, an install -> init -> auth -> run guide, and an easy-read table. Mock plays canned output offline; Real runs pinned pingcli 1.2.0 against your own environment.",
-   "url": "http://localhost:7806",
-   "healthPath": "/api/health",
-   "composeFile": "pingcli-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "pingProducts": [],
-   "notes": "Host-run: ./scripts/run.sh (port 7806). Docker: docker compose up --build -d (published on 127.0.0.1 only). Mock needs no tenant and no credentials. Real: PINGONE_ENVIRONMENT_ID, PINGONE_REGION, PINGONE_CLIENT_ID, PINGONE_CLIENT_SECRET in ~/Development/.env (host) or passed through compose (Docker). Derived from the AI-DEMO2 /pingcli page. Catalog id D126 (owner, 2026-11-09).",
-   "tags": [
-    "pingone",
-    "learning",
-    "simulated",
-    "real"
-   ],
-   "repo": "https://github.com/curtismu7/pingcli-LAB",
-   "alsoCatalogIds": [],
-   "where": "installed"
-  },
-  {
-   "id": "mcp-skills-lab",
-   "addedAt": "2026-11-09",
-   "name": "MCP Skills LAB",
-   "catalogId": "D127",
-   "kind": "Tester",
-   "description": "Tests the MCP Skills extension (io.modelcontextprotocol/skills, SEP-2640): a skills server (Mock or Real), 23 hostile cases a correct host must catch, and a host verifier that checks digests, sizes, frontmatter, approvals and origins. Nothing is executed or fetched.",
-   "url": "http://localhost:7807",
-   "healthPath": "/api/health",
-   "composeFile": "mcp-skills-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "pingProducts": [],
-   "notes": "Host-run: npm start (port 7807). Docker: docker compose up --build -d (published on 127.0.0.1 only). Mock by default; Real reads SKILLS_DIR (read-only mount). No tenant, no credentials, no outbound call. Catalog id D127 (owner, 2026-11-09: next free after D126); no catalog row for it yet, like D123 to D126. UNVERIFIED against a vendor gateway.",
-   "tags": [
-    "mcp",
-    "mcp-security",
-    "tool-poisoning",
-    "simulated",
-    "real",
-    "mcp-server-built"
-   ],
-   "repo": "https://github.com/curtismu7/mcp-skills-LAB",
-   "where": "installed"
-  },
-  {
-   "id": "demo-map-lab",
-   "addedAt": "2026-11-10T12:56:31Z",
-   "name": "Demo Map",
-   "kind": "Tool",
-   "description": "A one-page map of the demo family: a row for the Personal Agent demo, the Digital Worker agent and each Ping product, with the standalone apps that belong in it and the AI-DEMO2 pages for it. Mock uses a made-up sample; Real reads your local shelf.",
-   "url": "http://localhost:7808",
-   "healthPath": "/api/health",
-   "composeFile": "demo-map-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "pingProducts": [],
-   "notes": "Host-run: ./scripts/run.sh (port 7808). Docker: HOST_PORT=7808 docker compose up --build -d (published on 127.0.0.1 only; Mock only). Real: copy .env.example to .env, set AI_DEMO2_URL (SHELF_URL defaults to http://127.0.0.1:4400) and run on the host. Rows are data/rows.json. No catalog row matches, so no catalogId; the owner assigns one with the board row.",
-   "repo": "https://github.com/curtismu7/demo-map-LAB",
-   "tags": [
-    "learning",
-    "simulated",
-    "real"
-   ],
-   "where": "installed"
-  },
-  {
-   "id": "privilege-k8-kits",
-   "addedAt": "2026-11-10",
-   "name": "Agent Privilege K8 Kits",
-   "kind": "Tool",
-   "description": "Download hub for the Agent Privilege Gateway Kubernetes deployment kits: the single-gateway quick-start package and the multi-gateway HA package (shared Redis, integrated load balancer), plus the shared 18-page deployment guide served inline. Read-only artifact server, offline.",
-   "url": "http://127.0.0.1:7809",
-   "healthPath": "/api/health",
-   "composeFile": "privilege-k8-kits-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "port": 7809,
-   "catalogId": "",
-   "tags": [
-    "pingone-privilege",
-    "simulated",
-    "learning"
-   ],
-   "where": "installed",
-   "repo": "https://github.com/curtismu7/privilege-k8-kits-LAB",
-   "pingProducts": []
-  },
-  {
-   "id": "ai-demo-standalone",
-   "name": "AI Demo Standalone",
-   "kind": "Demo",
-   "description": "A mock of the AI-DEMO2 dashboard: all 87 use cases in one catalog, run against one mock PDP (token, gateway, policy, then HITL obligations). Foundations, controls, HITL (UC7/8/22) and A2A hand-off (UC2/2.5/2.6/2.7) are wired; the other tracks are listed. Mock only; Real is reserved.",
-   "url": "http://localhost:7810",
-   "healthPath": "/api/health",
-   "composeFile": "ai-demo-standalone-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "pingProducts": [],
-   "notes": "Host-run: ./scripts/run.sh (port 7810). Mock needs no tenant and no credentials. Docker: HOST_PORT=7810 docker compose up --build -d (published on 127.0.0.1 only). Catalog id D128.",
-   "repo": "https://github.com/curtismu7/ai-demo-standalone-LAB",
-   "catalogId": "D128",
-   "alsoCatalogIds": [],
-   "addedAt": "2026-11-11T01:00:00Z",
-   "tags": [
-    "agent-gateway",
-    "ai-agent-security",
-    "agent-identity",
-    "authorization-policy",
-    "human-in-the-loop",
-    "agent-controls",
-    "ciba",
-    "step-up",
-    "a2a",
-    "simulated"
-   ],
-   "where": "installed"
-  },
-  {
-   "id": "privilege-owasp-lab",
-   "addedAt": "2026-11-11T17:22:17Z",
-   "name": "Privilege OWASP Lab",
-   "catalogId": "D000",
-   "kind": "Tester",
-   "description": "The OWASP Agentic AI Top 10 (ASI01-ASI10) with PingOne Privilege coverage: the slide-21 table from the Capability Overview deck, ten explained category cards, and the Gateway vs AIGuard split. The two stated gaps are labelled, not hidden. Mock is static deck wording offline; Real adds read-only live",
-   "url": "http://localhost:7811",
-   "healthPath": "/api/health",
-   "composeFile": "privilege-owasp-lab-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "pingProducts": [],
-   "notes": "Host-run: ./scripts/run.sh (port 7811). Docker: docker compose up --build -d (published on 127.0.0.1 only). Mock needs no tenant and no credentials. Real: PINGONE_ENVIRONMENT_ID, PINGONE_REGION, PINGONE_CLIENT_ID, PINGONE_CLIENT_SECRET in ~/Development/.env (host) or passed through compose (Docker). Derived from the AI-DEMO2 /privilege-owasp-top10 page. Catalog id D000 placeholder until the owner assigns one.",
-   "tags": [
-    "pingone-privilege",
-    "ai-agent-security",
-    "agent-identity",
-    "authorization-policy",
-    "learning",
-    "simulated",
-    "real"
-   ],
-   "repo": "https://github.com/curtismu7/privilege-owasp-lab-LAB",
-   "alsoCatalogIds": [],
-   "where": "installed"
-  },
-  {
-   "id": "pf-privilege-obo-lab",
-   "addedAt": "2026-11-11T22:53:57Z",
-   "name": "PF → Privilege OBO Lab",
-   "catalogId": "D000",
-   "kind": "Demo",
-   "description": "Simulated PingFederate to Privilege OBO chain: user SSO, RFC 8693 exchange (sub=user, act.sub=agent), federated-identity check, grant tiers, Cedar policy, Pass Agent Token passthrough. Interactive flow walk, eight scenarios, refusals mirror measured log lines, twelve-card issues panel. Mock only.",
-   "url": "http://localhost:7812",
-   "healthPath": "/api/health",
-   "composeFile": "pf-privilege-obo-LAB/docker-compose.yml",
-   "composeOverlays": [],
-   "pingProducts": [],
-   "notes": "Host-run: npm start (port 7812). Docker: docker compose up --build -d (published on 127.0.0.1 only). Mock needs no tenant and no credentials. Content pack: content-pack.json (validator PASS). Catalog id D000 placeholder until the owner assigns one.",
-   "tags": [
-    "pingone-privilege",
-    "pingfederate",
-    "agent-identity",
-    "token-exchange",
-    "authorization-policy",
-    "simulated"
-   ],
-   "repo": "https://github.com/curtismu7/pf-privilege-obo-LAB",
-   "alsoCatalogIds": [],
-   "where": "installed"
-  }
- ]
+  "demos": [
+    {
+      "id": "ai-gateway-client",
+      "addedAt": "2026-11-04T23:13:48Z",
+      "name": "Agent Privilege Client LAB",
+      "catalogId": "D20",
+      "kind": "Tester",
+      "description": "A local, no-login test client for an OAuth-protected MCP gateway. Shows one tool call through the gateway and directly, so the policy difference is visible.",
+      "url": "http://127.0.0.1:6880",
+      "healthPath": "/api/health",
+      "composeFile": "ai-gateway-client-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingone-privilege",
+        "agent-gateway",
+        "oauth",
+        "mcp",
+        "real"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/ai-gateway-client-LAB",
+      "pingProducts": [
+        "privilege-gateway"
+      ]
+    },
+    {
+      "id": "mcp-demo-client-privilege",
+      "addedAt": "2026-11-04T23:16:20Z",
+      "name": "MCP Demo Client for Privilege LAB",
+      "kind": "Demo",
+      "description": "Chat-first local MCP demo client for protected MCP demos behind a PingOne Privilege gateway.",
+      "url": "http://127.0.0.1:6884",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-demo-client-privilege-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "catalogId": "D2",
+      "tags": [
+        "pingone-privilege",
+        "mcp",
+        "oauth",
+        "real",
+        "agent-gateway"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/mcp-demo-client-privilege-LAB",
+      "pingProducts": [
+        "privilege-gateway"
+      ]
+    },
+    {
+      "id": "privilege-a2a-anthropic-demo",
+      "addedAt": "2026-11-04T23:19:14Z",
+      "name": "Privilege A2A Anthropic demo LAB",
+      "kind": "Demo",
+      "description": "Three Node processes that show an access review through A2A and MCP, on Anthropic or Google models.",
+      "url": "http://127.0.0.1:6881",
+      "healthPath": "/api/health",
+      "composeFile": "privilege-a2a-anthropic-demo-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingone-privilege",
+        "a2a",
+        "agent-identity",
+        "real",
+        "agent-gateway",
+        "pingone"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/privilege-a2a-anthropic-demo-LAB",
+      "pingProducts": [
+        "privilege-gateway",
+        "pingone"
+      ],
+      "catalogId": "D121"
+    },
+    {
+      "id": "id-jag-standalone",
+      "addedAt": "2026-11-04T23:15:43Z",
+      "name": "ID-JAG Standalone LAB",
+      "catalogId": "C1",
+      "kind": "Demo",
+      "description": "Token exchange with ID-JAG, using a mock authorization server and a sample MCP server.",
+      "url": "http://localhost:4720",
+      "healthPath": "/api/health",
+      "composeFile": "id-jag-standalone-LAB/deploy/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingfederate",
+        "id-jag",
+        "token-exchange",
+        "oauth",
+        "agent-identity",
+        "simulated",
+        "real"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/id-jag-standalone-LAB",
+      "pingProducts": [
+        "pingfederate"
+      ]
+    },
+    {
+      "id": "privilege-demo",
+      "addedAt": "2026-11-04T23:19:20Z",
+      "name": "Privilege demo LAB",
+      "kind": "Demo",
+      "description": "An AI agent's MCP tool calls pass a policy enforcement point that decides allow, deny or hold with Cedar. Runs offline in mock mode (in-process mock issuer and tool backends) or verifies Bearer tokens from your own PingFederate in live mode.",
+      "url": "http://127.0.0.1:4510",
+      "healthPath": "/api/health",
+      "composeFile": "privilege-demo-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "port": 4510,
+      "catalogId": "D1",
+      "tags": [
+        "authorization-policy",
+        "cedar",
+        "mcp",
+        "pingone-privilege",
+        "real",
+        "simulated",
+        "pingfederate",
+        "pingone"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/privilege-demo-LAB",
+      "pingProducts": [
+        "pingfederate",
+        "pingone"
+      ]
+    },
+    {
+      "id": "privilege-map",
+      "addedAt": "2026-11-04T23:12:16Z",
+      "name": "Privilege Map LAB",
+      "kind": "Demo",
+      "description": "The PingOne Privilege Federated Identity model as ReactFlow diagrams you can drag and walk through, plus 21 Privilege feature cards, stories and a talk track. Mock only.",
+      "url": "http://127.0.0.1:5301",
+      "healthPath": "/api/health",
+      "composeFile": "privilege-map-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingone-privilege",
+        "authorization-policy",
+        "simulated"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/privilege-map-LAB",
+      "pingProducts": [
+        "pingone-privilege"
+      ]
+    },
+    {
+      "id": "agent-mcp-door-demo",
+      "addedAt": "2026-11-04T23:13:29Z",
+      "name": "Agent Meets the MCP Door LAB",
+      "kind": "Demo",
+      "description": "A member's own AI agent reaches an enterprise MCP door: discover, register, consent, per-call token exchange, gateway, policy decision, human approval, audit. Movable React Flow sequence diagram with a payload or mock token under each message, talk track and presenter mode. Mock only.",
+      "url": "http://localhost:6850",
+      "healthPath": "/api/health",
+      "composeFile": "agent-mcp-door-demo-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "mcp",
+        "pingone-privilege",
+        "simulated",
+        "agent-gateway",
+        "pingone",
+        "pingone-authorize",
+        "pingone-protect"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/agent-mcp-door-demo-LAB",
+      "pingProducts": [
+        "privilege-gateway",
+        "pingone"
+      ]
+    },
+    {
+      "id": "pingone-signin-lab",
+      "addedAt": "2026-11-04T23:19:02Z",
+      "name": "PingOne Sign-in LAB",
+      "kind": "Demo",
+      "description": "Sign-in behaviour, mock only: failures, lockout, replay, MFA, step-up (RFC 9470) and CIBA with a mock phone. For real PingOne response shapes and live tenant runs, see the pingone-LAB repo.",
+      "url": "http://127.0.0.1:6171",
+      "healthPath": "/api/health",
+      "composeFile": "pingone-signin-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "catalogId": "A11",
+      "alsoCatalogIds": [
+        "A4",
+        "A5"
+      ],
+      "tags": [
+        "pingone",
+        "sign-in-and-mfa",
+        "ciba",
+        "step-up",
+        "simulated",
+        "pingid"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/pingone-signin-LAB",
+      "pingProducts": [
+        "pingone"
+      ]
+    },
+    {
+      "id": "pingone-lab",
+      "addedAt": "2026-11-04T23:18:49Z",
+      "name": "PingOne LAB",
+      "catalogId": "A29",
+      "kind": "Demo",
+      "description": "A card for each thing PingOne advertises in its discovery document: pi.flow sign-in, PKCE, PAR, JAR, client credentials, token lifecycle, Userinfo, device authorization, CIBA, token exchange, plus a playground. Mock PingOne by default, or your own environment.",
+      "url": "http://127.0.0.1:5500",
+      "healthPath": "/api/health",
+      "composeFile": "pingone-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingone",
+        "oauth",
+        "oidc",
+        "par",
+        "ciba",
+        "token-exchange",
+        "simulated",
+        "real"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/pingone-LAB",
+      "pingProducts": [
+        "pingone"
+      ]
+    },
+    {
+      "id": "pingfederate-lab",
+      "addedAt": "2026-11-04T23:18:43Z",
+      "name": "PingFederate LAB",
+      "catalogId": "A28",
+      "kind": "Demo",
+      "description": "A card for each PingFederate feature behind AI agents: pi.flow sign-in, DCR, RAR with PAR, CIBA, DPoP, token exchange, Userinfo, PAR, PKCE and a protocol playground. Built-in mock PingFederate (offline) or your own PingFederate (live).",
+      "url": "http://127.0.0.1:5400",
+      "healthPath": "/api/health",
+      "composeFile": "pingfederate-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingfederate",
+        "oauth",
+        "oidc",
+        "par",
+        "ciba",
+        "dpop",
+        "token-exchange",
+        "simulated",
+        "real"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/pingfederate-LAB",
+      "pingProducts": [
+        "pingfederate"
+      ]
+    },
+    {
+      "id": "customer-agent-lab",
+      "addedAt": "2026-11-04T23:14:42Z",
+      "name": "Customer Agent LAB",
+      "catalogId": "D24",
+      "kind": "Demo",
+      "description": "The customer-facing AI agent with all 87 use cases, each routed Here, Here + go deeper, Hand off or Guide. AI-DEMO2-depth movie reel, sequence view and step detail in movable cards; hand-offs to 30 labs whose Back strip resumes the chat; an A2A page; Scripted or llama.cpp brain. Mock runs offline.",
+      "url": "http://127.0.0.1:5603",
+      "healthPath": "/api/health",
+      "composeFile": "customer-agent-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: ./scripts/run.sh (port 5600). Docker: HOST_PORT=5603 docker compose up --build -d (published on 127.0.0.1 only). Mock needs no tenant and no credentials. Settings: the app's own .env beside docker-compose.yml (copy .env.example; Docker takes only SHELF_URL, CAL_LAB_MODE and LAB_ALLOWED_HOSTS from it, never the PingOne settings). Live (host-run only, owner opt-in: CAL_ALLOW_LIVE=1, IDP=pingone, PINGONE_ENVIRONMENT_ID, PINGONE_REGION, PINGONE_CLIENT_ID, PINGONE_CLIENT_SECRET in that .env) makes two real calls to one PingOne environment. Live was owner-verified 2026-11-05 with the old shared settings file; it is UNVERIFIED after the move to the app's own .env until the owner re-checks it. Catalog id D24.",
+      "tags": [
+        "ai-agent-security",
+        "agent-identity",
+        "simulated",
+        "pingone",
+        "real",
+        "pingone-authorize"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/customer-agent-LAB"
+    },
+    {
+      "id": "agent-kill-switch",
+      "addedAt": "2026-11-04T23:13:23Z",
+      "name": "Agent Kill Switch",
+      "catalogId": "D14",
+      "kind": "Demo",
+      "description": "How an organization stops a runaway AI agent: rate and cost caps that trip automatically, an operator kill switch that revokes access, and the next call failing. Fully mocked; nothing real is touched.",
+      "url": "http://localhost:6550",
+      "healthPath": "/api/health",
+      "composeFile": "agent-kill-switch-LAB/docker-compose.yml",
+      "tags": [
+        "agent-gateway",
+        "ai-agent-security",
+        "agent-controls",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/agent-kill-switch-LAB"
+    },
+    {
+      "id": "agent-registry-demo",
+      "addedAt": "2026-11-04T23:13:36Z",
+      "name": "Agent Registry Lifecycle",
+      "catalogId": "D11",
+      "kind": "Demo",
+      "description": "Register an AI agent as a non-human identity, grant it to a tool, rotate it by replacement, retire it, and watch the gateway refuse it (401/403/429). Mock only. Optional owner-run live checks compare with a real Privilege console.",
+      "url": "http://localhost:5010",
+      "healthPath": "/api/health",
+      "composeFile": "agent-registry-demo-LAB/docker-compose.yml",
+      "tags": [
+        "agent-identity",
+        "ai-agent-security",
+        "pingone-privilege",
+        "real",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/agent-registry-demo-LAB",
+      "pingProducts": [
+        "pingone-privilege"
+      ]
+    },
+    {
+      "id": "ai-guard-sidecar",
+      "addedAt": "2026-11-04T23:13:55Z",
+      "name": "AI Guard Sidecar",
+      "catalogId": "D12",
+      "kind": "Demo",
+      "description": "How an external guardrail sidecar plugs into an agent gateway: a stand-in detector, per-category block thresholds, PII rails, a fail-closed toggle and a fault injector. Contract unverified; offline.",
+      "url": "http://localhost:6500",
+      "healthPath": "/api/health",
+      "composeFile": "ai-guard-sidecar-LAB/docker-compose.yml",
+      "tags": [
+        "agent-gateway",
+        "ai-agent-security",
+        "agent-controls",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/ai-guard-sidecar-LAB"
+    },
+    {
+      "id": "attack-gallery",
+      "addedAt": "2026-11-04T23:14:09Z",
+      "name": "Agent attack gallery",
+      "catalogId": "D33",
+      "kind": "Tester",
+      "description": "Ten named attacks, including MCP authorization attacks, each run ungoverned and governed against an in-process mock stack: see what the attacker gets, then the control that refuses it.",
+      "url": "http://localhost:5181",
+      "healthPath": "/api/health",
+      "composeFile": "attack-gallery-LAB/docker-compose.yml",
+      "tags": [
+        "ai-agent-security",
+        "mcp-security",
+        "mcp",
+        "oauth",
+        "simulated",
+        "pingone-privilege"
+      ],
+      "repo": "https://github.com/curtismu7/attack-gallery-LAB"
+    },
+    {
+      "id": "cimd-lab",
+      "addedAt": "2026-11-04T23:14:29Z",
+      "name": "CIMD Lab",
+      "catalogId": "D36",
+      "kind": "Demo",
+      "description": "Teaches OAuth Client ID Metadata Documents both ways: real PingFederate as the authorization server (owner-run, no mock), and the lab's own teaching server with a tester that breaks the document in a dozen ways. PingFederate acting as a CIMD client is UNVERIFIED.",
+      "url": "http://localhost:5250",
+      "healthPath": "/api/health",
+      "composeFile": "cimd-LAB/docker-compose.yml",
+      "tags": [
+        "cimd",
+        "mcp",
+        "mcp-security",
+        "oauth",
+        "simulated",
+        "real",
+        "pingone",
+        "pingfederate"
+      ],
+      "repo": "https://github.com/curtismu7/cimd-LAB",
+      "pingProducts": [
+        "pingfederate"
+      ]
+    },
+    {
+      "id": "diagram-studio",
+      "addedAt": "2026-11-04T23:15:06Z",
+      "name": "Diagram Studio",
+      "catalogId": "E3",
+      "kind": "Tool",
+      "description": "Pick or edit a flow diagram stored as data: move boxes, Simulate the arrows, change the speed, Reset, undo, tidy, present, embed, and export as JSON, SVG, PNG or one offline HTML file.",
+      "url": "http://localhost:6001",
+      "healthPath": "/api/health",
+      "composeFile": "diagram-studio-LAB/docker-compose.yml",
+      "tags": [
+        "learning",
+        "simulated",
+        "poc-patterns",
+        "pingone"
+      ],
+      "repo": "https://github.com/curtismu7/diagram-studio-LAB"
+    },
+    {
+      "id": "gateway-claims-lab",
+      "addedAt": "2026-11-04T23:15:19Z",
+      "name": "Gateway Claims Lab",
+      "catalogId": "D99",
+      "kind": "Demo",
+      "description": "What gateway v1.261024 added, in mock: a nested-claim gate (client_id + act.sub via RequiredClaims, including the act-as-text trap) and an AgentCore gateway posture view (shape only, values invented), plus two H2 2026 release tabs (on-behalf-of RFC 8693 exchange, AgentCore gateway governance...",
+      "url": "http://localhost:5150",
+      "healthPath": "/api/health",
+      "composeFile": "gateway-claims-LAB/docker-compose.yml",
+      "tags": [
+        "agent-gateway",
+        "agent-identity",
+        "authorization-policy",
+        "aws",
+        "aws-agentcore",
+        "aws-bedrock",
+        "oauth",
+        "pingone-privilege",
+        "simulated",
+        "token-exchange",
+        "pinggateway",
+        "pingfederate"
+      ],
+      "repo": "https://github.com/curtismu7/gateway-claims-LAB",
+      "pingProducts": [
+        "pinggateway",
+        "pingfederate"
+      ]
+    },
+    {
+      "id": "hostile-a2a",
+      "addedAt": "2026-11-04T23:15:32Z",
+      "name": "Hostile A2A / poisoned Agent Card",
+      "catalogId": "D7",
+      "kind": "Demo",
+      "description": "A deliberately hostile A2A agent, an offline delegating generalist, and a pinned-card client shown side by side with an ungoverned one: the card told my agent to include my token.",
+      "url": "http://localhost:4750",
+      "healthPath": "/api/health",
+      "composeFile": "hostile-a2a-LAB/docker-compose.yml",
+      "tags": [
+        "ai-agent-security",
+        "tool-poisoning",
+        "a2a",
+        "simulated",
+        "pingone-privilege"
+      ],
+      "repo": "https://github.com/curtismu7/hostile-a2a-LAB"
+    },
+    {
+      "id": "hostile-mcp",
+      "addedAt": "2026-11-04T23:15:38Z",
+      "name": "Hostile MCP / rug-pull",
+      "catalogId": "D6",
+      "kind": "Demo",
+      "description": "A deliberately hostile MCP server, an offline victim, and a pinned client shown side by side with an ungoverned one: the tool that changed overnight.",
+      "url": "http://localhost:4701",
+      "healthPath": "/api/health",
+      "composeFile": "hostile-mcp-LAB/docker-compose.yml",
+      "tags": [
+        "ai-agent-security",
+        "mcp-security",
+        "tool-poisoning",
+        "mcp",
+        "simulated",
+        "mcp-server-built",
+        "pingone-privilege"
+      ],
+      "repo": "https://github.com/curtismu7/hostile-mcp-LAB"
+    },
+    {
+      "id": "mcp-auth-conformance-lab",
+      "addedAt": "2026-11-04T23:16:13Z",
+      "name": "MCP Auth Conformance Lab",
+      "catalogId": "D35",
+      "kind": "Tester",
+      "description": "Score a mock MCP server with selectable defects (or, in a gated read-only probe, one URL you type) against the MCP authorization expectations, with a sourced reference of what ChatGPT and other clients need.",
+      "url": "http://localhost:4901",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-auth-conformance-LAB/docker-compose.yml",
+      "tags": [
+        "mcp",
+        "mcp-security",
+        "oauth",
+        "simulated",
+        "pingone"
+      ],
+      "repo": "https://github.com/curtismu7/mcp-auth-conformance-LAB"
+    },
+    {
+      "id": "mcp-discovery",
+      "addedAt": "2026-11-04T23:16:26Z",
+      "name": "MCP Discovery",
+      "catalogId": "D5",
+      "kind": "Tester",
+      "description": "Read-only MCP discovery: finds MCP servers, probes tool metadata, flags poisoned or changed metadata (rug-pull). Demo mode: fixtures and stubs only; live mode points at a server you name. Plus simulated Ping H2 2026 claims (private network, slide 44 personal agents), UNVERIFIED on our tenant.",
+      "url": "http://localhost:5310",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-discovery-LAB/docker-compose.yml",
+      "tags": [
+        "mcp",
+        "mcp-security",
+        "real",
+        "simulated",
+        "tool-poisoning",
+        "pingone"
+      ],
+      "repo": "https://github.com/curtismu7/mcp-discovery-LAB"
+    },
+    {
+      "id": "no-tool-no-promise",
+      "addedAt": "2026-11-04T23:17:54Z",
+      "name": "No tool, no promise",
+      "catalogId": "D31",
+      "kind": "Demo",
+      "description": "A support agent can only commit the company through a tool. Same scripted agent, two tool sets, and a commitment ledger that only tools can write. Mock only: no tenant, no LLM.",
+      "url": "http://localhost:5350",
+      "healthPath": "/api/health",
+      "composeFile": "no-tool-no-promise-LAB/docker-compose.yml",
+      "tags": [
+        "ai-agent-security",
+        "agent-controls",
+        "simulated",
+        "pingone"
+      ],
+      "repo": "https://github.com/curtismu7/no-tool-no-promise-LAB"
+    },
+    {
+      "id": "p1-third-party-exchange",
+      "addedAt": "2026-11-04T23:18:05Z",
+      "name": "P1 Third-Party Exchange",
+      "catalogId": "D98",
+      "kind": "Demo",
+      "description": "PingOne token exchange (RFC 8693) that accepts a third-party signed JWT (PingFederate, another PingOne environment, Okta, Auth0, RFC 9068, Microsoft) as the actor token: trusted issuer, assignment, claim mapping, the checks and PingOne's measured refusal texts. Mock only.",
+      "url": "http://localhost:5200",
+      "healthPath": "/api/health",
+      "composeFile": "p1-third-party-exchange-LAB/docker-compose.yml",
+      "tags": [
+        "pingone",
+        "token-exchange",
+        "oauth",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/p1-third-party-exchange-LAB",
+      "pingProducts": [
+        "pingone"
+      ]
+    },
+    {
+      "id": "personal-agent-demo",
+      "addedAt": "2026-11-04T23:18:18Z",
+      "name": "Personal Agent Flow",
+      "catalogId": "D21",
+      "kind": "Demo",
+      "description": "How an AI assistant reaches a member's benefits through an MCP gateway in twelve steps: discovery, CIMD, consent, signed code exchange, gateway check, policy decision. React Flow sequence diagram, mock token JSON, simulated approval modal, talk track. Mock only.",
+      "url": "http://localhost:6900",
+      "healthPath": "/api/health",
+      "composeFile": "personal-agent-demo-LAB/docker-compose.yml",
+      "tags": [
+        "agent-gateway",
+        "agent-identity",
+        "mcp-security",
+        "cimd",
+        "oauth",
+        "mcp",
+        "simulated",
+        "pingfederate",
+        "pingone-authorize",
+        "pingone-protect"
+      ],
+      "repo": "https://github.com/curtismu7/personal-agent-demo-LAB",
+      "pingProducts": [
+        "pingfederate"
+      ]
+    },
+    {
+      "id": "ping-gateway-route-lab",
+      "addedAt": "2026-11-04T23:18:24Z",
+      "name": "PingGateway Route Lab (simulated)",
+      "catalogId": "A19",
+      "kind": "Demo",
+      "description": "Simulated evaluator, not real PingGateway: which route a request matches and why, the empty-first-param WWW-Authenticate bug, RFC 9728 metadata lint and an RFC 7662 introspection stub. Mock only.",
+      "url": "http://localhost:5050",
+      "healthPath": "/api/health",
+      "composeFile": "ping-gateway-route-LAB/docker-compose.yml",
+      "tags": [
+        "pinggateway",
+        "mcp-security",
+        "rfc9728",
+        "mcp",
+        "oauth",
+        "simulated",
+        "pingfederate"
+      ],
+      "repo": "https://github.com/curtismu7/ping-gateway-route-LAB",
+      "pingProducts": [
+        "pinggateway",
+        "pingfederate"
+      ]
+    },
+    {
+      "id": "token-workbench",
+      "addedAt": "2026-11-04T23:20:01Z",
+      "name": "Token Workbench",
+      "catalogId": "C2",
+      "kind": "Demo",
+      "description": "Mock-only token workbench: decode and trace a token, test wrong-token rejection, check stub authorization servers against OAuth rules (FAPI 2.0 pack UNVERIFIED), compare PAR/RAR/DPoP/mTLS/JAR/PKCE (simulation).",
+      "url": "http://localhost:5910",
+      "healthPath": "/api/health",
+      "composeFile": "token-workbench-LAB/docker-compose.yml",
+      "tags": [
+        "token-security",
+        "learning",
+        "oauth",
+        "fapi",
+        "simulated",
+        "pingone",
+        "pingfederate"
+      ],
+      "repo": "https://github.com/curtismu7/token-workbench-LAB",
+      "pingProducts": [
+        "pingone",
+        "pingfederate"
+      ]
+    },
+    {
+      "id": "worker-demo",
+      "addedAt": "2026-11-04T23:20:08Z",
+      "name": "Worker Agent Demo",
+      "catalogId": "D22",
+      "kind": "Demo",
+      "description": "A worker agent acting for a person: attended, delegated (agent to agent) and unattended runs, every tool call through a policy enforcement point that allows, denies or holds for approval; plus an H2 2026 section simulating AgentCard discovery and A2A scope separation (Ping release claims,...",
+      "url": "http://localhost:6700",
+      "healthPath": "/api/health",
+      "composeFile": "worker-demo-LAB/docker-compose.yml",
+      "tags": [
+        "agent-identity",
+        "ai-agent-security",
+        "authorization-policy",
+        "simulated",
+        "pingone"
+      ],
+      "repo": "https://github.com/curtismu7/worker-demo-LAB"
+    },
+    {
+      "id": "session-lab",
+      "addedAt": "2026-11-04T23:19:47Z",
+      "name": "Session Lab: PingOne and DaVinci sessions and cookies",
+      "catalogId": "A30",
+      "kind": "Demo",
+      "description": "See the session cookie, the DaVinci sessionToken and the tokens apps hold, then change the session (revoke, shorten idle timeout, require mfa step-up, reuse a sessionToken in a widget) and watch what each app does. React Flow diagram, talk track and presenter mode. Mock only.",
+      "url": "http://localhost:6890",
+      "healthPath": "/api/health",
+      "composeFile": "session-LAB/docker-compose.yml",
+      "tags": [
+        "pingone",
+        "pingone-davinci",
+        "sign-in-and-mfa",
+        "simulated",
+        "pingid"
+      ],
+      "repo": "https://github.com/curtismu7/session-LAB",
+      "pingProducts": [
+        "pingone"
+      ]
+    },
+    {
+      "id": "intent-par-inspector",
+      "addedAt": "2026-11-04T23:15:49Z",
+      "name": "Intent / PAR Inspector",
+      "catalogId": "C40",
+      "kind": "Demo",
+      "description": "Push an authorization request to a mock server (RFC 9126), watch the intent get bound into the request_uri, consent and token, and see tampering, replay and expiry refused.",
+      "url": "http://localhost:4771",
+      "healthPath": "/api/health",
+      "composeFile": "intent-par-inspector-LAB/docker-compose.yml",
+      "tags": [
+        "par",
+        "oauth",
+        "authorization-policy",
+        "simulated",
+        "pingone",
+        "pingfederate"
+      ],
+      "repo": "https://github.com/curtismu7/intent-par-inspector-LAB",
+      "pingProducts": [
+        "pingfederate"
+      ]
+    },
+    {
+      "id": "poppy-agent-tester",
+      "addedAt": "2026-11-04T23:19:09Z",
+      "name": "Poppy Agent Tester",
+      "catalogId": "D100",
+      "kind": "Demo",
+      "description": "Play the personal agent from the Personal Agent Protocol (Poppy, Draft 0.3): read a Company's poppy.json, sign in to a real PingFederate with a URL as the client id and PKCE, then call the Company API with a signed Poppy-Session. Every request and token is shown raw.",
+      "url": "http://localhost:5450",
+      "healthPath": "/api/health",
+      "composeFile": "poppy-agent-tester-LAB/docker-compose.yml",
+      "tags": [
+        "pingfederate",
+        "agent-identity",
+        "oauth",
+        "simulated",
+        "real"
+      ],
+      "repo": "https://github.com/curtismu7/poppy-agent-tester-LAB"
+    },
+    {
+      "id": "intent-purpose-behaviour-lab",
+      "addedAt": "2026-11-04T23:15:55Z",
+      "name": "Intent, Purpose and Behaviour Lab",
+      "catalogId": "D101",
+      "kind": "Demo",
+      "description": "Three signals asked of every call (intent, purpose, behaviour), plus on-behalf-of and ID-JAG flows, modelling the 2026-11-02 Ping release claims. Mock reads tables; Live signs for real (RS256) locally; a Privilege check sends the call through the live AI Guard on our tenant.",
+      "url": "http://localhost:7100",
+      "healthPath": "/api/health",
+      "composeFile": "intent-purpose-behaviour-LAB/docker-compose.yml",
+      "tags": [
+        "pingone-privilege",
+        "ai-agent-security",
+        "token-exchange",
+        "id-jag",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/intent-purpose-behaviour-LAB"
+    },
+    {
+      "id": "coding-agents-lab",
+      "addedAt": "2026-11-04T23:14:36Z",
+      "name": "Coding Agents LAB",
+      "catalogId": "D102",
+      "kind": "Demo",
+      "description": "Inspection inside Claude Code, Cursor, Codex, Gemini CLI, GitHub Copilot and Antigravity: hooks as the enforcement point, the outcome follows the risk. Opens in Real mode — every decision is the live Privilege AI Guard on our tenant; Mock and Live are the offline rehearsal.",
+      "url": "http://localhost:7150",
+      "healthPath": "/api/health",
+      "composeFile": "coding-agents-LAB/docker-compose.yml",
+      "tags": [
+        "pingone-privilege",
+        "ai-agent-security",
+        "agent-controls",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/coding-agents-LAB"
+    },
+    {
+      "id": "data-protection-lab",
+      "addedAt": "2026-11-04T23:14:48Z",
+      "name": "Data Protection LAB",
+      "catalogId": "D103",
+      "kind": "Demo",
+      "description": "AIGuard content inspection in and out with graduated outcomes, your own gitleaks rules, personal-data kinds with checksums, Agent Insights, the OWASP Agentic Top 10, and sealed prompt logging. Mock reads tables; Live runs locally; a Privilege check sends the text through the live AI Guard.",
+      "url": "http://localhost:7200",
+      "healthPath": "/api/health",
+      "composeFile": "data-protection-LAB/docker-compose.yml",
+      "tags": [
+        "pingone-privilege",
+        "ai-agent-security",
+        "audit-observability",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/data-protection-LAB"
+    },
+    {
+      "id": "saas-access-lab",
+      "addedAt": "2026-11-04T23:19:32Z",
+      "name": "SaaS Access LAB",
+      "catalogId": "D104",
+      "kind": "Demo",
+      "description": "Just-in-time, time-bound access to six platforms (GitHub, GitLab, Salesforce, Snowflake, Databricks, Google Workspace): approval chains, blocked self-approval, expiry, receipts, drift. Mock is read-only; Live runs real local state; a Privilege check sends the request through the live AI Guard.",
+      "url": "http://localhost:7250",
+      "healthPath": "/api/health",
+      "composeFile": "saas-access-LAB/docker-compose.yml",
+      "tags": [
+        "pingone-privilege",
+        "agent-identity",
+        "authorization-policy",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/saas-access-LAB"
+    },
+    {
+      "id": "agent-governance-lab",
+      "addedAt": "2026-11-04T23:13:17Z",
+      "name": "Agent Governance LAB",
+      "catalogId": "D105",
+      "kind": "Demo",
+      "description": "AI Platform Agents: cross-cloud inventory of 13 sources, a five-level permission review, custodian approval before any action, remediation, a safe sync that never mistakes silence for deletion, AgentCore gateway governance and private-network discovery. Mock or Live. All product claims UNVERIFIED.",
+      "url": "http://localhost:7300",
+      "healthPath": "/api/health",
+      "composeFile": "agent-governance-LAB/docker-compose.yml",
+      "tags": [
+        "pingone-privilege",
+        "agent-identity",
+        "agent-controls",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/agent-governance-LAB"
+    },
+    {
+      "id": "mcp-surface-lab",
+      "addedAt": "2026-11-04T23:16:45Z",
+      "name": "MCP Surface LAB",
+      "catalogId": "D106",
+      "kind": "Demo",
+      "description": "The MCP gateway in front of every MCP server: aggregate policy caps, entitlement-aware discovery, OpenAPI to MCP, five backend credential modes, a verified-server catalog, OAuth 2.1 with PKCE and CIMD, approval-gated creation. Simulates the 2026-11-02 release claims. Mock or Live. UNVERIFIED.",
+      "url": "http://localhost:7350",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-surface-LAB/docker-compose.yml",
+      "tags": [
+        "pingone-privilege",
+        "mcp-security",
+        "mcp",
+        "simulated",
+        "mcp-server-built"
+      ],
+      "repo": "https://github.com/curtismu7/mcp-surface-LAB"
+    },
+    {
+      "id": "federated-identity-lab",
+      "addedAt": "2026-11-04T23:15:12Z",
+      "name": "Federated Identity LAB",
+      "catalogId": "D107",
+      "kind": "Demo",
+      "description": "Simulates the 2026-11-02 Ping release claims for Federated Identity (short-lived tokens, issuer, subject and audience binding, lifetimes, key refresh, revocation) and Self-Hosted Agents, with real local RS256 verification. Mock tables or a Live local engine. Every product claim is UNVERIFIED.",
+      "url": "http://localhost:7400",
+      "healthPath": "/api/health",
+      "composeFile": "federated-identity-LAB/docker-compose.yml",
+      "tags": [
+        "pingone-privilege",
+        "agent-identity",
+        "token-security",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/federated-identity-LAB"
+    },
+    {
+      "id": "secrets-vault-lab",
+      "addedAt": "2026-11-04T23:19:39Z",
+      "name": "Secrets Vault LAB",
+      "catalogId": "D108",
+      "kind": "Demo",
+      "description": "A per-user credential vault (self-service, no administrator override, real AES-256-GCM, injected by a simulated gateway) and secret store management over five mock providers (AWS, GCP, Azure, Delinea, CyberArk). Mock or Live mode. Every product claim is UNVERIFIED on our tenant.",
+      "url": "http://localhost:7450",
+      "healthPath": "/api/health",
+      "composeFile": "secrets-vault-LAB/docker-compose.yml",
+      "tags": [
+        "pingone-privilege",
+        "ai-agent-security",
+        "agent-identity",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/secrets-vault-LAB"
+    },
+    {
+      "id": "ai-policies-lab",
+      "addedAt": "2026-11-04T23:14:02Z",
+      "name": "AI Policies LAB",
+      "catalogId": "D109",
+      "kind": "Demo",
+      "description": "Scope and HITL: four layered scope checks (surface, application, action, end user) on a real RS256 token you mint locally, a call held for a person, single-use approvals bound to the exact call, fail closed. Simulates release claims, all UNVERIFIED. Mock tables or a Live local engine.",
+      "url": "http://localhost:7500",
+      "healthPath": "/api/health",
+      "composeFile": "ai-policies-LAB/docker-compose.yml",
+      "tags": [
+        "pingone-privilege",
+        "authorization-policy",
+        "human-in-the-loop",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/ai-policies-LAB"
+    },
+    {
+      "id": "p1az-inspector",
+      "addedAt": "2026-11-02T13:46:42-06:00",
+      "name": "P1AZ Inspector LAB",
+      "kind": "Tester",
+      "description": "Send decisions to PingOne Authorize and see the verdict, statements and the exact call. One UI runs the offline Mock engine or, owner-run, your own PingOne environment or on-prem PingAuthorize (Live).",
+      "url": "http://localhost:4840",
+      "healthPath": "/api/health",
+      "composeFile": "p1az-inspector-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "catalogId": "B2",
+      "notes": "Host-run: npm start (port 4840). Docker: docker compose up --build -d (publishes 127.0.0.1:4840 only). Catalog B2 is a stand-in (the nearest row, Authorize policy playground): the catalog has no exact row. Mock needs no setup. Live is owner-run and is set up on the Settings page; request and response shapes are UNVERIFIED.",
+      "tags": [
+        "pingone-authorize",
+        "authorization-policy",
+        "simulated",
+        "real",
+        "oauth"
+      ],
+      "repo": "https://github.com/curtismu7/p1az-inspector-LAB"
+    },
+    {
+      "id": "agent-gateway-inspector",
+      "addedAt": "2026-11-02T13:46:42-06:00",
+      "name": "Agent Gateway Inspector LAB",
+      "catalogId": "D54",
+      "kind": "Tester",
+      "description": "Inspector for an AI/agent gateway (PingOne Privilege) that allows, denies or holds agent tool calls for a human, with a decision buffer and a verifiable audit trail. Driven by an in-process stub gateway; nothing real is touched. Mock only: Live is refused.",
+      "url": "http://localhost:5850",
+      "healthPath": "/api/health",
+      "composeFile": "agent-gateway-inspector-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: npm ci && npm run build && npm start (port 5850; npm run doctor checks it). Or: HOST_PORT=5850 docker compose up --build -d (published on 127.0.0.1 only). Mock mode only, loopback-only, zero outbound calls; the Live toggle is refused. The composeFile is relative to the folder the demo repos sit in.",
+      "tags": [
+        "pingone-privilege",
+        "agent-gateway",
+        "agent-controls",
+        "human-in-the-loop",
+        "simulated",
+        "real",
+        "mcp"
+      ],
+      "repo": "https://github.com/curtismu7/agent-gateway-inspector-LAB"
+    },
+    {
+      "id": "pingone-mcp-inspector",
+      "addedAt": "2026-11-02T13:46:42-06:00",
+      "name": "PingOne MCP Inspector LAB",
+      "catalogId": "D3",
+      "kind": "Tester",
+      "description": "Connect to PingOne's hosted MCP server (worker or interactive admin sign-in) or any MCP server, list its tools with a safety class, and call them read-only by default. Mock by default; Live is owner-run.",
+      "url": "http://localhost:5201",
+      "healthPath": "/api/health",
+      "composeFile": "pingone-mcp-inspector-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: npm ci && npm run build && npm start (port 5201; npm run doctor checks it). Or: HOST_PORT=5201 docker compose up --build -d (published on 127.0.0.1 only). Mock mode needs no setup; Live is refused until the owner sets PINGONE_MCP_INSPECTOR_MODE=live. Not tested against a real tenant. The composeFile is relative to the folder the demo repos sit in.",
+      "tags": [
+        "pingone-mcp",
+        "mcp-security",
+        "simulated",
+        "real",
+        "mcp"
+      ],
+      "repo": "https://github.com/curtismu7/pingone-mcp-inspector-LAB"
+    },
+    {
+      "id": "agent-audit-trail-lab",
+      "addedAt": "2026-11-02T13:46:42-06:00",
+      "name": "Agent Audit Trail LAB",
+      "kind": "Demo",
+      "description": "Who did what through which agent: seeded synthetic events from six sources, a read-only audit tool surface, and a correlation join into one timeline per action, with a tamper-evident hash chain. Fully mock; Live is refused.",
+      "url": "http://localhost:6600",
+      "healthPath": "/api/health",
+      "composeFile": "agent-audit-trail-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "catalogId": "D17",
+      "notes": "Host-run: npm ci && npm run build && npm start (port 6600; npm run doctor checks it). Or: docker compose up --build -d (publishes 127.0.0.1:6600 only; HOST_PORT changes it, and the shelf's Start button does not set HOST_PORT). Mock only: the Live toggle explains why it is not available.",
+      "tags": [
+        "pingone-privilege",
+        "audit-observability",
+        "agent-identity",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/agent-audit-trail-LAB"
+    },
+    {
+      "id": "progressive-trust-ladder",
+      "addedAt": "2026-11-02T13:46:42-06:00",
+      "name": "Progressive trust ladder LAB",
+      "catalogId": "D29",
+      "kind": "Demo",
+      "description": "A personal agent climbs four rungs of trust as risk and amount rise: sign-in, step-up, then a CIBA approval on a mock phone. Mock only, simulated, no tenant. Live is refused: the lab has no live provider.",
+      "url": "http://127.0.0.1:6211",
+      "healthPath": "/api/health",
+      "composeFile": "progressive-trust-ladder-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: npm ci, npm run build, npm start (port 6211, PTL_PORT to change within 6200-6249). Docker: docker compose up --build -d (published on 127.0.0.1:6211 only). Mock only: no tenant, no credentials, no outbound network. composeFile is relative to the shelf's demo root (the folder that holds the demo repos).",
+      "tags": [
+        "agent-controls",
+        "sign-in-and-mfa",
+        "simulated",
+        "ciba",
+        "step-up",
+        "pingid",
+        "pingone"
+      ],
+      "repo": "https://github.com/curtismu7/progressive-trust-ladder-LAB",
+      "pingProducts": [
+        "pingone"
+      ]
+    },
+    {
+      "id": "chatgpt-mcp-flow",
+      "addedAt": "2026-11-02T13:46:42-06:00",
+      "name": "AI assistant to MCP authorization flow LAB",
+      "catalogId": "D25",
+      "kind": "Demo",
+      "description": "How a remote MCP server behind an enterprise front door is authorized when a public AI assistant calls it for a signed-in user: connector catalog, PKCE, resource indicators, IdP hand-off, RFC 8693 exchange. 20 messages backed by real mock exchanges. Mock only; product claims UNVERIFIED.",
+      "url": "http://localhost:6650",
+      "healthPath": "/api/health",
+      "composeFile": "chatgpt-mcp-flow-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: npm ci && npm run build && npm start (port 6650; mock actors on 6651-6655, MCP_FLOW_STUB_BASE moves them; npm run doctor checks it). Docker: HOST_PORT=6650 docker compose up --build -d (published on 127.0.0.1 only). Mock only; Live is refused. Catalog id D25 is carried over from the old repo and is still a placeholder (to confirm).",
+      "tags": [
+        "pingone",
+        "mcp-security",
+        "real",
+        "oauth",
+        "mcp"
+      ],
+      "repo": "https://github.com/curtismu7/chatgpt-mcp-flow-LAB",
+      "pingProducts": [
+        "pingone"
+      ]
+    },
+    {
+      "id": "mock-authorize",
+      "addedAt": "2026-11-02T13:46:42-06:00",
+      "name": "Mock Authorize LAB",
+      "catalogId": "G4",
+      "kind": "Tester",
+      "description": "A local stand-in for PingOne Authorize: editable rules, a Try page, a decision log, and a PingOne-shaped token, decision and recent-decisions API that clients like the P1AZ Inspector can call. Simulated.",
+      "url": "http://localhost:4850",
+      "healthPath": "/api/health",
+      "composeFile": "mock-authorize-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: npm start (port 4850). Docker: HOST_PORT=4850 docker compose up --build -d (published on 127.0.0.1 only). Mock is the only mode; there is no live mode. Point the P1AZ Inspector's Live mode at http://127.0.0.1:4850/pingone (see Connect).",
+      "tags": [
+        "pingone-authorize",
+        "authorization-policy",
+        "simulated",
+        "oauth"
+      ],
+      "repo": "https://github.com/curtismu7/mock-authorize-LAB"
+    },
+    {
+      "id": "stolen-token-lab",
+      "addedAt": "2026-11-02T13:46:42-06:00",
+      "name": "Stolen-token LAB",
+      "catalogId": "C22",
+      "kind": "Tester",
+      "description": "Replay a captured access token through a mock gateway and see what stops it: nothing (bearer), audience binding, DPoP (RFC 9449), or mTLS certificate binding (RFC 8705, simulated). Mock mode only; Live is refused.",
+      "url": "http://localhost:4950",
+      "healthPath": "/api/health",
+      "composeFile": "stolen-token-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: ./scripts/run.sh (port 4950). Mock only: no tenant, no credentials. Docker: HOST_PORT=4950 docker compose up --build -d (published on 127.0.0.1 only). composeFile is relative to the demo root (the folder above this checkout).",
+      "tags": [
+        "token-security",
+        "simulated",
+        "dpop",
+        "mtls",
+        "pingone",
+        "pingfederate"
+      ],
+      "repo": "https://github.com/curtismu7/stolen-token-LAB",
+      "pingProducts": [
+        "pingfederate"
+      ]
+    },
+    {
+      "id": "mcp-elicitation-lab",
+      "addedAt": "2026-11-02T13:46:42-06:00",
+      "name": "MCP Elicitation LAB",
+      "catalogId": "D37",
+      "kind": "Tester",
+      "description": "An MCP server mid-tool-call asks the person for more: form mode and URL mode, accept / decline / cancel, -32042, and the spec's safety rules, with findings when a server breaks them. Mock server and mock client; nothing is fetched.",
+      "url": "http://localhost:6800",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-elicitation-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: npm start (port 6800). Docker: HOST_PORT=6800 docker compose up --build -d (published on 127.0.0.1 only). Mock only: no tenant, no credentials, no outbound call. composeFile is relative to the folder that holds the clone (a placeholder the shelf resolves). Targets MCP spec 2025-11-25; the draft differs (see the page's Spec basis).",
+      "tags": [
+        "mcp-security",
+        "simulated",
+        "mcp",
+        "pingone-privilege"
+      ],
+      "repo": "https://github.com/curtismu7/mcp-elicitation-LAB"
+    },
+    {
+      "id": "mcp-tools",
+      "addedAt": "2026-11-04T23:16:50Z",
+      "name": "MCP inspector",
+      "catalogId": "D3",
+      "kind": "Tester",
+      "description": "Connect to an MCP server, list its tools, resources and prompts, scan them, then call tools behind a confirm step. One app with the scanner (D4).",
+      "url": "http://localhost:4810",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-tools-LAB/docker-compose.yml",
+      "tags": [
+        "mcp",
+        "mcp-security",
+        "tool-poisoning",
+        "simulated",
+        "real",
+        "mcp-server-built",
+        "pingone-privilege"
+      ],
+      "repo": "https://github.com/curtismu7/mcp-tools-LAB"
+    },
+    {
+      "id": "mcp-scanner",
+      "addedAt": "2026-11-04T23:16:50Z",
+      "name": "MCP scanner",
+      "catalogId": "D4",
+      "kind": "Tester",
+      "description": "Scan the metadata an MCP server serves, or a pasted tools/list snapshot, for tool poisoning before an agent reads it. Reports; never blocks. Same app as the inspector (D3).",
+      "url": "http://localhost:4810",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-tools-LAB/docker-compose.yml",
+      "tags": [
+        "mcp",
+        "mcp-security",
+        "tool-poisoning",
+        "simulated",
+        "real",
+        "mcp-server-built",
+        "pingone-privilege"
+      ],
+      "repo": "https://github.com/curtismu7/mcp-tools-LAB"
+    },
+    {
+      "id": "mcp-resource-server",
+      "addedAt": "2026-11-04T23:16:38Z",
+      "name": "MCP resource server",
+      "catalogId": "D0",
+      "kind": "Tool",
+      "description": "A config-driven MCP resource server: banking and healthcare verticals defined by files, answered from bundled SQLite, token-protected (RFC 9728). Runs offline; loopback only.",
+      "url": "http://localhost:8081",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-resource-server-LAB/docker-compose.yml",
+      "tags": [
+        "mcp",
+        "mcp-server-built",
+        "oauth",
+        "simulated",
+        "pingone"
+      ],
+      "repo": "https://github.com/curtismu7/mcp-resource-server-LAB"
+    },
+    {
+      "id": "deploy-test-lab",
+      "addedAt": "2026-11-04T23:15:00Z",
+      "name": "Deploy Test LAB",
+      "kind": "Tool",
+      "description": "Throwaway app that exists to exercise the shelf's one-click Deploy: clone, build, run. One page and a demo-health/1 endpoint. Not part of any demo story.",
+      "url": "http://localhost:5590",
+      "healthPath": "/api/health",
+      "composeFile": "deploy-test-LAB/docker-compose.yml",
+      "repo": "https://github.com/curtismu7/deploy-test-LAB",
+      "where": "installed",
+      "tags": [
+        "simulated",
+        "pingone"
+      ]
+    },
+    {
+      "id": "jev-lab",
+      "addedAt": "2026-11-04T23:16:01Z",
+      "name": "JEV Decision Model LAB",
+      "catalogId": "D113",
+      "kind": "Demo",
+      "description": "Judge an agent's decisions against a policy: attack/innocent/intent corpora, bake-offs between models, a threshold-policy slider. Mock engine or your own model endpoint.",
+      "url": "http://127.0.0.1:7550",
+      "healthPath": "/api/health",
+      "composeFile": "jev-lab-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "ai-agent-security",
+        "agent-identity",
+        "authorization-policy",
+        "oauth",
+        "learning",
+        "simulated",
+        "real",
+        "pingone"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/jev-lab-LAB",
+      "pingProducts": [
+        "pingone"
+      ]
+    },
+    {
+      "id": "obo-lab",
+      "addedAt": "2026-11-04T23:17:59Z",
+      "name": "OBO Delegation Inspector LAB",
+      "catalogId": "D111",
+      "kind": "Demo",
+      "description": "Seven steps of RFC 8693 on-behalf-of delegation: sub kept, act added, aud+scope narrowed; downstream accepts the delegated token and refuses the person's own. Mock engine or your PingOne tenant.",
+      "url": "http://127.0.0.1:7560",
+      "healthPath": "/api/health",
+      "composeFile": "obo-lab-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "token-exchange",
+        "agent-identity",
+        "token-security",
+        "oauth",
+        "ai-agent-security",
+        "pingone",
+        "simulated",
+        "real"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/obo-lab-LAB",
+      "pingProducts": [
+        "pingone"
+      ]
+    },
+    {
+      "id": "jit-lab",
+      "addedAt": "2026-11-04T23:16:06Z",
+      "name": "JIT Ephemeral Credentials LAB",
+      "catalogId": "D112",
+      "kind": "Demo",
+      "description": "Standing (30 d) vs just-in-time (300 s, tool-bound) agent credentials; replay the captured copy and watch one stay accepted and the other die; tool revocation. Mock or Real via the shared local PingFederate (rule 20) or your PingOne tenant.",
+      "url": "http://127.0.0.1:7570",
+      "healthPath": "/api/health",
+      "composeFile": "jit-lab-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "token-security",
+        "agent-identity",
+        "token-exchange",
+        "oauth",
+        "pingfederate",
+        "ai-agent-security",
+        "simulated",
+        "real"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/jit-lab-LAB",
+      "pingProducts": [
+        "pingfederate"
+      ]
+    },
+    {
+      "id": "ping-services-stub",
+      "addedAt": "2026-11-04T23:18:31Z",
+      "name": "Ping Services Stub LAB",
+      "catalogId": "D114",
+      "kind": "Tester",
+      "description": "One stub exercising every shared Ping service the family deploys: shared local PingFederate, PingGateway, Privilege Agent Gateway, PingOne (SaaS), PingOne Privilege console, and the SE-K8s PingFederate. One real, read-only call per service; Mock/Real toggle; reuses shared infra (shared-first rule).",
+      "url": "http://127.0.0.1:6300",
+      "healthPath": "/api/health",
+      "composeFile": "ping-services-stub-LAB/deploy/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingfederate",
+        "pinggateway",
+        "pingone",
+        "pingone-privilege",
+        "real",
+        "simulated"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/ping-services-stub-LAB",
+      "group": "C"
+    },
+    {
+      "id": "a2a-lab",
+      "addedAt": "2026-11-07T04:28:10Z",
+      "name": "A2A Lab",
+      "catalogId": "D122",
+      "kind": "Demo",
+      "description": "A generalist agent hands off to a specialist: two RFC 8693 exchanges build the nested act chain, scope narrowed per hop. The gateway routes the call only when the specialist is registered; an unregistered identity is denied. Mock of UC2/2.5/2.6/2.7.",
+      "url": "http://localhost:7700",
+      "healthPath": "/api/health",
+      "composeFile": "a2a-lab-LAB/docker-compose.yml",
+      "tags": [
+        "agent-gateway",
+        "ai-agent-security",
+        "agent-controls",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/a2a-lab-LAB"
+    },
+    {
+      "id": "idjag-runner",
+      "addedAt": "2026-11-06T11:27:11Z",
+      "name": "Tarun ID-JAG Runner",
+      "kind": "Tester",
+      "description": "Runs the PingFederate ID-JAG (cross-app access) demo without Postman: password grant + refresh, RFC 8693 exchange for the ID-JAG assertion, jwt-bearer redeem + introspection, four refusal cases, and a JWKS inspector. Real PingFederate 13.1+ only.",
+      "url": "http://localhost:4780",
+      "healthPath": "/api/health",
+      "composeFile": "idjag-runner-LAB/deploy/docker-compose.yml",
+      "tags": [
+        "pingfederate",
+        "id-jag",
+        "token-exchange",
+        "real"
+      ],
+      "repo": "https://github.com/curtismu7/idjag-runner-LAB"
+    },
+    {
+      "id": "agent-preferences-lab",
+      "addedAt": "2026-11-06T12:23:33Z",
+      "name": "Agent Preferences Lab",
+      "kind": "Demo",
+      "description": "The user sets what their AI agent may do — allowed action tiers, a spend cap, what happens when Protect detects an AI agent — enforced at a mock MCP tool boundary: permit, human approval (HITL) or deny. Standalone mock of the AI-DEMO2 agentPreferences feature. Mock only.",
+      "url": "http://localhost:7660",
+      "healthPath": "/api/health",
+      "composeFile": "agent-preferences-lab/docker-compose.yml",
+      "tags": [
+        "agent-controls",
+        "human-in-the-loop",
+        "ai-agent-security",
+        "simulated",
+        "pingone-protect"
+      ],
+      "repo": "https://github.com/curtismu7/agent-preferences-lab-LAB"
+    },
+    {
+      "id": "delegation-lab",
+      "addedAt": "2026-11-07T03:16:05Z",
+      "name": "Delegation Lab",
+      "catalogId": "D120",
+      "kind": "Demo",
+      "description": "Consent mints a delegated token with act={agent}; the gateway validates the chain (actor allow-list, no upstream audience). Directory groups are read EVERY decision: outside the group is denied regardless of scopes; premium expands tools and ceiling. Mock of UC1/UC9/UC9A/UC21.",
+      "url": "http://localhost:7690",
+      "healthPath": "/api/health",
+      "composeFile": "delegation-lab-LAB/docker-compose.yml",
+      "tags": [
+        "agent-gateway",
+        "ai-agent-security",
+        "agent-controls",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/delegation-lab-LAB"
+    },
+    {
+      "id": "demo-field-guide",
+      "addedAt": "2026-11-05T19:17:42Z",
+      "name": "Demo field guide LAB",
+      "catalogId": "D115",
+      "kind": "Tool",
+      "description": "A JSON-driven card-deck handoff page: edit data/cards.json (title, base URL, sections, cards) and the page renders it. Genericized from the AI-DEMO2 personal-agents handoff page; no baked-in routes or credentials. Each deployment points at its own demo surfaces.",
+      "url": "http://localhost:7590",
+      "healthPath": "/api/health",
+      "composeFile": "demo-field-guide-LAB/docker-compose.yml",
+      "tags": [
+        "learning",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/demo-field-guide-LAB"
+    },
+    {
+      "id": "diagram-prove-lab",
+      "addedAt": "2026-11-06T15:03:49Z",
+      "name": "Diagram Prove Lab",
+      "kind": "Tool",
+      "description": "Validated personal-agent (ChatGPT) and digital-assistant diagrams as diagram-studio data, with a Prove-it-live checklist: each token claim (RFC 8693 sub+act, scope narrowing, HITL) maps to a real prompt and its evidence. Movable boxes, Simulate, Reset, Mock/Real toggle.",
+      "url": "http://localhost:7710",
+      "healthPath": "/api/health",
+      "composeFile": "diagram-prove-lab/docker-compose.yml",
+      "tags": [
+        "learning",
+        "simulated",
+        "real"
+      ],
+      "repo": "https://github.com/curtismu7/diagram-prove-lab-LAB"
+    },
+    {
+      "id": "hitl-mfa-lab",
+      "addedAt": "2026-11-06T22:32:05Z",
+      "name": "HITL MFA Lab",
+      "catalogId": "D119",
+      "kind": "Demo",
+      "description": "An agent's money movement gated by a mock authorization policy: amount bands decide PERMIT, human consent (HITL), MFA step-up or DENY, and CIBA asks for out-of-band approval on the user's phone. Single-use, amount-bound receipts. Mock of the AI-DEMO2 HITL track (UC7/UC8/UC22).",
+      "url": "http://localhost:7680",
+      "healthPath": "/api/health",
+      "composeFile": "hitl-mfa-lab-LAB/docker-compose.yml",
+      "tags": [
+        "human-in-the-loop",
+        "ciba",
+        "step-up",
+        "agent-controls",
+        "simulated",
+        "real"
+      ],
+      "repo": "https://github.com/curtismu7/hitl-mfa-lab-LAB"
+    },
+    {
+      "id": "mcp-gateway-lab",
+      "addedAt": "2026-11-06T15:38:18Z",
+      "name": "MCP Gateway Lab",
+      "kind": "Demo",
+      "description": "A third-party weather MCP server scoped at an agent gateway: an admin-editable policy is enforced at the edge, so a denied call never reaches the backend and switching the policy flips the same call with no restart. Mock of the AI-DEMO2 weather-mcp showcase (UC30/31/32).",
+      "url": "http://localhost:7670",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-gateway-lab-LAB/docker-compose.yml",
+      "tags": [
+        "mcp",
+        "mcp-security",
+        "agent-gateway",
+        "simulated",
+        "real"
+      ],
+      "repo": "https://github.com/curtismu7/mcp-gateway-lab-LAB"
+    },
+    {
+      "id": "observability-lab",
+      "addedAt": "2026-11-07T14:26:25Z",
+      "name": "Observability Lab",
+      "catalogId": "D123",
+      "kind": "Demo",
+      "description": "Follow a log line from PingOne, PingFederate and Ping Gateway to a searchable, alertable store, with Privilege sensor and MCP gateway lines too. Seeded mock logs, a query box, three alert rules and a label lab that shows the silent failure of a missing relabel rule. Real reads one loopback Loki.",
+      "url": "http://localhost:7800",
+      "healthPath": "/api/health",
+      "composeFile": "observability-LAB/docker-compose.yml",
+      "tags": [
+        "pingone",
+        "pingfederate",
+        "pinggateway",
+        "audit-observability",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/observability-LAB"
+    },
+    {
+      "id": "privilege-logging-lab",
+      "addedAt": "2026-11-07T21:35:14Z",
+      "name": "Privilege Logging Lab",
+      "kind": "Tester",
+      "description": "Drive each Privilege gateway use case and see what gets logged, scored on user, agent, tool and policy decision. Mock replays 17 transactions measured on 2026-11-07; Real (owner-run) sends them to your gateway and reads the log back. The gaps are listed, not hidden.",
+      "url": "http://localhost:7801",
+      "healthPath": "/api/health",
+      "composeFile": "privilege-logging-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: ./scripts/run.sh (port 7801). Mock needs no tenant, key or network. Docker: HOST_PORT=7801 docker compose up --build -d (published on 127.0.0.1 only; Mock by default). Real: set PRIV_LOG_GATEWAY_URL and PRIV_LOG_AGENT_KEY (and optionally PRIV_LOG_SEARCH_URL, PRIV_LOG_SEARCH_INDEX) in ~/Development/.env, then use the Real toggle and confirm the origins. No catalog row matches yet, so no catalogId; the owner assigns one with the board row.",
+      "repo": "https://github.com/curtismu7/privilege-logging-LAB",
+      "tags": [
+        "pingone-privilege",
+        "agent-gateway",
+        "audit-observability",
+        "mcp-security",
+        "simulated",
+        "real"
+      ]
+    },
+    {
+      "id": "field-notes-lab",
+      "addedAt": "2026-11-08T03:12:08Z",
+      "name": "Field Notes",
+      "kind": "Tool",
+      "description": "A library of pages about our apps and what we learned: findings, how-tos and investigations, one Markdown file each. Mock shows the sanitized pages shipped in the repo; Real (owner-run, loopback only) shows a local folder of full notes.",
+      "url": "http://localhost:7804",
+      "healthPath": "/api/health",
+      "composeFile": "field-notes-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: ./scripts/run.sh (port 7804). Docker: HOST_PORT=7804 docker compose up --build -d (published on 127.0.0.1 only; Mock only). Real: set FIELD_NOTES_DIR in ~/Development/.env to a folder of .md pages outside the repo and run on the host. No catalog row matches yet, so no catalogId; the owner assigns one with the board row.",
+      "repo": "https://github.com/curtismu7/field-notes-LAB",
+      "tags": [
+        "learning",
+        "simulated",
+        "real"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "aggregate-entitlement-lab",
+      "addedAt": "2026-11-08T05:04:20Z",
+      "name": "Aggregate entitlement lab",
+      "kind": "Tester",
+      "description": "See how an MCP aggregate lists only the tools each caller may use and refuses the rest by name: six checks, guided steps and a diagram. Mock simulates the Ping release claim (UNVERIFIED on our tenant); Real measures your own gateway's aggregate apps with your agent keys.",
+      "url": "http://localhost:7802",
+      "healthPath": "/api/health",
+      "composeFile": "aggregate-entitlement-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: npm run build, then npm start (port 7802, loopback only). Docker: HOST_PORT=7802 docker compose up --build -d (publishes 127.0.0.1:7802 only). Mock needs nothing. Real: set AGG_ENT_GW_URL, AGG_ENT_GW_APPS and AGG_ENT_GW_KEY_<NAME> in ~/Development/.env, then use the Real toggle. Fork of mcp-tools-LAB (its Entitled listing page). Catalog id D125 (owner, 2026-11-08). composeFile is relative to the shelf's demo root.",
+      "repo": "https://github.com/curtismu7/aggregate-entitlement-LAB",
+      "catalogId": "D125",
+      "alsoCatalogIds": [],
+      "tags": [
+        "mcp",
+        "mcp-security",
+        "pingone-privilege",
+        "agent-gateway",
+        "simulated",
+        "real"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "pingone-events-lab",
+      "addedAt": "2026-11-08T03:55:13Z",
+      "name": "PingOne Events Lab",
+      "catalogId": "D124",
+      "kind": "Demo",
+      "description": "See what PingOne delivers through a webhook subscription: an events page, delivery health (including a site that answers 200 with a web page and silently discards events) and optional forwarding to Elasticsearch for Kibana. Mock needs nothing. Also runs on SE K8 so PingOne can reach it.",
+      "url": "http://localhost:7803",
+      "healthPath": "/api/health",
+      "composeFile": "pingone-events-LAB/docker-compose.yml",
+      "tags": [
+        "pingone",
+        "audit-observability",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/pingone-events-LAB"
+    },
+    {
+      "id": "ciba-hitl-lab",
+      "addedAt": "2026-11-04T23:14:23Z",
+      "name": "CIBA HITL Lab",
+      "catalogId": "C1",
+      "kind": "Demo",
+      "description": "Twenty-four steps from scope to tool with a human in the loop: one login, one token exchange, an OBO token that keeps the full scope set; a write is denied with a CIBA identifier, the gateway rewrites the 403 into a JSON-RPC 2.0 error, the human approves, the agent replays, Authorize verifies…",
+      "url": "http://localhost:7580",
+      "healthPath": "/api/health",
+      "composeFile": "ciba-hitl-lab/docker-compose.yml",
+      "composeOverlays": [],
+      "repo": "https://github.com/curtismu7/ciba-hitl-lab-LAB",
+      "tags": [
+        "ciba",
+        "token-exchange",
+        "authorization-policy",
+        "simulated",
+        "human-in-the-loop",
+        "pingfederate"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "muse",
+      "addedAt": "2026-11-04T23:17:09Z",
+      "name": "Muse",
+      "catalogId": "D21",
+      "kind": "Demo",
+      "description": "A personal agent (Muse) calls tools through a PingOne Privilege-shaped gateway, with a DaVinci-shaped detection flow in front. Simulated: no tenant, no OBO.",
+      "url": "http://127.0.0.1:5100",
+      "healthPath": "/api/health",
+      "composeFile": "muse-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "repo": "https://github.com/curtismu7/muse-LAB",
+      "tags": [
+        "pingone-privilege",
+        "agent-gateway",
+        "agent-identity",
+        "ai-agent-security",
+        "simulated",
+        "pingone-authorize",
+        "pingone-protect"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "agentcore-pingone-demo-lab",
+      "addedAt": "2026-11-04T23:13:42Z",
+      "name": "AgentCore PingOne LAB",
+      "catalogId": "D114",
+      "kind": "Demo",
+      "description": "An AI agent on AWS Bedrock AgentCore Runtime whose identity comes from PingOne, in mock only: the M2M flow (the agent's own token), the USER_FEDERATION 3LO flow (a human login through the agent, four measured shapes), and on-behalf-of delegation. Mock/Real toggle; Real ships disabled.",
+      "url": "http://localhost:7601",
+      "healthPath": "/api/health",
+      "composeFile": "agentcore-pingone-demo-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "repo": "https://github.com/curtismu7/agentcore-pingone-demo-LAB",
+      "tags": [
+        "pingone",
+        "agent-identity",
+        "token-exchange",
+        "oauth",
+        "ai-agent-security",
+        "simulated",
+        "real",
+        "aws",
+        "aws-agentcore"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "meridian-a2a-hop",
+      "addedAt": "2026-11-04T23:16:57Z",
+      "name": "Meridian Pay A2A hop lab",
+      "catalogId": "D110",
+      "kind": "Demo",
+      "description": "Walk a delegated agent token chain one hop at a time: sign in, hand the job to a platform-signed external agent, exchange tokens (RFC 8693, third-party subject and actor), and call MCP tools through Privilege doors. Every hop shows sub/act/aud/scope, and refusals are demoed on purpose. Runs…",
+      "url": "http://127.0.0.1:7720",
+      "healthPath": "/api/health",
+      "composeFile": "meridian-a2a-hop-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "repo": "https://github.com/curtismu7/meridian-a2a-hop-LAB",
+      "tags": [
+        "pingone-privilege",
+        "pingone",
+        "a2a",
+        "token-exchange",
+        "ai-agent-security",
+        "simulated",
+        "real"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "gateway-suite-lab",
+      "addedAt": "2026-11-04T23:15:25Z",
+      "name": "AI Gateway Suite LAB",
+      "catalogId": "D118",
+      "kind": "Demo",
+      "description": "Relayed agent chat: preset prompts (access review, prompt injection, jailbreak, exfiltration, PII, tool misuse) travel Main Agent -> AI Gateway (A2A) -> Worker Agent -> AI Gateway (MCP) -> MCP tool on a movable ReactFlow diagram with a per-hop trace and AI Guard blocks; a Personal Agent tab connects",
+      "url": "http://localhost:5750",
+      "healthPath": "/api/health",
+      "composeFile": "gateway-suite-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "repo": "https://github.com/curtismu7/gateway-suite-LAB",
+      "tags": [
+        "a2a",
+        "mcp",
+        "agent-gateway",
+        "ai-agent-security",
+        "agent-controls",
+        "simulated"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "env-map-lab",
+      "addedAt": "2026-11-08T16:44:20Z",
+      "name": "Where Everything Runs",
+      "kind": "Tool",
+      "description": "What is running now, high level to low: AI-DEMO2 by tier and the LAB apps as two systems, then every running server with its links and observed request counts, plus request paths for a sample Personal Agent and Digital Worker. Mock is a sanitized sample; Real reads a snapshot you collect.",
+      "url": "http://localhost:7805",
+      "openPath": "/#/diagram",
+      "healthPath": "/api/health",
+      "composeFile": "env-map-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: ./scripts/run.sh (port 7805). Docker: HOST_PORT=7805 docker compose up --build -d (published on 127.0.0.1 only; Mock only). Real (host only): run scripts/collect.sh --running-only, then derive-links.mjs and derive-traces.mjs on the snapshot it wrote (outside the repo), set ENV_MAP_SNAPSHOT in ~/Development/.env, run on the host. Optional files beside the snapshot: env-map.owners.json (AI-DEMO2 vs LAB split), env-map.flows.json, env-map.links.json. Opens on the Landscape view (#/diagram). No catalog row matches yet, so no catalogId; the owner assigns one with the board row.",
+      "repo": "https://github.com/curtismu7/env-map-LAB",
+      "tags": [
+        "learning",
+        "simulated",
+        "real"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "pingcli-lab",
+      "addedAt": "2026-11-09T13:17:47Z",
+      "name": "PingCLI Lab",
+      "catalogId": "D126",
+      "kind": "Demo",
+      "description": "Watch an admin automate PingOne with Ping CLI: 14 allow-listed, read-only pingcli commands streamed to the browser, an install -> init -> auth -> run guide, and an easy-read table. Mock plays canned output offline; Real runs pinned pingcli 1.2.0 against your own environment.",
+      "url": "http://localhost:7806",
+      "healthPath": "/api/health",
+      "composeFile": "pingcli-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: ./scripts/run.sh (port 7806). Docker: docker compose up --build -d (published on 127.0.0.1 only). Mock needs no tenant and no credentials. Real: PINGONE_ENVIRONMENT_ID, PINGONE_REGION, PINGONE_CLIENT_ID, PINGONE_CLIENT_SECRET in ~/Development/.env (host) or passed through compose (Docker). Derived from the AI-DEMO2 /pingcli page. Catalog id D126 (owner, 2026-11-09).",
+      "tags": [
+        "pingone",
+        "learning",
+        "simulated",
+        "real"
+      ],
+      "repo": "https://github.com/curtismu7/pingcli-LAB",
+      "alsoCatalogIds": [],
+      "where": "installed"
+    },
+    {
+      "id": "mcp-skills-lab",
+      "addedAt": "2026-11-09",
+      "name": "MCP Skills LAB",
+      "catalogId": "D127",
+      "kind": "Tester",
+      "description": "Tests the MCP Skills extension (io.modelcontextprotocol/skills, SEP-2640): a skills server (Mock or Real), 23 hostile cases a correct host must catch, and a host verifier that checks digests, sizes, frontmatter, approvals and origins. Nothing is executed or fetched.",
+      "url": "http://localhost:7807",
+      "healthPath": "/api/health",
+      "composeFile": "mcp-skills-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: npm start (port 7807). Docker: docker compose up --build -d (published on 127.0.0.1 only). Mock by default; Real reads SKILLS_DIR (read-only mount). No tenant, no credentials, no outbound call. Catalog id D127 (owner, 2026-11-09: next free after D126); no catalog row for it yet, like D123 to D126. UNVERIFIED against a vendor gateway.",
+      "tags": [
+        "mcp",
+        "mcp-security",
+        "tool-poisoning",
+        "simulated",
+        "real",
+        "mcp-server-built"
+      ],
+      "repo": "https://github.com/curtismu7/mcp-skills-LAB",
+      "where": "installed"
+    },
+    {
+      "id": "demo-map-lab",
+      "addedAt": "2026-11-10T12:56:31Z",
+      "name": "Demo Map",
+      "kind": "Tool",
+      "description": "A one-page map of the demo family: a row for the Personal Agent demo, the Digital Worker agent and each Ping product, with the standalone apps that belong in it and the AI-DEMO2 pages for it. Mock uses a made-up sample; Real reads your local shelf.",
+      "url": "http://localhost:7808",
+      "healthPath": "/api/health",
+      "composeFile": "demo-map-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: ./scripts/run.sh (port 7808). Docker: HOST_PORT=7808 docker compose up --build -d (published on 127.0.0.1 only; Mock only). Real: copy .env.example to .env, set AI_DEMO2_URL (SHELF_URL defaults to http://127.0.0.1:4400) and run on the host. Rows are data/rows.json. No catalog row matches, so no catalogId; the owner assigns one with the board row.",
+      "repo": "https://github.com/curtismu7/demo-map-LAB",
+      "tags": [
+        "learning",
+        "simulated",
+        "real"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "privilege-k8-kits",
+      "addedAt": "2026-11-10",
+      "name": "Agent Privilege K8 Kits",
+      "kind": "Tool",
+      "description": "Download hub for the Agent Privilege Gateway Kubernetes deployment kits: the single-gateway quick-start package and the multi-gateway HA package (shared Redis, integrated load balancer), plus the shared 18-page deployment guide served inline. Read-only artifact server, offline.",
+      "url": "http://127.0.0.1:7809",
+      "healthPath": "/api/health",
+      "composeFile": "privilege-k8-kits-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "port": 7809,
+      "catalogId": "",
+      "tags": [
+        "pingone-privilege",
+        "simulated",
+        "learning"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/privilege-k8-kits-LAB",
+      "pingProducts": []
+    },
+    {
+      "id": "ai-demo-standalone",
+      "name": "AI Demo Standalone",
+      "kind": "Demo",
+      "description": "A mock of the AI-DEMO2 dashboard: all 87 use cases in one catalog, run against one mock PDP (token, gateway, policy, then HITL obligations). Foundations, controls, HITL (UC7/8/22) and A2A hand-off (UC2/2.5/2.6/2.7) are wired; the other tracks are listed. Mock only; Real is reserved.",
+      "url": "http://localhost:7810",
+      "healthPath": "/api/health",
+      "composeFile": "ai-demo-standalone-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: ./scripts/run.sh (port 7810). Mock needs no tenant and no credentials. Docker: HOST_PORT=7810 docker compose up --build -d (published on 127.0.0.1 only). Catalog id D128.",
+      "repo": "https://github.com/curtismu7/ai-demo-standalone-LAB",
+      "catalogId": "D128",
+      "alsoCatalogIds": [],
+      "addedAt": "2026-11-11T01:00:00Z",
+      "tags": [
+        "agent-gateway",
+        "ai-agent-security",
+        "agent-identity",
+        "authorization-policy",
+        "human-in-the-loop",
+        "agent-controls",
+        "ciba",
+        "step-up",
+        "a2a",
+        "simulated"
+      ],
+      "where": "installed"
+    },
+    {
+      "id": "privilege-owasp-lab",
+      "addedAt": "2026-11-11T17:22:17Z",
+      "name": "Privilege OWASP Lab",
+      "catalogId": "D129",
+      "kind": "Tester",
+      "description": "The OWASP Agentic AI Top 10 (ASI01-ASI10) with PingOne Privilege coverage: the slide-21 table from the Capability Overview deck, ten explained category cards, and the Gateway vs AIGuard split. The two stated gaps are labelled, not hidden. Mock is static deck wording offline; Real adds read-only live",
+      "url": "http://localhost:7811",
+      "healthPath": "/api/health",
+      "composeFile": "privilege-owasp-lab-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: ./scripts/run.sh (port 7811). Docker: docker compose up --build -d (published on 127.0.0.1 only). Mock needs no tenant and no credentials. Real: PINGONE_ENVIRONMENT_ID, PINGONE_REGION, PINGONE_CLIENT_ID, PINGONE_CLIENT_SECRET in ~/Development/.env (host) or passed through compose (Docker). Derived from the AI-DEMO2 /privilege-owasp-top10 page. Catalog id D129 (assigned 2026-11-12).",
+      "tags": [
+        "pingone-privilege",
+        "ai-agent-security",
+        "agent-identity",
+        "authorization-policy",
+        "learning",
+        "simulated",
+        "real"
+      ],
+      "repo": "https://github.com/curtismu7/privilege-owasp-lab-LAB",
+      "alsoCatalogIds": [],
+      "where": "installed"
+    },
+    {
+      "id": "pf-privilege-obo-lab",
+      "addedAt": "2026-11-11T22:53:57Z",
+      "name": "PF → Privilege OBO Lab",
+      "catalogId": "D130",
+      "kind": "Demo",
+      "description": "Simulated PingFederate to Privilege OBO chain: user SSO, RFC 8693 exchange (sub=user, act.sub=agent), federated-identity check, grant tiers, Cedar policy, Pass Agent Token passthrough. Interactive flow walk, eight scenarios, refusals mirror measured log lines, twelve-card issues panel. Mock only.",
+      "url": "http://localhost:7812",
+      "healthPath": "/api/health",
+      "composeFile": "pf-privilege-obo-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "pingProducts": [],
+      "notes": "Host-run: npm start (port 7812). Docker: docker compose up --build -d (published on 127.0.0.1 only). Mock needs no tenant and no credentials. Content pack: content-pack.json (validator PASS). Catalog id D130 (assigned 2026-11-12).",
+      "tags": [
+        "pingone-privilege",
+        "pingfederate",
+        "agent-identity",
+        "token-exchange",
+        "authorization-policy",
+        "simulated"
+      ],
+      "repo": "https://github.com/curtismu7/pf-privilege-obo-LAB",
+      "alsoCatalogIds": [],
+      "where": "installed"
+    }
+  ]
 }
