@@ -258,6 +258,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
   const PROXY_PATHS = {
     'ai-gateway-client': '/ai-gateway-client/',
     'pf-privilege-obo-lab': '/pf-privilege-obo-lab/',
+    'privilege-api-explorer': '/privilege-api-explorer/',
     'privilege-k8-kits': '/privilege-k8-kits/',
     'ai-guard-sidecar': '/ai-guard-sidecar/',
     'agentcore-pingone-demo-lab': '/agentcore-pingone/',
