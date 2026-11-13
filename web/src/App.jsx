@@ -360,11 +360,22 @@ export default function App() {
         setNote(`stop-all: ${d.name} failed — continuing (${WHY[e.message] || e.message})`);
       }
     }
+    // Shared Ping product containers go down with the demos (Start brings them back when a demo needs them).
+    let sharedCount = 0; let sharedFailed = false;
+    try {
+      const r = await call("/api/shared/stop", "POST");
+      sharedCount = (r.stopped || []).length;
+    } catch { sharedFailed = true; }
     setStopAllRunning(false);
     setAnnounce(`Stop all finished: ${okCount} stopped, ${failed.length} failed`);
+    const sharedNote = sharedFailed
+      ? " Shared services could not be stopped."
+      : sharedCount
+        ? ` Shared services stopped too (${sharedCount}).`
+        : "";
     setNote(failed.length
-      ? `Stop all: ${okCount} stopped, ${failed.length} failed (${failed.join(", ")}).`
-      : `Stop all: all ${okCount} demos stopped. The shelf stays up.`);
+      ? `Stop all: ${okCount} stopped, ${failed.length} failed (${failed.join(", ")}).${sharedNote}`
+      : `Stop all: all ${okCount} demos stopped. The shelf stays up.${sharedNote}`);
     load(true);
   }
 

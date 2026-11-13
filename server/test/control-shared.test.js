@@ -74,3 +74,21 @@ describe('runCompose starts shared services on Start', () => {
     expect(w.calls.filter((c) => c.startsWith('ps ') || c.startsWith('start '))).toEqual([]);
   });
 });
+
+import { stopSharedContainers } from '../src/control.js';
+
+describe('stopSharedContainers', () => {
+  it('stops only the Up shared containers, from every demo\'s pingProducts', async () => {
+    const demos = [demo('a', ['pingfederate']), demo('b', ['pinggateway', 'pingone']), demo('c', ['privilege-gateway'])];
+    const w = world({ [SHARED_CONTAINERS.pingfederate]: 'Up 2 hours', [SHARED_CONTAINERS.pinggateway]: 'Exited (137)', [SHARED_CONTAINERS['privilege-gateway']]: 'Up 1 minute' });
+    const stopped = await stopSharedContainers(() => demos, w.exec);
+    expect(stopped.sort()).toEqual([SHARED_CONTAINERS['privilege-gateway'], SHARED_CONTAINERS.pingfederate].sort());
+    expect(w.calls.filter((c) => c.startsWith('stop ')).length).toBe(2);
+  });
+
+  it('no demos declare products: no calls', async () => {
+    const w = world({ [SHARED_CONTAINERS.pingfederate]: 'Up 2 hours' });
+    expect(await stopSharedContainers(() => [demo('a')], w.exec)).toEqual([]);
+    expect(w.calls.filter((c) => c.startsWith('stop '))).toEqual([]);
+  });
+});

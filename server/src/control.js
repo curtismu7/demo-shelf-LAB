@@ -79,6 +79,22 @@ export async function startSharedContainers(demo, exec) {
   return started;
 }
 
+// Stop the shared product containers (Stop all: shared services go down with the demos).
+// Never stopped by the running-cap logic — only by an explicit Stop all (or this route).
+// Returns the names it stopped.
+export async function stopSharedContainers(getDemos, exec) {
+  const wanted = [...new Set((getDemos() || []).flatMap((d) => d.pingProducts || []))]
+    .map((p) => SHARED_CONTAINERS[p]).filter(Boolean);
+  const stopped = [];
+  for (const container of [...new Set(wanted)]) {
+    let st = '';
+    try { st = (await exec('docker', ['ps', '-a', '--filter', `name=^${container}$`, '--format', '{{.Status}}'])).stdout.trim(); } catch { return stopped; }
+    if (!st.startsWith('Up')) continue;
+    try { await exec('docker', ['stop', container]); stopped.push(container); } catch { /* leave it running */ }
+  }
+  return stopped;
+}
+
 // At most this many shelf demos run at once (SHELF_MAX_RUNNING overrides). Starting one more stops the oldest, and says so.
 export const MAX_RUNNING_DEFAULT = 10;
 // Shared services other demos lean on: they still count toward the limit, but the limit never picks one to stop (Stop all and Stop do).
@@ -227,6 +243,22 @@ export function createControlRouter({ express, getDemos, onChange, exec = defaul
       return fail(500, 'internal'); // Express 4 does not catch a rejected handler: answer instead of hanging
     } finally {
       busy.delete(demo.id);
+    }
+  });
+
+  // Stop all's second half: the shared Ping product containers (the demos themselves are stopped one by one by the UI).
+  router.post('/shared/stop', async (req, res) => {
+    const fail = (code, error) => res.status(code).json({ ok: false, error });
+    if (!inDocker && !isLoopbackAddr(req.socket.remoteAddress)) return fail(403, 'loopback-only');
+    const xfHost = req.headers['x-forwarded-host'];
+    const expectedOrigin = xfHost ? `${req.headers['x-forwarded-proto'] || 'https'}://${xfHost}` : `http://${req.headers.host}`;
+    if (!req.headers.origin || req.headers.origin !== expectedOrigin) return fail(403, 'bad-origin');
+    try {
+      const stopped = await stopSharedContainers(getDemos, exec);
+      onChange?.();
+      return res.status(200).json({ ok: true, stopped });
+    } catch {
+      return fail(500, 'internal');
     }
   });
 
