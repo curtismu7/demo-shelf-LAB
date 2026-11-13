@@ -9,6 +9,14 @@ import http from 'node:http';
 
 const CACHE_MS = 30_000;
 
+// Shared products that run as local containers, mapped to their container names (Rule 20).
+// pingone / pingone-privilege are SaaS: nothing to start locally, so they are absent here.
+export const SHARED_CONTAINERS = {
+  pingfederate: 'ai-demo-pingfederate',
+  pinggateway: 'ai-demo-ping-gateway',
+  'privilege-gateway': 'ai-demo-ping-mcpgw',
+};
+
 // Shared products publish on the host's loopback. Inside the containerised shelf that host
 // is host.docker.internal (SHELF_PING_HOST overrides); a host-run shelf probes 127.0.0.1.
 const PING_HOST = process.env.SHELF_PING_HOST || (process.env.SHELF_IN_DOCKER ? 'host.docker.internal' : '127.0.0.1');

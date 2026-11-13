@@ -4,6 +4,8 @@ import { execFile } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { ensureRepo } from './deploy.js';
+// Shared Ping products a demo leans on (Rule 20): Start also brings these up.
+import { SHARED_CONTAINERS } from './pingProducts.js';
 
 export const EXEC_TIMEOUT_MS = 60_000;
 // The first Start builds the image, which takes minutes; killing it at 60 s made every first Start fail and look like nothing happened.
@@ -60,6 +62,23 @@ export async function orbstackGuard(exec, opts) {
   return ctx === 'orbstack' ? 'ok' : 'docker-context-not-orbstack';
 }
 
+// Start the shared product containers the demo declares (pingProducts). Already-running ones are left alone;
+// a shared container that is missing entirely is not an error (that machine simply does not run that product).
+// Returns the names it started.
+export async function startSharedContainers(demo, exec) {
+  const wanted = [...new Set(demo.pingProducts || [])].map((p) => SHARED_CONTAINERS[p]).filter(Boolean);
+  if (!wanted.length) return [];
+  const started = [];
+  for (const container of wanted) {
+    let st = '';
+    try { st = (await exec('docker', ['ps', '-a', '--filter', `name=^${container}$`, '--format', '{{.Status}}'])).stdout.trim(); } catch { return started; }
+    if (!st) continue; // no such container on this machine
+    if (st.startsWith('Up')) continue;
+    try { await exec('docker', ['start', container]); started.push(container); } catch { /* leave it: the demo still starts */ }
+  }
+  return started;
+}
+
 // At most this many shelf demos run at once (SHELF_MAX_RUNNING overrides). Starting one more stops the oldest, and says so.
 export const MAX_RUNNING_DEFAULT = 10;
 // Shared services other demos lean on: they still count toward the limit, but the limit never picks one to stop (Stop all and Stop do).
@@ -113,6 +132,7 @@ export async function runCompose(demo, action, { exec = defaultExec, fileExists 
   const missing = [demo.composeFile, ...(demo.composeOverlays || [])].filter((f) => !fileExists(f));
   if (missing.length) return fail(409, 'compose-file-missing', { missing });
   let stopped;
+  let sharedStarted = [];
   if ((action === 'start' || action === 'deploy') && cap) {
     // Keep the shelf to cap.max running demos. At the limit: stop the oldest one, then start this one. Already over it (the user started
     // more by hand): refuse rather than stop several at once, and say how many are running.
@@ -132,6 +152,8 @@ export async function runCompose(demo, action, { exec = defaultExec, fileExists 
     }
   }
   if (action === 'start' || action === 'deploy') {
+    // Shared services first, so the demo's own compose has its dependencies when it comes up.
+    sharedStarted = await startSharedContainers(demo, exec).catch(() => []);
     const limit = await networkLimitFor(exec, networkLimit);
     const pool = await networkPoolGuard(exec, limit);
     if (pool === 'docker-unavailable') return fail(503, pool);
@@ -142,7 +164,9 @@ export async function runCompose(demo, action, { exec = defaultExec, fileExists 
   try {
     // Run from the compose file's own folder, as a person would: relative paths, .env and build contexts then resolve the same way.
     const out = await exec('docker', composeArgs(demo, action), { cwd: path.dirname(demo.composeFile), timeoutMs: action === 'start' ? START_TIMEOUT_MS : EXEC_TIMEOUT_MS });
-    return { status: 200, body: { ok: true, id: demo.id, action, output: redact(`${out.stdout}\n${out.stderr}`), ...(stopped ? { stopped, limit: cap.max } : {}) } };
+    const body = { ok: true, id: demo.id, action, output: redact(`${out.stdout}\n${out.stderr}`), ...(stopped ? { stopped, limit: cap.max } : {}) };
+    if (sharedStarted.length) body.sharedStarted = sharedStarted;
+    return { status: 200, body };
   } catch (e) {
     const timedOut = e.killed || e.signal === 'SIGTERM';
     return fail(502, timedOut ? 'timeout' : 'compose-failed', { output: redact(`${e.stdout || ''}\n${e.stderr || ''}`) });
