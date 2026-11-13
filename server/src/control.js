@@ -254,9 +254,9 @@ export function createControlRouter({ express, getDemos, onChange, exec = defaul
     const expectedOrigin = xfHost ? `${req.headers['x-forwarded-proto'] || 'https'}://${xfHost}` : `http://${req.headers.host}`;
     if (!req.headers.origin || req.headers.origin !== expectedOrigin) return fail(403, 'bad-origin');
     try {
-      const stopped = await stopSharedContainers(getDemos, exec);
-      onChange?.();
-      return res.status(200).json({ ok: true, stopped });
+      const r = agent ? await agent.runSharedStop() : { status: 200, body: { ok: true, stopped: await stopSharedContainers(getDemos, exec) } };
+      if (r.status === 200) onChange?.();
+      return res.status(r.status).json(r.body);
     } catch {
       return fail(500, 'internal');
     }

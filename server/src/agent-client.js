@@ -27,6 +27,19 @@ export function createAgentClient({ url, token, fetchFn = fetch, now = () => Dat
       if (!body || typeof body !== 'object') return { status: 502, body: { ok: false, error: 'agent-bad-reply' } };
       return { status: res.status, body };
     },
+    // Stop the shared Ping product containers on the host. Returns { status, body } like run().
+    async runSharedStop() {
+      let res;
+      try {
+        res = await fetchFn(`${base}/v1/shared/stop`, { method: 'POST', headers, signal: AbortSignal.timeout(RUN_TIMEOUT_MS) });
+      } catch {
+        return { status: 503, body: { ok: false, error: 'agent-not-running' } };
+      }
+      const body = await res.json().catch(() => null);
+      if (res.status === 401) return { status: 502, body: { ok: false, error: 'agent-token-rejected' } };
+      if (!body || typeof body !== 'object') return { status: 502, body: { ok: false, error: 'agent-bad-reply' } };
+      return { status: res.status, body };
+    },
     // Map id -> { compose, images } from the agent, or null on any failure (not running, old agent, bad reply). Only known values are kept.
     async installs() {
       try {

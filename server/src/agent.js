@@ -5,7 +5,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import express from 'express';
-import { defaultExec, isLoopbackAddr, runCompose, runningDemos } from './control.js';
+import { defaultExec, isLoopbackAddr, runCompose, runningDemos, stopSharedContainers } from './control.js';
 import { ensureRepo } from './deploy.js';
 import { createInstallChecker } from './install.js';
 
@@ -96,6 +96,16 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
     } finally {
       installs.invalidate(demo.id);
       busy.delete(demo.id);
+    }
+  });
+
+  // Stop all's second half: stop the shared Ping product containers on the host.
+  app.post('/v1/shared/stop', async (req, res) => {
+    try {
+      const stopped = await stopSharedContainers(getDemos, exec);
+      res.json({ ok: true, stopped });
+    } catch {
+      res.status(500).json({ ok: false, error: 'internal' });
     }
   });
 
