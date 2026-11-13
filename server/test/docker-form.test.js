@@ -15,8 +15,18 @@ describe('the Docker form of the shelf', () => {
   it('has no Docker socket, no privileged mode, no host network and no demo-folder mount', () => {
     expect(compose).not.toMatch(/docker\.sock/);
     expect(compose).not.toMatch(/privileged|network_mode|pid:\s*host|user:\s*(root|"?0)/);
-    const volumes = [...compose.matchAll(/volumes:\s*\[(.*)\]/g)].flatMap((m) => m[1].split(',').map((v) => v.trim().replace(/^"|"$/g, '')));
-    expect(volumes).toEqual(['./.data:/data:ro']);
+    // Volumes may be inline [..] or block style (one "- path" per line).
+    const inline = [...compose.matchAll(/volumes:\s*\[(.*?)\]/gs)].map((m) => m[1]);
+    const block = [...compose.matchAll(/volumes:\n((?:\s+-\s+.*\n?)+)/g)].map((m) => m[1]);
+    const volumes = [...inline, ...block]
+      .flatMap((chunk) => chunk.split('\n'))
+      .map((v) => v.trim().replace(/^-\s*/, '').trim().replace(/^"|"$/g, ''))
+      .filter(Boolean);
+    // ./data for the registry cache; the shared env file is read-only mounted so the
+    // SaaS product checks can see it (pingProducts.js). Every mount must be read-only.
+    expect(volumes).toEqual(expect.arrayContaining(['./.data:/data:ro']));
+    for (const v of volumes) expect(v, v).toMatch(/:ro$/);
+    expect(volumes).not.toContain(expect.stringMatching(/:rw/));
   });
   it('is read-only with every capability dropped and no new privileges', () => {
     expect(compose).toMatch(/read_only:\s*true/);

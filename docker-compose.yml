@@ -12,7 +12,13 @@ services:
       SHELF_ALLOWED_HOSTS: ${SHELF_ALLOWED_HOSTS:-}
       SHELF_AGENT_TOKEN: ${SHELF_AGENT_TOKEN:?run npm run docker}
       SHELF_MAX_RUNNING: ${SHELF_MAX_RUNNING:-}
-    volumes: ["./.data:/data:ro"]
+      # The family's one shared settings file (~/Development/.env) is read-only mounted so the
+      # SaaS product checks (PingOne, PingOne Privilege) can see PINGONE_ENVIRONMENT_ID & co.
+      # A missing file is fine: those checks then report not-configured.
+      SHELF_SHARED_ENV: /shared-env/.env
+    volumes:
+      - "./.data:/data:ro"
+      - "${HOME}/Development/.env:/shared-env/.env:ro"
     init: true
     read_only: true
     tmpfs: ["/tmp"]

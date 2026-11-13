@@ -93,7 +93,7 @@ function containerUp(container, exec = execFileSync) {
 }
 
 export function createPingProducts({ envFile, now = Date.now, exec = execFileSync } = {}) {
-  const env = sharedEnv(process.env, envFile);
+  const env = sharedEnv(process.env, envFile || process.env.SHELF_SHARED_ENV);
   let cache = { at: 0, statuses: {} };
 
   async function statusOf(product) {
