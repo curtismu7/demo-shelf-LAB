@@ -568,6 +568,13 @@
       "group": "D",
       "oneLiner": "A mock of the AI-DEMO2 dashboard: 87 use cases, one mock PDP, per-use-case product roles and tech-proof hops; foundations, controls, HITL and A2A hand-off wired.",
       "status": "active"
+    },
+    {
+      "id": "D132",
+      "name": "MFA Admin MCP LAB",
+      "kind": "Tester",
+      "group": "D",
+      "oneLiner": "Administer PingOne's early-access MFA administration MCP tool set — environment MFA settings, device-auth and FIDO passkey policies, notification policies, OATH tokens, and email/phone/WhatsApp delivery settings — with safety classes, a confirm gate and a metadata scan."
     }
   ]
 }
