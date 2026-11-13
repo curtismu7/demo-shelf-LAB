@@ -259,6 +259,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'ai-gateway-client': '/ai-gateway-client/',
     'pf-privilege-obo-lab': '/pf-privilege-obo-lab/',
     'privilege-api-explorer': '/privilege-api-explorer/',
+    'mfa-admin-mcp': '/mfa-admin-mcp/',
     'privilege-k8-kits': '/privilege-k8-kits/',
     'ai-guard-sidecar': '/ai-guard-sidecar/',
     'agentcore-pingone-demo-lab': '/agentcore-pingone/',
