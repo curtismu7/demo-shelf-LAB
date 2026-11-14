@@ -586,7 +586,7 @@ export default function App() {
         {notesOpen && releases && (
           <div className="note" data-state="info" role="region" aria-label="Release notes">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
-              <strong>What's new — {releaseVersion}</strong>
+              <strong>Release notes — every update to the shelf{releaseVersion ? `, currently v${releaseVersion}` : ""}</strong>
               <button type="button" aria-label="Close release notes" onClick={dismissNotes}>Close</button>
             </div>
             <div style={{ margin: "8px 0 0" }} dangerouslySetInnerHTML={{ __html: mdToNodes(releases.notes.replace(/^##\s+.+\n/, "")) }} />
@@ -597,10 +597,10 @@ export default function App() {
             <p style={{ marginTop: 6, marginBottom: 0 }}>Run it in a terminal to get these updates. Safe to re-run. This panel stays closed until the next release.</p>
           </div>
         )}
-        {!notesOpen && releases && (
+        {!notesOpen && releases?.notes && (
           <div className="note note--strip" data-state="info" role="region" aria-label="Release notes">
-            <strong>What's new — {releaseVersion}</strong>
-            <button type="button" aria-label="Show release notes" onClick={() => setNotesOpen(true)}>Show</button>
+            <strong>Release notes — every update to the shelf{releaseVersion ? `, currently v${releaseVersion}` : ""}.</strong>
+            <button type="button" aria-label="Show release notes" onClick={() => setNotesOpen(true)}>Show release notes</button>
           </div>
         )}
         {hasUpdates && !showUpdates && (
@@ -629,6 +629,13 @@ export default function App() {
               </>
             )}
             {updates.notice && <div dangerouslySetInnerHTML={{ __html: mdToNodes(updates.notice) }} style={{ marginTop: 4 }} />}
+            {releases?.notes && (
+              <p style={{ marginTop: 8, marginBottom: 0 }}>
+                {notesOpen
+                  ? <span className="note__meta">Full release notes are open above.</span>
+                  : <button type="button" aria-label="Show all release notes" onClick={() => setNotesOpen(true)}>See all release notes</button>}
+              </p>
+            )}
             {/* One update command on screen at a time: the What's-new panel owns it
                 while open; the banner shows its own copy only when the panel is closed. */}
             {!notesOpen && (

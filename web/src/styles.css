@@ -36,7 +36,7 @@
 
 .top__tools {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
   align-items: center;
 }

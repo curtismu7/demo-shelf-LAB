@@ -890,6 +890,34 @@ describe("Updates available banner", () => {
     expect(screen.getByText("curl -fsSL https://example.invalid/install.sh | bash")).toBeInTheDocument();
   });
 
+  it("offers a 'See all release notes' link in the banner that opens the full notes panel", async () => {
+    const base = mockFetch(shelf());
+    const f = vi.fn(async (url, init) => {
+      if (String(url) === "/api/new-apps") return { ok: true, json: async () => ({ windowHours: 48, since: hrs(48), apps: [A] }) };
+      if (String(url) === "/api/notice") return { ok: true, json: async () => ({ notice: null, updateCommand: "curl" }) };
+      if (String(url) === "/api/releases") return { ok: true, json: async () => ({ version: "2.13", notes: "## 2.13 (2026-11-12)\n\n- A change", updateCommand: "curl" }) };
+      return base(url, init);
+    });
+    vi.stubGlobal("fetch", f);
+    render(<App />);
+    await screen.findByRole("list", { name: "New labs in the last 48 hours" });
+    const panel = screen.getByRole("region", { name: "Release notes", selector: ".note:not(.note--strip)" });
+    expect(panel).toHaveTextContent("A change");
+    // Close the auto-opened notes panel; the banner link then reopens it.
+    fireEvent.click(within(panel).getByRole("button", { name: "Close release notes" }));
+    expect(screen.queryByRole("button", { name: "Close release notes" })).toBeNull();
+    expect(screen.getByRole("button", { name: "Show all release notes" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Show all release notes" }));
+    expect(screen.getByRole("region", { name: "Release notes", selector: ".note:not(.note--strip)" })).toHaveTextContent("A change");
+  });
+
+  it("shows no 'See all release notes' link when the server has no notes", async () => {
+    withUpdates({ apps: [A] });
+    render(<App />);
+    await screen.findByRole("list", { name: "New labs in the last 48 hours" });
+    expect(screen.queryByRole("button", { name: "Show all release notes" })).toBeNull();
+  });
+
   it("shows the notice alone when no lab is new, and no banner when neither part has content", async () => {
     withUpdates({ notice: "Just a notice." });
     const { unmount } = render(<App />);
