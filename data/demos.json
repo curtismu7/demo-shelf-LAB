@@ -117,7 +117,6 @@
         "cedar",
         "mcp",
         "pingone-privilege",
-        "real",
         "simulated",
         "pingfederate",
         "pingone"
@@ -315,7 +314,6 @@
         "agent-identity",
         "ai-agent-security",
         "pingone-privilege",
-        "real",
         "simulated"
       ],
       "repo": "https://github.com/curtismu7/agent-registry-demo-LAB",
@@ -915,7 +913,6 @@
         "agent-controls",
         "human-in-the-loop",
         "simulated",
-        "real",
         "mcp"
       ],
       "repo": "https://github.com/curtismu7/agent-gateway-inspector-LAB"
