@@ -121,6 +121,8 @@ function fromAddress() {
 export default function App() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+  // A manual Refresh is waiting on the server (it re-checks every demo, so it can take seconds). The chips keep their old counts meanwhile.
+  const [refreshing, setRefreshing] = useState(false);
   const [busy, setBusy] = useState(false);
   // Which card action is in flight, as "id/action", so that card can show a spinner while it waits.
   const [activeAction, setActiveAction] = useState(null);
@@ -177,6 +179,10 @@ export default function App() {
       setError(e.message);
     }
   }, []);
+  const refreshNow = useCallback(async () => {
+    setRefreshing(true);
+    try { await load(true); } finally { setRefreshing(false); }
+  }, [load]);
 
   // Rule 19: the Mock/Real toggle. The shelf is a launcher with no live mode, so Real is always disabled
   // with the server's reason; the control still exists in the header and reports the honest answer.
@@ -579,7 +585,7 @@ export default function App() {
           <button type="button" onClick={deployAll} disabled={busy || deployAllRunning || stopAllRunning} aria-busy={deployAllRunning || undefined}>
             {deployAllRunning && <span className="spin" aria-hidden="true" />}Deploy all
           </button>
-          <button type="button" onClick={() => load(true)}>Refresh</button>
+          <button type="button" onClick={refreshNow}>Refresh</button>
           <button type="button" ref={helpBtn} onClick={openHelp} aria-haspopup="dialog" aria-expanded={helpOpen}>Help</button>
         </div>
       </header>
@@ -662,9 +668,14 @@ export default function App() {
         {data && !present && (
           <p className="howto">Start any demo from its folder and it adds itself to this shelf the first time. Restart the shelf to see the new card.</p>
         )}
+        {!data && !error && (
+          <section className="lights" aria-label="Summary by status" aria-busy="true">
+            <span className="chip chip--loading" role="status"><span className="spin" aria-hidden="true" />Loading demos…</span>
+          </section>
+        )}
         {data && (
           <>
-            <section className="lights" aria-label="Summary by status">
+            <section className="lights" aria-label="Summary by status" aria-busy={refreshing || undefined}>
               <button type="button" className="chip" data-state="all" aria-pressed={status === "all"} onClick={() => setStatus("all")}>
                 <b>{items.length}</b> All
               </button>
@@ -680,6 +691,7 @@ export default function App() {
                   {data.runningLimit.running != null ? <><b>{data.runningLimit.running}</b> running · limit {data.runningLimit.max}</> : <>Limit {data.runningLimit.max} running</>}
                 </span>
               )}
+              {refreshing && <span className="chip chip--loading" role="status"><span className="spin" aria-hidden="true" />Refreshing…</span>}
             </section>
             <form className="filters" role="search" onSubmit={(e) => e.preventDefault()}>
               <label>Search<input type="search" value={text} onChange={(e) => setText(e.target.value)} placeholder="Name, id, description or tag" /></label>

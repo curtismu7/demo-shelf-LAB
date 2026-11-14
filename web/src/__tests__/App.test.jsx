@@ -782,6 +782,52 @@ describe("tags", () => {
     expect(screen.getByText("Nothing matches these filters.")).toBeInTheDocument();
   });
 
+  it("the status row shows a spinner until the first answer, then the chips replace it", async () => {
+    let release;
+    const gate = new Promise((r) => { release = r; });
+    vi.stubGlobal("fetch", vi.fn(async (url) => {
+      if (String(url) === "/api/info") return { ok: true, json: async () => INFO };
+      await gate; // /api/shelf is slow: 88 demos to check
+      return { ok: true, json: async () => shelf() };
+    }));
+    render(<App />);
+    const loading = await screen.findByText("Loading demos…");
+    expect(loading.closest('[role="status"]')).not.toBeNull();
+    expect(loading.querySelector(".spin")).toHaveAttribute("aria-hidden", "true"); // the ring is decoration; the words say it
+    expect(screen.getByRole("region", { name: "Summary by status" })).toHaveAttribute("aria-busy", "true");
+    expect(screen.queryByRole("button", { name: /^\d+ All$/ })).toBeNull();
+    await act(async () => { release(); });
+    await screen.findByText("Demo A");
+    expect(screen.queryByText("Loading demos…")).toBeNull();
+    expect(screen.getByRole("button", { name: /^4 All$/ })).toBeInTheDocument();
+  });
+
+  it("an unreachable shelf shows the error, not a spinner that never ends", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => ({ ok: false, status: 503, json: async () => ({}) })));
+    render(<App />);
+    expect(await screen.findByText(/Cannot reach the shelf server/)).toBeInTheDocument();
+    expect(screen.queryByText("Loading demos…")).toBeNull();
+  });
+
+  it("a manual Refresh shows Refreshing… beside the chips and keeps their counts until it answers", async () => {
+    mockFetch(shelf());
+    render(<App />);
+    await screen.findByText("Demo A");
+    let release;
+    const gate = new Promise((r) => { release = r; });
+    vi.stubGlobal("fetch", vi.fn(async (url) => {
+      if (String(url) === "/api/shelf/refresh") await gate; // the forced re-check of every demo
+      return { ok: true, json: async () => shelf() };
+    }));
+    fireEvent.click(screen.getByRole("button", { name: "Refresh" }));
+    expect(await screen.findByText("Refreshing…")).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Summary by status" })).toHaveAttribute("aria-busy", "true");
+    expect(screen.getByRole("button", { name: /^2 Running$/ })).toBeInTheDocument(); // the old counts stay up
+    await act(async () => { release(); });
+    await waitFor(() => expect(screen.queryByText("Refreshing…")).toBeNull());
+    expect(screen.getByRole("region", { name: "Summary by status" })).not.toHaveAttribute("aria-busy");
+  });
+
   it("an old ?status= link still loads with every card shown (the param is ignored)", async () => {
     window.history.replaceState(null, "", "/?status=new");
     mockFetch(shelf());
