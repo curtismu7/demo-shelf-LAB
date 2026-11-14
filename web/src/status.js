@@ -1,13 +1,11 @@
-// User-facing status buckets for the shelf (four, per the owner):
+// User-facing status buckets for the shelf (three; they add up to All):
 //   Running  — the demo answers its health check right now
-//   Deployed — cloned/installed on this machine (may be running or stopped; Running is the live subset)
 //   Offline  — installed but not answering (stopped, failed, or unhealthy)
 //   Not deployed — in GitHub/the catalog but not deployed on this machine (not the same as the What's new filter)
 // The server's finer-grained states (ready/broken/needs-setup/…) still drive the
-// Details drawer; the shelf summary and filter use these four buckets.
+// Details drawer; the shelf summary and filter use these buckets.
 export const BUCKETS = [
   { id: "running",  label: "Running" },
-  { id: "deployed", label: "Deployed" },
   { id: "offline",  label: "Offline" },
   { id: "new",      label: "Not deployed" },
 ];

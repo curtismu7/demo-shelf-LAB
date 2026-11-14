@@ -86,10 +86,9 @@ async function copyText(text) {
 }
 
 function toItems(data) {
-  // Bucket per the owner's four statuses. A demo that answers health is Running;
+  // Every item lands in exactly one bucket. A demo that answers health is Running;
   // one in the catalog/GitHub but not deployed here is Not deployed; everything else
-  // (cloned/installed but not answering) is Offline. "Deployed" counts every
-  // installed demo (Running + Offline are its live subsets).
+  // (cloned/installed but not answering) is Offline.
   const reg = data.demos.map((d) => {
     const stateBucket = BUCKET_OF_STATE[d.status?.state] || "offline";
     const installed = d.where === "installed" || d.install === "installed" || !("where" in d);
@@ -144,6 +143,8 @@ export default function App() {
   const [releaseVersion, setReleaseVersion] = useState(null);
   const [announce, setAnnounce] = useState("");
   const [where, setWhere] = useState("all");
+  // The status chips in the summary row: "all" or a bucket id from status.js. Clicking the active one clears it.
+  const [status, setStatus] = useState("all");
   const [text, setText] = useState(() => fromAddress().q);
   const [picked, setPicked] = useState(() => fromAddress().tags);
   // "What's new": only demos the server marks isNew (added within its rolling newWindowHours).
@@ -500,6 +501,7 @@ export default function App() {
   const passesBase = (i) => {
     const q = text.trim().toLowerCase();
     return (where === "all" || i.where === where) &&
+      (status === "all" || i.bucket === status) &&
       (!q || [i.name, i.catalogId, ...(i.alsoCatalogIds || []), i.description, ...(i.tags || []).flatMap((t) => [t, tagInfo.get(t)?.label])].some((f) => (f || "").toLowerCase().includes(q)));
   };
   const passesTags = (i, skip) => tagGroups.every((g) => {
@@ -508,10 +510,10 @@ export default function App() {
     return !mine.length || mine.some((t) => i.tags?.includes(t.id));
   });
   const passesNew = (i) => !newOnly || i.isNew === true;
-  const shown = useMemo(() => items.filter((i) => passesBase(i) && passesTags(i) && passesNew(i)), [items, where, text, picked, tagGroups, newOnly]); // eslint-disable-line react-hooks/exhaustive-deps
+  const shown = useMemo(() => items.filter((i) => passesBase(i) && passesTags(i) && passesNew(i)), [items, where, status, text, picked, tagGroups, newOnly]); // eslint-disable-line react-hooks/exhaustive-deps
   // The What's new chip counts like a tag chip: every other filter applied, its own left out.
   const newTotal = items.filter((i) => i.isNew === true).length;
-  const newCount = useMemo(() => items.filter((i) => i.isNew === true && passesBase(i) && passesTags(i)).length, [items, where, text, picked, tagGroups]); // eslint-disable-line react-hooks/exhaustive-deps
+  const newCount = useMemo(() => items.filter((i) => i.isNew === true && passesBase(i) && passesTags(i)).length, [items, where, status, text, picked, tagGroups]); // eslint-disable-line react-hooks/exhaustive-deps
   // How many cards each chip would give, with every other filter (and the other tag groups) applied.
   const tagCounts = useMemo(() => {
     const out = {};
@@ -520,7 +522,7 @@ export default function App() {
       for (const t of g.tags) out[t.id] = pool.filter((i) => i.tags?.includes(t.id)).length;
     }
     return out;
-  }, [items, where, text, picked, tagGroups, newOnly]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [items, where, status, text, picked, tagGroups, newOnly]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Registered demos stand on the first shelf. Planned ideas follow, one shelf per catalog group.
   const byPlan = (a, b) => (a.wave ?? 99) - (b.wave ?? 99) || String(a.catalogId).localeCompare(String(b.catalogId), undefined, { numeric: true });
@@ -663,13 +665,14 @@ export default function App() {
         {data && (
           <>
             <section className="lights" aria-label="Summary by status">
-              <span type="button" className="chip" data-state="all">
+              <button type="button" className="chip" data-state="all" aria-pressed={status === "all"} onClick={() => setStatus("all")}>
                 <b>{items.length}</b> All
-              </span>
+              </button>
               {BUCKETS.map((b) => (
-                <span key={b.id} className="chip" data-state={b.id}>
+                <button key={b.id} type="button" className="chip" data-state={b.id} aria-pressed={status === b.id}
+                  disabled={status !== b.id && !counts[b.id]} onClick={() => setStatus(status === b.id ? "all" : b.id)}>
                   <b>{counts[b.id] || 0}</b> {b.label}
-                </span>
+                </button>
               ))}
               {data.runningLimit && !present && (
                 <span className="chip chip--limit" data-state={data.runningLimit.running != null && data.runningLimit.running >= data.runningLimit.max ? "full" : "room"} role="status" data-testid="running-limit"
