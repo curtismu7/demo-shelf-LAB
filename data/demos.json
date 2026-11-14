@@ -1851,7 +1851,33 @@
         "simulated",
         "real"
       ]
+    },
+    {
+      "id": "workload-identity-lab",
+      "name": "Workload Identity Lab",
+      "catalogId": "D133",
+      "kind": "Tester",
+      "description": "Federated agents: an agent authenticates to the gateway with a JWT from its own identity platform - no gateway secret. Mint tokens, watch the signature/issuer/audience/required-claims checks, prove Pass Agent Token passthrough, break it on purpose.",
+      "url": "http://localhost:7816",
+      "healthPath": "/api/health",
+      "composeFile": "workload-identity-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "workload-identity",
+        "federation",
+        "pingfederate",
+        "jwt",
+        "jwks",
+        "pass-agent-token",
+        "mcp",
+        "simulated",
+        "real"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/workload-identity-LAB",
+      "port": "7816",
+      "addedAt": "2026-11-14",
+      "pingProducts": []
     }
-
   ]
 }

@@ -97,6 +97,26 @@
         {
           "id": "learning",
           "label": "Learning and tooling"
+        },
+        {
+          "id": "workload-identity",
+          "label": "Workload identity"
+        },
+        {
+          "id": "federation",
+          "label": "Federation"
+        },
+        {
+          "id": "jwt",
+          "label": "JWT"
+        },
+        {
+          "id": "jwks",
+          "label": "JWKS"
+        },
+        {
+          "id": "pass-agent-token",
+          "label": "Pass Agent Token"
         }
       ]
     },
