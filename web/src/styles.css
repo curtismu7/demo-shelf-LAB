@@ -214,6 +214,16 @@ html[data-present] {
   font-weight: 500;
 }
 
+/* The "Loading demos…" / "Refreshing…" pill: a spinner ring and a muted label, not a button. */
+.chip--loading {
+  align-items: center;
+  color: var(--muted);
+}
+
+.chip--loading .spin {
+  margin-right: 0;
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;
