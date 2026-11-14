@@ -59,9 +59,10 @@ describe("shelf page", () => {
     render(<App />);
     await screen.findByText("Demo A");
     const sum = screen.getByRole("region", { name: "Summary by status" });
-    expect(within(sum).getByText("Running").closest("span")).toHaveTextContent("2"); // Demo A (ready) + Demo C (up, no contract)
-    expect(within(sum).getByText("Offline").closest("span")).toHaveTextContent("1"); // Demo B (down)
-    expect(within(sum).getByText("Not deployed").closest("span")).toHaveTextContent("1"); // Passwordless (planned)
+    expect(within(sum).getByText("Running").closest("button")).toHaveTextContent("2"); // Demo A (ready) + Demo C (up, no contract)
+    expect(within(sum).queryByText("Deployed")).toBeNull(); // no separate Deployed chip: Running + Offline + Not deployed add up to All
+    expect(within(sum).getByText("Offline").closest("button")).toHaveTextContent("1"); // Demo B (down)
+    expect(within(sum).getByText("Not deployed").closest("button")).toHaveTextContent("1"); // Passwordless (planned)
     expect(within(sum).queryByText("New")).toBeNull(); // "New" is only the recently-added badge
     expect(within(screen.getByText("Demo A").closest("article")).getByRole("link", { name: /Open/ })).toHaveAttribute("target", "_blank");
     expect(within(screen.getByText("Demo B").closest("article")).queryByRole("link")).toBeNull();
@@ -737,17 +738,48 @@ describe("tags", () => {
     expect(window.location.search).toBe(""); // the defaults need no param
   });
 
-  it("the status row is a summary, not a filter: every card shows and the address stays clean", async () => {
+  it("the status chips are buttons that filter the cards; the page opens on All and the address stays clean", async () => {
     window.history.replaceState(null, "", "/");
     mockFetch(shelf());
     render(<App />);
     await screen.findByText("Demo A");
-    expect(screen.getByText("Demo A")).toBeInTheDocument();
-    expect(screen.getByText("Demo B")).toBeInTheDocument();
-    const summary = screen.getByRole("region", { name: "Summary by status" });
-    expect(within(summary).getByText("All").closest("span")).not.toBeNull();
+    const sum = within(screen.getByRole("region", { name: "Summary by status" }));
+    const chip = (label) => sum.getByRole("button", { name: new RegExp(`^\\d+ ${label}$`) });
+    const seen = () => ["Demo A", "Demo B", "Demo C", "Passwordless"].filter((n) => screen.queryByRole("heading", { name: n }));
+    expect(chip("All")).toHaveAttribute("aria-pressed", "true");
+    expect(seen()).toEqual(["Demo A", "Demo B", "Demo C", "Passwordless"]);
+
+    fireEvent.click(chip("Running"));
+    expect(seen()).toEqual(["Demo A", "Demo C"]);
+    expect(chip("Running")).toHaveAttribute("aria-pressed", "true");
+    expect(chip("All")).toHaveAttribute("aria-pressed", "false");
+
+    fireEvent.click(chip("Offline"));
+    expect(seen()).toEqual(["Demo B"]);
+    fireEvent.click(chip("Not deployed"));
+    expect(seen()).toEqual(["Passwordless"]);
+
+    fireEvent.click(chip("Not deployed")); // the active chip again clears it
+    expect(seen()).toEqual(["Demo A", "Demo B", "Demo C", "Passwordless"]);
+    expect(chip("All")).toHaveAttribute("aria-pressed", "true");
+
+    fireEvent.click(chip("Offline"));
+    fireEvent.click(chip("All"));
+    expect(seen()).toEqual(["Demo A", "Demo B", "Demo C", "Passwordless"]);
     expect(screen.queryByLabelText("Status")).toBeNull();
     expect(window.location.search).toBe("");
+  });
+
+  it("a status chip combines with search, and a chip with nothing behind it is disabled", async () => {
+    mockFetch(shelf({ planned: [] }));
+    render(<App />);
+    await screen.findByText("Demo A");
+    const sum = within(screen.getByRole("region", { name: "Summary by status" }));
+    expect(sum.getByRole("button", { name: /^0 Not deployed$/ })).toBeDisabled();
+    fireEvent.click(sum.getByRole("button", { name: /^\d+ Running$/ }));
+    fireEvent.change(screen.getByLabelText("Search"), { target: { value: "mfa" } }); // Demo B matches, but it is Offline
+    expect(screen.queryByText("Demo B")).toBeNull();
+    expect(screen.getByText("Nothing matches these filters.")).toBeInTheDocument();
   });
 
   it("an old ?status= link still loads with every card shown (the param is ignored)", async () => {

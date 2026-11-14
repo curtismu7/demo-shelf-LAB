@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- The status chips in the summary row (All, Running, Offline, Not deployed) are now buttons that filter the shelf to that status. The active chip is pressed; pressing it again, or All, shows every demo. A chip with nothing behind it is disabled. It combines with search, Where it runs, What's new and the tag filters, and the tag and What's new counts follow it. The `running · limit` chip stays a read-only indicator. The Deployed chip is gone: it always read 0, and it would only have repeated Running + Offline. Use Where it runs → Installed for everything on this machine.
 - Closing the What's new panel or the Updates available banner folds it to a one-line strip with a Show button instead of hiding it, so it takes little screen space. It stays folded across reloads until a new release or a new lab appears; Show re-opens it for that visit only.
 - Running demos are listed first on the shelf, ahead of the stopped ones; the plan order holds inside each group, and it applies under every filter and What's new.
 - A refused Start, Stop or Deploy now shows its reason on the card that was pressed (role=alert), until that card's next action: the agent's own words for the running limit ("13 demos are running and the limit is 10..."), the network-pool fix and compose errors, and the plain-words reason for the token, agent-down and OrbStack-context refusals. The buttons no longer look dead when the agent says no.
