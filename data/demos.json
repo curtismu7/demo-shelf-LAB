@@ -1900,6 +1900,30 @@
       "port": "7817",
       "addedAt": "2026-11-14",
       "pingProducts": []
+    },
+    {
+      "id": "appfire-agent-governance-lab",
+      "name": "Appfire Agent Governance LAB",
+      "kind": "Demo",
+      "description": "Built for the Appfire agentic-AI briefing: Ping governs the agent-facing front end (identity, privilege, authorize, risk-based HITL, audit) over the simulated HIVE back-end split. 87 use cases, movie reel, 11 attack scenarios, lab-family hand-offs. Mock runs offline.",
+      "url": "http://localhost:7814",
+      "healthPath": "/api/health",
+      "composeFile": "appfire-agent-governance-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: ./scripts/run.sh (port 7814). Docker: HOST_PORT=7814 docker compose up --build -d (published on 127.0.0.1 only). Mock needs no tenant and no credentials. Settings: the app's own .env beside docker-compose.yml (copy .env.example; Docker takes named values from it by substitution, never env_file). Real works in Docker from the app's .env, and on the host: it is available whenever the full-Real settings are set in that .env (no opt-in; AAG_ALLOW_LIVE=0 turns it off), and makes two real calls to one PingOne environment. With no .env Real is disabled and its tooltip says what to fill in. Live is UNVERIFIED (owner runs it). No catalog id yet: the owner assigns one with the board row.",
+      "tags": [
+        "agent-identity",
+        "agent-controls",
+        "human-in-the-loop",
+        "mcp",
+        "simulated",
+        "real"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/appfire-agent-governance-LAB",
+      "port": "7814",
+      "addedAt": "2026-11-15",
+      "pingProducts": []
     }
   ]
 }
