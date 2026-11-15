@@ -99,7 +99,7 @@ function shelfOrigin(req) {
   return `${proto}://${host}`;
 }
 
-export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, installSource = null, demoRoot = null, refreshWaitMs = 4000, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait, pingProductsCheck, lastRunning = null, networkLimit = undefined, maxRunningDemos = null }) {
+export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, installSource = null, demoRoot = null, refreshWaitMs = 4000, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait, pingProductsCheck, lastRunning = null, networkLimit = undefined, maxRunningDemos = null, keepWarmMs = 0 }) {
   const demos = expandWhere(registry);
   const app = express();
   app.disable('x-powered-by');
@@ -190,7 +190,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     res.json(await newApps.get());
   });
 
-  const poller = createPoller({ getDemos: () => demos, fetchFn, now, random, wait });
+  const poller = createPoller({ getDemos: () => demos, fetchFn, now, random, wait, keepWarmMs });
   const install = createInstallState({ source: installSource, now });
   // Rule 20: which shared Ping products each demo needs, and whether they are shared-and-healthy.
   const checkPing = pingProductsCheck || createPingProducts({ now, exec });
