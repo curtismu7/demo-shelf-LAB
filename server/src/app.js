@@ -343,6 +343,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'chatgpt-mcp-flow': '/chatgpt-mcp-flow/',
     'mock-authorize': '/mock-authorize/',
     'agent-audit-trail-lab': '/agent-audit-trail-lab/',
+    'privilege-bulk-users': '/privilege-bulk-users/',
   };
   app.get('/api/shelf', async (req, res, next) => {
     try { res.set('Cache-Control', 'no-store').json({ ...(await shelf(await poller.get())), starterSets, shelfUrl: shelfOrigin(req) }); } catch (e) { next(e); }

@@ -1878,6 +1878,28 @@
       "port": "7816",
       "addedAt": "2026-11-14",
       "pingProducts": []
+    },
+    {
+      "id": "privilege-bulk-users",
+      "name": "Privilege Bulk Users LAB",
+      "kind": "Tester",
+      "description": "Register users for PingOne Privilege by API, in bulk: a guide to the two routes (PingOne API, Privilege console API) and a runnable lab with plan, typed-count apply and verify, 429 back-off, and six Mock scenarios. Mock by default; Real is owner-run.",
+      "url": "http://localhost:7817",
+      "healthPath": "/api/health",
+      "composeFile": "privilege-bulk-users-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "notes": "Host-run: npm ci && npm run build && npm start (port 7817; npm run doctor checks it). Or: HOST_PORT=7817 docker compose up --build -d (published on 127.0.0.1 only). Mock needs no setup. Real is refused until the owner sets PRIVILEGE_BULK_MODE=real in the lab's own .env beside docker-compose.yml. Fork of privilege-api-explorer-LAB. Repo: curtismu7/privilege-bulk-users-LAB. No catalog id yet: the owner assigns one with the board row.",
+      "tags": [
+        "pingone",
+        "pingone-privilege",
+        "simulated",
+        "real"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/privilege-bulk-users-LAB",
+      "port": "7817",
+      "addedAt": "2026-11-14",
+      "pingProducts": []
     }
   ]
 }
