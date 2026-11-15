@@ -586,6 +586,7 @@ export default function App() {
             {deployAllRunning && <span className="spin" aria-hidden="true" />}Deploy all
           </button>
           <button type="button" onClick={refreshNow}>Refresh</button>
+          <a className="top__link" href="#/verify" title="Mark demos Verified or In progress, with a note">Verification</a>
           <button type="button" ref={helpBtn} onClick={openHelp} aria-haspopup="dialog" aria-expanded={helpOpen}>Help</button>
         </div>
       </header>

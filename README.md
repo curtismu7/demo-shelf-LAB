@@ -92,7 +92,7 @@ The container is published on `127.0.0.1` only. It has no Docker socket and no m
 npm test
 ```
 
-On Node 26: 289 server tests and 77 web tests pass. `npm run e2e` drives a real browser against fake demos (needs Playwright's Chromium, not run in CI).
+On Node 26: 437 server tests and 138 web tests pass. `npm run e2e` drives a real browser against fake demos (needs Playwright's Chromium, not run in CI).
 
 ## Troubleshooting
 
@@ -112,9 +112,14 @@ Owner: the Ping AI demo family maintainers. Licence: MIT ([LICENSE](LICENSE)). R
 
 Every -LAB app ships `docs/shelf-entry.json` and a `scripts/shelf-register.mjs`. On `npm start` the app looks for a `demo-shelf-LAB` folder next to it. If its id is already on the shelf (the committed `data/demos.json` or your `.data/demos.local.json`) it does nothing. If not, it appends its entry to `.data/demos.local.json` and prints one line. Restart the shelf to see the new card. No shelf folder, or `SHELF_AUTOREGISTER=0`: it skips and the app starts as normal. An app started only with `docker compose up` cannot reach your shelf folder, so it does not register; run its `npm start` once, or add its entry by hand ([docs/registry.md](docs/registry.md)).
 
+## Verification marks
+
+Each tile can show a green **Verified** check or an amber **In progress** check, with a short note, so users know which demos have been checked. Set them on the **Verification** page (the header link, or `#/verify`). They are saved on your machine and shipped to everyone with `npm run verification:publish` and a pull request. See [docs/verification.md](docs/verification.md).
+
 ## Docs
 
 - [docs/health-contract.md](docs/health-contract.md): the `demo-health/1` field table, what each light tells you, and a short example for adding `GET /api/health` to a demo.
+- [docs/verification.md](docs/verification.md): the Verified / In progress marks, the Verification page, and how marks ship.
 - [docs/registry.md](docs/registry.md): the registry files, every field, tags, and the catalog regeneration command.
 - [docs/security.md](docs/security.md): loopback, no secrets, the Start / Stop allowlist, the read-only install check, the SSRF stance.
 - [CHANGELOG.md](CHANGELOG.md).

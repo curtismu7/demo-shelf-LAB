@@ -10,6 +10,7 @@ import { createInstallChecker } from './install.js';
 import { createProbeFetch } from './probe.js';
 import { loadCatalogTags, loadTaxonomy, tagIdSet, untaggedPlanned } from './tags.js';
 import { createLastRunning } from './lastRunning.js';
+import { createVerification } from './verification.js';
 import { maxRunning } from './control.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -72,7 +73,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     if (untagged.length) console.warn(`${untagged.length} planned idea${untagged.length > 1 ? 's have' : ' has'} no tags (add to data/catalog-tags.json): ${untagged.join(', ')}`);
     const dataDir = path.resolve(process.env.SHELF_DATA_DIR || path.join(root, '.data'));
     const lastRunning = createLastRunning({ file: path.join(dataDir, 'last-running.json') });
-    const app = createApp({ demos, catalog, tags, catalogTags, allowStart, agent, inDocker, installSource, demoRoot, fetchFn, loopbackOnly: bind.loopback || inDocker, shelfDir: root, webDist: path.join(root, 'web', 'dist'), lastRunning, maxRunningDemos: maxRunning(), keepWarmMs: KEEP_WARM_MS });
+    const verification = createVerification({ seedFile: path.join(root, 'data', 'verification.json'), localFile: path.join(dataDir, 'verification.local.json'), knownIds: () => demos.map((d) => d.id) });
+    const app = createApp({ demos, catalog, tags, catalogTags, allowStart, agent, inDocker, installSource, demoRoot, fetchFn, loopbackOnly: bind.loopback || inDocker, shelfDir: root, webDist: path.join(root, 'web', 'dist'), lastRunning, maxRunningDemos: maxRunning(), keepWarmMs: KEEP_WARM_MS, verification });
     app.listen(port, bind.host, () => {
       console.log(`demo-shelf on http://${bind.host}:${port}  (${demos.length} demos, start/stop ${allowStart ? (inDocker ? 'via the start agent' : 'on') : 'off'})`);
     });

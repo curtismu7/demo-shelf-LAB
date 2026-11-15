@@ -21,7 +21,8 @@
     "agent": "node server/src/agent-cli.js",
     "docker": "node scripts/docker-up.mjs up",
     "docker:down": "node scripts/docker-up.mjs down",
-    "ports": "node scripts/ports.mjs"
+    "ports": "node scripts/ports.mjs",
+    "verification:publish": "node scripts/verification-publish.mjs"
   },
   "devDependencies": {
     "playwright": "^1.64.1"
