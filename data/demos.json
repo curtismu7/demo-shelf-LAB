@@ -700,7 +700,7 @@
       "catalogId": "D100",
       "kind": "Demo",
       "description": "Play the personal agent from the Personal Agent Protocol (Poppy, spec 1.0): read a Company's poppy.json, sign in to PingFederate with a URL as the client id, then call its API with a signed Poppy-Session. Step through it or ask the Agent chat (scripted or live Claude). Every request is shown raw.",
-      "url": "http://localhost:5450",
+      "url": "https://localhost:5450",
       "healthPath": "/api/health",
       "composeFile": "poppy-agent-tester-LAB/docker-compose.yml",
       "tags": [
