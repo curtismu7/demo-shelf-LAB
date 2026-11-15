@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-// The one badge for a verification mark ({ status, label, note, updatedAt, source } from /api/shelf). The shelf card, the Details drawer
-// and the Verification page all render it, so a change here (the tick, the colours in styles.css, the wording of the note line) changes
-// every place at once. The words ("Verified", "In progress") come from the server's single definition, never from here.
-// A tile with no mark, or one set to "none", renders nothing.
-export default function VerifyMark({ mark, note = true, className = "" }) {
+// VerifyMark: the Verified / In progress mark of an app, as the shelf (demo-shelf-LAB) records it. One badge for every app and for the shelf
+// itself; vendored byte for byte, never edited in an app (see README.md). The words ("Verified", "In progress") and their meanings come from
+// the shelf's one definition (server/src/verification.js there), never from this file.
+//
+//   <VerifyBadge mark={demo.verification} />        the badge for a mark you already hold ({ status, label, note, updatedAt, source })
+//   <VerifyMark id="a2a-lab" />                      an app's own mark: finds its entry in GET /api/shelf (the same call ShelfLink makes)
+//
+// Both render nothing when there is no mark, when the mark is "none", while loading, and when the shelf cannot be reached: never an error,
+// never a placeholder. `note` shows the note under the label (the shelf's cards do); off, the note is the badge's tooltip instead.
+
+export function VerifyBadge({ mark, note = true, className = "" }) {
   if (!mark || mark.status === "none") return null;
   const local = mark.source === "local";
-  const title = [mark.updatedAt && `Marked ${mark.updatedAt}`, local && "set on this machine, not shipped with the shelf"].filter(Boolean).join(", ");
+  const title = [!note && mark.note, mark.updatedAt && `Marked ${mark.updatedAt}`, local && "set on this machine, not shipped with the shelf"].filter(Boolean).join(". ");
   return (
     <div className={`verify ${className}`.trim()} data-status={mark.status} title={title || undefined}>
       <span className="verify__badge">
@@ -21,4 +27,17 @@ export default function VerifyMark({ mark, note = true, className = "" }) {
       {note && local && <span className="verify__local">Set on this machine</span>}
     </div>
   );
+}
+
+export default function VerifyMark({ id, path = "/api/shelf", headers, note = false, className = "" }) {
+  const [mark, setMark] = useState(null);
+  useEffect(() => {
+    let alive = true;
+    fetch(path, { credentials: "omit", headers: { Accept: "application/json", ...(headers ?? {}) } })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (alive) setMark(d?.demos?.find((x) => x.id === id)?.verification ?? null); })
+      .catch(() => { /* no shelf, no mark */ });
+    return () => { alive = false; };
+  }, [id, path]); // eslint-disable-line react-hooks/exhaustive-deps
+  return <VerifyBadge mark={mark} note={note} className={className} />;
 }

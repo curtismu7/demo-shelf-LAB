@@ -92,7 +92,7 @@ The container is published on `127.0.0.1` only. It has no Docker socket and no m
 npm test
 ```
 
-On Node 26: 437 server tests and 137 web tests pass. `npm run e2e` drives a real browser against fake demos (needs Playwright's Chromium, not run in CI).
+On Node 26: 437 server tests and 138 web tests pass. `npm run e2e` drives a real browser against fake demos (needs Playwright's Chromium, not run in CI).
 
 ## Troubleshooting
 

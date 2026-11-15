@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { cloneCommand, installState, NOT_BUILT, NOT_INSTALLED_HINT } from "./install.js";
 import { LABELS, HINTS } from "./status.js";
-import VerifyMark from "./components/VerifyMark.jsx";
+import { VerifyBadge } from "./components/VerifyMark.jsx";
 
 export function StatusLight({ state }) {
   return <span className="light" data-state={state}>{LABELS[state] || state}</span>;
@@ -164,7 +164,7 @@ export function Card({ item, startEnabled, present, busy, activeAction, starting
       <h3>{item.name}</h3>
       <span className="box__place">{place}{item.isNew && <span className="box__new" title={item.addedAt ? `Added ${item.addedAt}` : undefined}>New</span>}</span>
       <StatusLight state={waiting ? "starting" : s.state} />
-      <VerifyMark mark={item.verification} />
+      <VerifyBadge mark={item.verification} />
       <p className="box__desc">{item.description}</p>
       <TagPills item={item} tagInfo={tagInfo} picked={picked} onTag={onTag} />
       <p className="box__meta">
@@ -228,7 +228,7 @@ export function Drawer({ item, present, onClose, closeRef, tagGroups = [] }) {
         <dd>{hint.means}</dd>
         <dt>Fix</dt>
         <dd>{hint.fix}</dd>
-        {item.verification && item.verification.status !== "none" && (<><dt>Verification</dt><dd><VerifyMark mark={item.verification} /></dd></>)}
+        {item.verification && item.verification.status !== "none" && (<><dt>Verification</dt><dd><VerifyBadge mark={item.verification} /></dd></>)}
         {s.reason && (<><dt>Reason reported</dt><dd>{s.reason}</dd></>)}
         {s.demo?.version && (<><dt>Version</dt><dd>{s.demo.version}</dd></>)}
         {!item.planned && (<><dt>Registered URL</dt><dd className="mono">{item.url}</dd></>)}

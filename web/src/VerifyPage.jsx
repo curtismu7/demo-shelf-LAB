@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import VerifyMark from "./components/VerifyMark.jsx";
+import { VerifyBadge } from "./components/VerifyMark.jsx";
 
 // The Verification page (#/verify): one row per registered demo, a status (the server's list: Not checked, In progress, Verified), a short
 // note, and Save. Saves go to this machine (PUT /api/verification/:id); `npm run verification:publish` ships them to everyone.
@@ -42,7 +42,7 @@ function Row({ demo, info, editable, draft, saving, message, onChange, onSave })
       <div className="vrow__who">
         <b>{demo.name}</b>
         <span className="vrow__id mono">{demo.id}</span>
-        <VerifyMark mark={demo.verification} note={false} />
+        <VerifyBadge mark={demo.verification} note={false} />
       </div>
       <div className="seg" role="group" aria-label={`Status for ${demo.name}`}>
         {info.statuses.map((s) => (

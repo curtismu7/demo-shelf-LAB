@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "../App.jsx";
 import Root from "../Root.jsx";
 import VerifyPage from "../VerifyPage.jsx";
-import VerifyMark from "../components/VerifyMark.jsx";
+import { VerifyBadge } from "../components/VerifyMark.jsx";
 
 const INFO = {
   statuses: [
@@ -42,23 +42,23 @@ afterEach(() => { vi.unstubAllGlobals(); window.history.replaceState(null, "", "
 
 const cardOf = (name) => within(screen.getByRole("heading", { name }).closest("article"));
 
-describe("VerifyMark", () => {
+describe("VerifyBadge", () => {
   it("renders nothing for no mark and for none", () => {
-    const { container, rerender } = render(<VerifyMark mark={null} />);
+    const { container, rerender } = render(<VerifyBadge mark={null} />);
     expect(container).toBeEmptyDOMElement();
-    rerender(<VerifyMark mark={mark("none")} />);
+    rerender(<VerifyBadge mark={mark("none")} />);
     expect(container).toBeEmptyDOMElement();
   });
 
   it("shows the server's label and the note, and says when the mark is only on this machine", () => {
-    render(<VerifyMark mark={mark("verified", { note: "Works", source: "local" })} />);
+    render(<VerifyBadge mark={mark("verified", { note: "Works", source: "local" })} />);
     expect(screen.getByText("Verified")).toBeInTheDocument();
     expect(screen.getByText("Works")).toBeInTheDocument();
     expect(screen.getByText("Set on this machine")).toBeInTheDocument();
   });
 
   it("can leave the note out", () => {
-    render(<VerifyMark mark={mark("verified", { note: "Works" })} note={false} />);
+    render(<VerifyBadge mark={mark("verified", { note: "Works" })} note={false} />);
     expect(screen.queryByText("Works")).toBeNull();
   });
 });
