@@ -8,6 +8,7 @@ import express from 'express';
 import { defaultExec, isLoopbackAddr, runCompose, runningDemos, stopSharedContainers } from './control.js';
 import { ensureRepo } from './deploy.js';
 import { createInstallChecker } from './install.js';
+import { VerificationError } from './verification.js';
 
 export const AGENT_PORT_DEFAULT = 4405;
 const TOKEN_FILE = 'agent-token';
@@ -30,7 +31,7 @@ const digest = (s) => crypto.createHash('sha256').update(String(s)).digest();
 export const sameToken = (a, b) => crypto.timingSafeEqual(digest(a), digest(b));
 
 // `getDemos()` returns the host's registered installed demos; it may throw if the registry is invalid.
-export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir = null, demoRoot = null, installOptions = {}, lastRunning = null, networkLimit = undefined, maxRunningDemos = null }) {
+export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir = null, demoRoot = null, installOptions = {}, lastRunning = null, networkLimit = undefined, maxRunningDemos = null, verification = null }) {
   const cap = maxRunningDemos ? { getDemos, lastRunning, max: maxRunningDemos } : null;
   const hosts = new Set([`127.0.0.1:${port}`, `localhost:${port}`, `[::1]:${port}`, `host.docker.internal:${port}`]);
   const busy = new Set();
@@ -137,6 +138,18 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
   app.get('/v1/last-running', (req, res) => {
     if (!lastRunning) return res.status(409).json({ ok: false, error: 'no-last-running' });
     res.json({ ok: true, schema: 'shelf-agent-last-running/1', demos: lastRunning.list() });
+  });
+
+  // Save one tile's verification mark into this machine's .data (the shelf container mounts it read-only). The caller names a
+  // registered id, a status and a note; the store validates all three and the file path is its own.
+  app.put('/v1/verification/:id', express.json({ limit: '4kb' }), (req, res) => {
+    if (!verification) return res.status(409).json({ ok: false, error: 'no-verification' });
+    try {
+      res.json({ ok: true, mark: verification.set(req.params.id, req.body) });
+    } catch (e) {
+      if (!(e instanceof VerificationError)) throw e;
+      res.status(e.code === 'unknown-demo' ? 404 : 400).json({ ok: false, error: e.code });
+    }
   });
 
   app.use((req, res) => res.status(404).json({ ok: false, error: 'not-found' }));

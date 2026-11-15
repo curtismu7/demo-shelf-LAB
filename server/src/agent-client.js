@@ -40,6 +40,19 @@ export function createAgentClient({ url, token, fetchFn = fetch, now = () => Dat
       if (!body || typeof body !== 'object') return { status: 502, body: { ok: false, error: 'agent-bad-reply' } };
       return { status: res.status, body };
     },
+    // Save one tile's verification mark through the agent (it owns the writable .data). Returns { status, body } like run().
+    async setVerification(id, input) {
+      let res;
+      try {
+        res = await fetchFn(`${base}/v1/verification/${encodeURIComponent(id)}`, { method: 'PUT', headers: { ...headers, 'content-type': 'application/json' }, body: JSON.stringify(input ?? {}), signal: AbortSignal.timeout(PING_TIMEOUT_MS * 4) });
+      } catch {
+        return { status: 503, body: { ok: false, error: 'agent-not-running' } };
+      }
+      const body = await res.json().catch(() => null);
+      if (res.status === 401) return { status: 502, body: { ok: false, error: 'agent-token-rejected' } };
+      if (!body || typeof body !== 'object') return { status: 502, body: { ok: false, error: 'agent-bad-reply' } };
+      return { status: res.status, body };
+    },
     // Map id -> { compose, images } from the agent, or null on any failure (not running, old agent, bad reply). Only known values are kept.
     async installs() {
       try {

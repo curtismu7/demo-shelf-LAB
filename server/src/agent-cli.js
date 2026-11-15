@@ -11,6 +11,7 @@ import { loadShelfEnv } from './dotenv.js';
 import { loadAll } from './index.js';
 import { defaultExec, maxRunning } from './control.js';
 import { createLastRunning } from './lastRunning.js';
+import { createVerification } from './verification.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 loadShelfEnv(root);
@@ -23,7 +24,8 @@ const dataDir = path.resolve(process.env.SHELF_DATA_DIR || path.join(root, '.dat
 const token = ensureToken(dataDir);
 const demoRoot = path.resolve(process.env.SHELF_DEMO_ROOT || path.join(root, '..'));
 const lastRunning = createLastRunning({ file: path.join(dataDir, 'last-running.json') });
-const agent = createAgent({ getDemos: () => expandWhere(loadAll().demos).filter((d) => d.where === 'installed'), token, port, exec: defaultExec, fileExists: (f) => fs.existsSync(f), shelfDir: root, demoRoot, lastRunning, maxRunningDemos: maxRunning() });
+const verification = createVerification({ seedFile: path.join(root, 'data', 'verification.json'), localFile: path.join(dataDir, 'verification.local.json'), knownIds: () => loadAll().demos.map((d) => d.id) });
+const agent = createAgent({ getDemos: () => expandWhere(loadAll().demos).filter((d) => d.where === 'installed'), token, port, exec: defaultExec, fileExists: (f) => fs.existsSync(f), shelfDir: root, demoRoot, lastRunning, maxRunningDemos: maxRunning(), verification });
 agent.listen(port, '127.0.0.1', () => {
   console.log(`start agent on http://127.0.0.1:${port} (token in ${path.join(dataDir, 'agent-token')}). Ctrl-C to stop.`);
   if (process.env.CI || process.env.SHELF_AUTOSTART === '0' || process.env.SHELF_DATA_DIR) return;

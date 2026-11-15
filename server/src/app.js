@@ -1,13 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import express from 'express';
-import { composeArgs, createControlRouter, defaultExec, runningDemos } from './control.js';
+import { composeArgs, createControlRouter, defaultExec, isLoopbackAddr, runningDemos } from './control.js';
 import { createInstallState } from './install.js';
 import { createPoller } from './poller.js';
 import { createNewApps } from './newApps.js';
 import { createPingProducts } from './pingProducts.js';
 import { hostedTags } from './tags.js';
 import { isNewDemo, NEW_WINDOW_HOURS } from './registry.js';
+import { NOTE_MAX, STATUS_INFO, VerificationError } from './verification.js';
 
 const VERSION = JSON.parse(fs.readFileSync(new URL('../../package.json', import.meta.url), 'utf8')).version;
 
@@ -99,7 +100,7 @@ function shelfOrigin(req) {
   return `${proto}://${host}`;
 }
 
-export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, installSource = null, demoRoot = null, refreshWaitMs = 4000, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait, pingProductsCheck, lastRunning = null, networkLimit = undefined, maxRunningDemos = null }) {
+export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, installSource = null, demoRoot = null, refreshWaitMs = 4000, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait, pingProductsCheck, lastRunning = null, networkLimit = undefined, maxRunningDemos = null, verification = null }) {
   const demos = expandWhere(registry);
   const app = express();
   app.disable('x-powered-by');
@@ -219,6 +220,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     const pingNeeded = [...new Set(demos.flatMap((d) => d.pingProducts || []))];
     const pingStatuses = pingNeeded.length ? await checkPing(pingNeeded) : [];
     const pingMap = new Map(pingStatuses.map((p) => [p.product, p]));
+    const marks = verification ? verification.marks() : new Map(); // read fresh: the Verification page may have just saved
     const registered = demos.map((d) => ({
       id: d.id,
       name: d.name,
@@ -240,6 +242,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
       repo: d.repo ?? null,
       pingProducts: d.pingProducts ? (d.pingProducts.map((p) => pingMap.get(p) || { product: p, state: 'unknown' })) : [],
       ...installOf(d, results[d.id], inst.map),
+      verification: marks.get(d.id) ?? null,
       status: results[d.id] || { state: 'unknown', reason: 'not-polled' },
     }));
     const have = new Set(demos.flatMap((d) => [d.catalogId, ...(d.alsoCatalogIds ?? [])]).filter(Boolean));
@@ -249,7 +252,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     // 'local' = the shelf runs Docker itself; 'up' / 'down' = the start agent a containerised shelf depends on.
     const agentState = agent ? await agent.ping() : 'local';
     const runningLimit = allowStart ? await runningCount() : null;
-    return { schema: 'demo-shelf/1', generatedAt: new Date().toISOString(), installPending: inst.pending, startEnabled: allowStart, agent: agentState, runningLimit, newWindowHours: NEW_WINDOW_HOURS, groups: catalog?.groups || {}, tagGroups: tags?.groups || [], demos: registered, planned };
+    return { schema: 'demo-shelf/1', generatedAt: new Date().toISOString(), installPending: inst.pending, startEnabled: allowStart, verificationEditable: allowStart && Boolean(verification || agent), verificationInfo: { statuses: STATUS_INFO, noteMax: NOTE_MAX }, agent: agentState, runningLimit, newWindowHours: NEW_WINDOW_HOURS, groups: catalog?.groups || {}, tagGroups: tags?.groups || [], demos: registered, planned };
   }
 
   // Labs reachable through the lab-proxy (https://local.ping-devops.com:8443/<path>/).
@@ -374,6 +377,27 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
   app.get('/api/starter-sets', (req, res) => {
     res.set('Cache-Control', 'no-store').json({ ok: true, schema: 'shelf-starter-sets/1', sets: starterSets });
   });
+  // Verification marks (docs/verification.md): the Verification page saves one tile's mark here. Same trust as Start / Stop (loopback, and only
+  // while Start is on). A containerised shelf cannot write (.data is mounted read-only), so the start agent writes it; host-run writes it itself.
+  // The request names a registered id, a status and a note: never a path.
+  if (allowStart) {
+    app.put('/api/verification/:id', async (req, res) => {
+      // The same two guards as Start / Stop (control.js): loopback caller (the container sees the Docker network, so not there), and a
+      // same-origin Origin header, which behind the lab-proxy is the forwarded pair.
+      if (!inDocker && !isLoopbackAddr(req.socket.remoteAddress)) return res.status(403).json({ ok: false, error: 'loopback-only' });
+      const xfHost = req.headers['x-forwarded-host'];
+      const expectedOrigin = xfHost ? `${req.headers['x-forwarded-proto'] || 'https'}://${xfHost}` : `http://${req.headers.host}`;
+      if (!req.headers.origin || req.headers.origin !== expectedOrigin) return res.status(403).json({ ok: false, error: 'bad-origin' });
+      if (agent) { const r = await agent.setVerification(req.params.id, req.body); return res.status(r.status).json(r.body); }
+      if (!verification) return res.status(409).json({ ok: false, error: 'no-verification' });
+      try {
+        res.json({ ok: true, mark: verification.set(req.params.id, req.body) });
+      } catch (e) {
+        if (!(e instanceof VerificationError)) throw e;
+        res.status(e.code === 'unknown-demo' ? 404 : 400).json({ ok: false, error: e.code });
+      }
+    });
+  }
   if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: (id) => { poller.invalidate(); install.invalidate(id); }, exec, fileExists, agent, inDocker, shelfDir, demoRoot, lastRunning, networkLimit, maxRunningDemos }));
   app.use('/api', (req, res) => res.status(404).json({ error: 'not-found' }));
 
