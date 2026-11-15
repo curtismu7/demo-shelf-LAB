@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { allowedHostsFromEnv, alsoCatalogProblems, loadRegistry, RegistryError } from './registry.js';
 import { createApp, expandWhere } from './app.js';
+import { KEEP_WARM_MS } from './poller.js';
 import { loadShelfEnv } from './dotenv.js';
 import { createAgentClient } from './agent-client.js';
 import { createInstallChecker } from './install.js';
@@ -73,7 +74,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const dataDir = path.resolve(process.env.SHELF_DATA_DIR || path.join(root, '.data'));
     const lastRunning = createLastRunning({ file: path.join(dataDir, 'last-running.json') });
     const verification = createVerification({ seedFile: path.join(root, 'data', 'verification.json'), localFile: path.join(dataDir, 'verification.local.json'), knownIds: () => demos.map((d) => d.id) });
-    const app = createApp({ demos, catalog, tags, catalogTags, allowStart, agent, inDocker, installSource, demoRoot, fetchFn, loopbackOnly: bind.loopback || inDocker, shelfDir: root, webDist: path.join(root, 'web', 'dist'), lastRunning, maxRunningDemos: maxRunning(), verification });
+    const app = createApp({ demos, catalog, tags, catalogTags, allowStart, agent, inDocker, installSource, demoRoot, fetchFn, loopbackOnly: bind.loopback || inDocker, shelfDir: root, webDist: path.join(root, 'web', 'dist'), lastRunning, maxRunningDemos: maxRunning(), keepWarmMs: KEEP_WARM_MS, verification });
     app.listen(port, bind.host, () => {
       console.log(`demo-shelf on http://${bind.host}:${port}  (${demos.length} demos, start/stop ${allowStart ? (inDocker ? 'via the start agent' : 'on') : 'off'})`);
     });

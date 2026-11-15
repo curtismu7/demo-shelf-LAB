@@ -73,7 +73,7 @@ Not applicable: this is a Tool, with nothing to simulate.
 
 ## Health, doctor and reset
 
-- `GET /api/health` returns `demo-health/1` for the shelf itself. The shelf's server polls each registered demo's `/api/health` (3 s timeout, 4 KB cap, results cached 10 s). A demo with no endpoint but a page that loads shows "Up (no health contract)"; one that does not answer shows "Down". Contract in [docs/health-contract.md](docs/health-contract.md).
+- `GET /api/health` returns `demo-health/1` for the shelf itself. The shelf's server polls each registered demo's `/api/health` (3 s timeout, 4 KB cap, 12 at a time). The page never waits for a poll: it gets the last result at once, a result older than 10 s is re-polled behind the request, and the server also re-polls every 30 s. Only a result older than 2 minutes (or none yet) makes a request wait. A demo with no endpoint but a page that loads shows "Up (no health contract)"; one that does not answer shows "Down". Contract in [docs/health-contract.md](docs/health-contract.md).
 - `npm run doctor` prints one line per check and exits 1 on failure: Node, port, registry, catalog, Docker CLI and context, and whether the start agent is running.
 - There is nothing to reset: the shelf keeps no run state. Your own entries live in `.data/demos.local.json`.
 
@@ -92,7 +92,7 @@ The container is published on `127.0.0.1` only. It has no Docker socket and no m
 npm test
 ```
 
-On Node 26: 423 server tests and 137 web tests pass. `npm run e2e` drives a real browser against fake demos (needs Playwright's Chromium, not run in CI).
+On Node 26: 437 server tests and 137 web tests pass. `npm run e2e` drives a real browser against fake demos (needs Playwright's Chromium, not run in CI).
 
 ## Troubleshooting
 
