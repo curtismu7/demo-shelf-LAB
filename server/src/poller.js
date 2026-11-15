@@ -5,8 +5,12 @@
 export const TIMEOUT_MS = 3000;
 export const MAX_BODY = 4096;
 export const CACHE_MS = 10_000;
+// A result older than CACHE_MS is still served at once (and re-polled behind the request) until it is this old; past it
+// (the Mac slept, the timer stalled) a request waits for a fresh poll rather than show hours-old status lights.
+export const MAX_STALE_MS = 120_000;
+export const KEEP_WARM_MS = 30_000;
 export const MIN_REFRESH_MS = 2000;
-const CONCURRENCY = 4;
+const CONCURRENCY = 12;
 const JITTER_MS = 150;
 const MAX_HOPS = 3;
 
@@ -96,10 +100,16 @@ export async function probeDemo(demo, { fetchFn = fetch, now = () => Date.now(),
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Cached poller. get() reuses a result younger than CACHE_MS; refresh() re-polls but not more often than MIN_REFRESH_MS.
-export function createPoller({ getDemos, fetchFn = fetch, timeoutMs = TIMEOUT_MS, now = () => Date.now(), random = Math.random, wait = sleep, concurrency = CONCURRENCY }) {
+// Cached poller. A poll of every registered demo takes seconds (a stopped demo costs two refused requests), so a request must not
+// wait for one when it can be avoided:
+//   get()     serves the cache at once; once it is older than CACHE_MS it also starts a re-poll behind the request. It waits for
+//             a poll only when there is no cache (first request, after invalidate()) or the cache is older than MAX_STALE_MS.
+//   keepWarmMs (off by default) polls once now and then every keepWarmMs, so a page opened after an idle spell finds a recent cache.
+//   refresh() re-polls and waits, but not more often than MIN_REFRESH_MS (the Refresh button asked for it).
+export function createPoller({ getDemos, fetchFn = fetch, timeoutMs = TIMEOUT_MS, now = () => Date.now(), random = Math.random, wait = sleep, concurrency = CONCURRENCY, keepWarmMs = 0 }) {
   let cache = null; // { at, byId }
   let inflight = null;
+  let generation = 0; // bumped by invalidate(): a poll that started before it must not refill the cache
 
   async function pollAll() {
     const demos = getDemos();
@@ -117,19 +127,39 @@ export function createPoller({ getDemos, fetchFn = fetch, timeoutMs = TIMEOUT_MS
   }
 
   function run() {
-    if (!inflight) inflight = pollAll().then((r) => { cache = r; return r; }).finally(() => { inflight = null; });
+    if (!inflight) {
+      const started = generation;
+      const p = pollAll().then((r) => { if (started === generation) cache = r; return r; }).finally(() => { if (inflight === p) inflight = null; });
+      inflight = p;
+    }
     return inflight;
+  }
+
+  const behind = () => { run().catch(() => {}); }; // a background poll has no caller to hand a failure to; the old cache stays
+
+  async function refresh() {
+    if (cache && now() - cache.at < MIN_REFRESH_MS) return cache.byId;
+    return (await run()).byId;
+  }
+
+  let timer = null;
+  if (keepWarmMs > 0) {
+    behind();
+    timer = setInterval(() => { refresh().catch(() => {}); }, keepWarmMs);
+    timer.unref?.();
   }
 
   return {
     async get() {
-      if (cache && now() - cache.at < CACHE_MS) return cache.byId;
+      if (cache) {
+        const age = now() - cache.at;
+        if (age < CACHE_MS) return cache.byId;
+        if (age < MAX_STALE_MS) { behind(); return cache.byId; }
+      }
       return (await run()).byId;
     },
-    async refresh() {
-      if (cache && now() - cache.at < MIN_REFRESH_MS) return cache.byId;
-      return (await run()).byId;
-    },
-    invalidate() { cache = null; },
+    refresh,
+    invalidate() { cache = null; inflight = null; generation++; },
+    stop() { if (timer) clearInterval(timer); timer = null; },
   };
 }

@@ -99,7 +99,7 @@ function shelfOrigin(req) {
   return `${proto}://${host}`;
 }
 
-export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, installSource = null, demoRoot = null, refreshWaitMs = 4000, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait, pingProductsCheck, lastRunning = null, networkLimit = undefined, maxRunningDemos = null }) {
+export function createApp({ demos: registry, catalog, tags, catalogTags = {}, allowStart = false, agent = null, inDocker = false, installSource = null, demoRoot = null, refreshWaitMs = 4000, loopbackOnly = true, webDist, fetchFn, exec, fileExists, shelfDir, now, random, wait, pingProductsCheck, lastRunning = null, networkLimit = undefined, maxRunningDemos = null, keepWarmMs = 0 }) {
   const demos = expandWhere(registry);
   const app = express();
   app.disable('x-powered-by');
@@ -190,7 +190,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     res.json(await newApps.get());
   });
 
-  const poller = createPoller({ getDemos: () => demos, fetchFn, now, random, wait });
+  const poller = createPoller({ getDemos: () => demos, fetchFn, now, random, wait, keepWarmMs });
   const install = createInstallState({ source: installSource, now });
   // Rule 20: which shared Ping products each demo needs, and whether they are shared-and-healthy.
   const checkPing = pingProductsCheck || createPingProducts({ now, exec });
@@ -200,7 +200,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
   // { running, max } for the "13 running · limit 10" line: the agent's own count and limit (it is the one that refuses), or this
   // process's when the shelf runs Docker itself. running is null when it cannot be told (an older agent): the page then shows the limit.
   let runningCache = { at: 0, value: null };
-  async function runningCount() {
+  async function askRunning() {
     if (agent) {
       const v = typeof agent.running === 'function' ? await agent.running() : null;
       if (v && v.max !== null) return v;
@@ -211,6 +211,34 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     const list = await runningDemos(demos.filter((d) => d.where === 'installed'), exec || defaultExec, shelfDir).catch(() => null);
     runningCache = { at: Date.now(), value: { running: list ? list.length : null, max: maxRunningDemos } };
     return runningCache.value;
+  }
+  // Asking Docker takes 1 to 5 s (docker compose ls, here or in the agent), so /api/shelf must not wait for it when it has a count:
+  // it answers with the last one at once and, once that is over 5 s old, asks again behind the request. It waits only when there is
+  // no count yet, the last is over 2 minutes old, or a Start / Stop just changed the answer (runningForget). Same shape as the poller.
+  let runningLast = null; // { at, value }
+  let runningAsking = null;
+  let runningGeneration = 0;
+  function runningRefresh() {
+    if (!runningAsking) {
+      const started = runningGeneration;
+      const p = askRunning().then((value) => { if (started === runningGeneration) runningLast = { at: (now || Date.now)(), value }; return value; }).finally(() => { if (runningAsking === p) runningAsking = null; });
+      runningAsking = p;
+    }
+    return runningAsking;
+  }
+  function runningForget() { runningLast = null; runningAsking = null; runningGeneration++; }
+  async function runningCount() {
+    if (runningLast) {
+      const age = (now || Date.now)() - runningLast.at;
+      if (age < 5000) return runningLast.value;
+      if (age < 120_000) { runningRefresh().catch(() => {}); return runningLast.value; }
+    }
+    return runningRefresh();
+  }
+  if (keepWarmMs > 0 && allowStart) {
+    const t = setInterval(() => { runningRefresh().catch(() => {}); }, keepWarmMs);
+    t.unref?.();
+    runningRefresh().catch(() => {});
   }
 
   async function shelf(results) {
@@ -374,7 +402,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
   app.get('/api/starter-sets', (req, res) => {
     res.set('Cache-Control', 'no-store').json({ ok: true, schema: 'shelf-starter-sets/1', sets: starterSets });
   });
-  if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: (id) => { poller.invalidate(); install.invalidate(id); }, exec, fileExists, agent, inDocker, shelfDir, demoRoot, lastRunning, networkLimit, maxRunningDemos }));
+  if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: (id) => { poller.invalidate(); install.invalidate(id); runningForget(); }, exec, fileExists, agent, inDocker, shelfDir, demoRoot, lastRunning, networkLimit, maxRunningDemos }));
   app.use('/api', (req, res) => res.status(404).json({ error: 'not-found' }));
 
   if (webDist && fs.existsSync(path.join(webDist, 'index.html'))) {

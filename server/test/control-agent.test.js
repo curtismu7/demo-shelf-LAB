@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createApp } from '../src/app.js';
 
 const demos = [
@@ -88,6 +88,64 @@ describe('the running count on /api/shelf', () => {
   });
   it('is null when Start / Stop is off', async () => {
     expect((await get(mk(agentStub(), { allowStart: false, maxRunningDemos: 10 }))).body.runningLimit).toBe(null);
+  });
+  // Counting asks Docker (1 to 5 s), so a request that already has a count must not wait for a new one.
+  const clocked = (running, over = {}) => {
+    const clock = { t: 1_000_000 };
+    return { clock, app: mk(agentStub({ running }), { maxRunningDemos: 10, now: () => clock.t, ...over }) };
+  };
+  const held = () => { const h = {}; h.promise = new Promise((r) => { h.release = r; }); return h; };
+  it('past 5 s it answers with the last count at once and asks again behind the request', async () => {
+    const running = vi.fn(async () => ({ running: 3, max: 10 }));
+    const { app, clock } = clocked(running);
+    expect((await get(app)).body.runningLimit).toEqual({ running: 3, max: 10 });
+    clock.t += 6_000;
+    const h = held();
+    running.mockImplementation(() => h.promise);
+    expect((await get(app)).body.runningLimit).toEqual({ running: 3, max: 10 }); // the new ask is still pending
+    h.release({ running: 4, max: 10 });
+    await vi.waitFor(async () => expect((await get(app)).body.runningLimit).toEqual({ running: 4, max: 10 }));
+    expect(running).toHaveBeenCalledTimes(2);
+  });
+  it('past 2 minutes it waits for a fresh count rather than show an old one', async () => {
+    const running = vi.fn(async () => ({ running: 3, max: 10 }));
+    const { app, clock } = clocked(running);
+    await get(app);
+    clock.t += 121_000;
+    const h = held();
+    running.mockImplementation(() => h.promise);
+    let answered = false;
+    const pending = get(app).then((r) => { answered = true; return r; });
+    await new Promise((r) => setTimeout(r, 20));
+    expect(answered).toBe(false);
+    h.release({ running: 9, max: 10 });
+    expect((await pending).body.runningLimit).toEqual({ running: 9, max: 10 });
+  });
+  it('a Start or Stop makes the next request wait for a fresh count', async () => {
+    const running = vi.fn().mockResolvedValueOnce({ running: 3, max: 10 }).mockResolvedValue({ running: 4, max: 10 });
+    const { app } = clocked(running);
+    expect((await get(app)).body.runningLimit).toEqual({ running: 3, max: 10 });
+    expect((await post(app, '/api/demos/a/start')).status).toBe(200);
+    expect((await get(app)).body.runningLimit).toEqual({ running: 4, max: 10 }); // same instant: the 5 s cache did not hide the change
+  });
+  describe('keepWarmMs', () => {
+    afterEach(() => { vi.useRealTimers(); });
+    it('counts once at start and then every interval, so a page opened after an idle spell has one', async () => {
+      vi.useFakeTimers();
+      const running = vi.fn(async () => ({ running: 3, max: 10 }));
+      clocked(running, { keepWarmMs: 30_000 });
+      await vi.advanceTimersByTimeAsync(0);
+      expect(running).toHaveBeenCalledTimes(1);
+      await vi.advanceTimersByTimeAsync(30_000);
+      expect(running).toHaveBeenCalledTimes(2);
+    });
+    it('does nothing when Start / Stop is off', async () => {
+      vi.useFakeTimers();
+      const running = vi.fn(async () => ({ running: 3, max: 10 }));
+      clocked(running, { keepWarmMs: 30_000, allowStart: false });
+      await vi.advanceTimersByTimeAsync(60_000);
+      expect(running).not.toHaveBeenCalled();
+    });
   });
   it('host-run: counts with docker compose ls itself', async () => {
     const exec = vi.fn(async (file, args) => (args[1] === 'ls'

@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createPoller, MAX_BODY, parseHealth, probeDemo } from '../src/poller.js';
 
 const demo = { id: 'd', url: 'http://localhost:4500', healthPath: '/api/health' };
@@ -125,9 +125,6 @@ describe('createPoller', () => {
     clock.advance(9_000);
     await poller.get();
     expect(fetchFn).toHaveBeenCalledTimes(6);
-    clock.advance(1_500);
-    await poller.get();
-    expect(fetchFn).toHaveBeenCalledTimes(12);
   });
   it('refresh re-polls but is rate limited', async () => {
     const { poller, fetchFn, clock } = base();
@@ -148,11 +145,129 @@ describe('createPoller', () => {
     expect(peak).toBeLessThanOrEqual(2);
     expect(peak).toBeGreaterThan(0);
   });
+  it('defaults to 12 probes at once', async () => {
+    const many = Array.from({ length: 30 }, (_, i) => ({ ...demo, id: `m${i}` }));
+    let live = 0;
+    let peak = 0;
+    const fetchFn = async () => { live++; peak = Math.max(peak, live); await new Promise((r) => setTimeout(r, 5)); live--; return json(good); };
+    await createPoller({ getDemos: () => many, fetchFn, random: () => 0, wait: async () => {} }).get();
+    expect(peak).toBe(12);
+  });
   it('applies jitter before each probe', async () => {
     const waits = [];
     const { poller } = base({ random: () => 0.5, wait: async (ms) => { waits.push(ms); } });
     await poller.get();
     expect(waits).toHaveLength(6);
     expect(waits.every((w) => w > 0 && w < 200)).toBe(true);
+  });
+});
+
+describe('createPoller serves a stale result instead of making a request wait', () => {
+  const demos = [{ ...demo, id: 'd0' }, { ...demo, id: 'd1' }];
+  // fetchFn answers with `state`; while `hold` is set every probe waits for it. A poll is 2 probes = 2 fetches.
+  const rig = (over = {}) => {
+    let t = 0;
+    const s = { state: 'ready', hold: null, calls: 0 };
+    const fetchFn = async () => { s.calls++; if (s.hold) await s.hold; return json({ ...good, state: s.state }); };
+    const poller = createPoller({ getDemos: () => demos, fetchFn, now: () => t, random: () => 0, wait: async () => {}, ...over });
+    return { s, poller, advance: (ms) => { t += ms; } };
+  };
+  const gate = () => { let open; const p = new Promise((r) => { open = r; }); return { p, open }; };
+  const state = async (poller) => (await poller.get()).d0.state;
+
+  it('past 10 s the old result comes back at once and a poll refreshes it behind the request', async () => {
+    const { s, poller, advance } = rig();
+    expect(await state(poller)).toBe('ready');
+    advance(10_500);
+    const g = gate();
+    s.hold = g.p;
+    s.state = 'broken';
+    expect(await state(poller)).toBe('ready'); // resolved while every probe is still held: it did not wait for the poll
+    g.open();
+    await vi.waitFor(async () => expect(await state(poller)).toBe('broken'));
+    expect(s.calls).toBe(4);
+  });
+
+  it('several requests during one stale spell start a single poll', async () => {
+    const { s, poller, advance } = rig();
+    await poller.get();
+    advance(11_000);
+    const g = gate();
+    s.hold = g.p;
+    await Promise.all([poller.get(), poller.get(), poller.get()]);
+    g.open();
+    await vi.waitFor(() => expect(s.calls).toBe(4));
+  });
+
+  it('past 2 minutes a request waits for a fresh poll rather than show old lights', async () => {
+    const { s, poller, advance } = rig();
+    await poller.get();
+    advance(121_000);
+    const g = gate();
+    s.hold = g.p;
+    s.state = 'broken';
+    let answered = false;
+    const pending = poller.get().then((r) => { answered = true; return r; });
+    await new Promise((r) => setTimeout(r, 10));
+    expect(answered).toBe(false);
+    g.open();
+    expect((await pending).d0.state).toBe('broken');
+  });
+
+  it('invalidate makes the next request wait for a fresh poll, and a poll already running does not refill the cache', async () => {
+    const { s, poller, advance } = rig();
+    await poller.get(); // 2 fetches
+    advance(11_000);
+    const g = gate();
+    s.hold = g.p;
+    s.state = 'broken';
+    await poller.get(); // stale answer, old poll now running behind it (held)
+    poller.invalidate();
+    s.state = 'ready'; // what the demo looks like after the Start / Stop that called invalidate
+    g.open();
+    s.hold = null;
+    expect(await state(poller)).toBe('ready'); // a new poll, not the 'broken' one that began before invalidate
+    expect(s.calls).toBe(6);
+  });
+
+  it('a background poll that fails leaves the cache in place and rejects nothing', async () => {
+    let broken = false;
+    const { poller, advance } = rig({ getDemos: () => { if (broken) throw new Error('registry unreadable'); return demos; } });
+    await poller.get();
+    advance(11_000);
+    broken = true;
+    expect(await state(poller)).toBe('ready');
+    await new Promise((r) => setTimeout(r, 10)); // an unhandled rejection would fail the run here
+    expect(await state(poller)).toBe('ready');
+  });
+
+  describe('keepWarmMs', () => {
+    afterEach(() => { vi.useRealTimers(); });
+    it('polls at start, then every interval, and stops on stop()', async () => {
+      vi.useFakeTimers();
+      const { s, poller, advance } = rig({ keepWarmMs: 30_000 });
+      await vi.advanceTimersByTimeAsync(0);
+      expect(s.calls).toBe(2);
+      advance(30_000);
+      await vi.advanceTimersByTimeAsync(30_000);
+      expect(s.calls).toBe(4);
+      poller.stop();
+      advance(30_000);
+      await vi.advanceTimersByTimeAsync(60_000);
+      expect(s.calls).toBe(4);
+    });
+    it('is off unless asked for', async () => {
+      vi.useFakeTimers();
+      const { s } = rig();
+      await vi.advanceTimersByTimeAsync(120_000);
+      expect(s.calls).toBe(0);
+    });
+    it('the first request waits for the start-up poll instead of starting a second', async () => {
+      const { s, poller } = rig({ keepWarmMs: 30_000 });
+      try {
+        expect(await state(poller)).toBe('ready');
+        expect(s.calls).toBe(2);
+      } finally { poller.stop(); }
+    });
   });
 });
