@@ -344,6 +344,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'mock-authorize': '/mock-authorize/',
     'agent-audit-trail-lab': '/agent-audit-trail-lab/',
     'privilege-bulk-users': '/privilege-bulk-users/',
+    'appfire-agent-governance-lab': '/appfire-agent-governance/',
   };
   app.get('/api/shelf', async (req, res, next) => {
     try { res.set('Cache-Control', 'no-store').json({ ...(await shelf(await poller.get())), starterSets, shelfUrl: shelfOrigin(req) }); } catch (e) { next(e); }
