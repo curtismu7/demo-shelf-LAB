@@ -128,6 +128,35 @@ describe('the running count on /api/shelf', () => {
     expect((await post(app, '/api/demos/a/start')).status).toBe(200);
     expect((await get(app)).body.runningLimit).toEqual({ running: 4, max: 10 }); // same instant: the 5 s cache did not hide the change
   });
+  it('a count that fails (the agent timed out) does not replace a good one under 2 minutes old', async () => {
+    const running = vi.fn(async () => ({ running: 56, max: 60 }));
+    const { app, clock } = clocked(running);
+    expect((await get(app)).body.runningLimit).toEqual({ running: 56, max: 60 });
+    const settle = async (calls) => { await vi.waitFor(() => expect(running).toHaveBeenCalledTimes(calls)); await new Promise((r) => setTimeout(r, 10)); };
+    running.mockImplementation(async () => null); // what the agent client returns after its 30 s timeout
+    clock.t += 6_000;
+    expect((await get(app)).body.runningLimit).toEqual({ running: 56, max: 60 });
+    await settle(2);
+    clock.t += 6_000;
+    expect((await get(app)).body.runningLimit).toEqual({ running: 56, max: 60 }); // not the shelf's own { running: null, max: 10 }
+    await settle(3);
+    running.mockImplementation(async () => ({ running: null, max: 60 })); // "Docker could not tell" is a failed count too
+    clock.t += 6_000;
+    expect((await get(app)).body.runningLimit).toEqual({ running: 56, max: 60 });
+    await settle(4);
+    clock.t += 6_000;
+    expect((await get(app)).body.runningLimit).toEqual({ running: 56, max: 60 });
+  });
+  it('a good count is kept only while it is under 2 minutes old; after that the failure shows', async () => {
+    const running = vi.fn(async () => ({ running: 56, max: 60 }));
+    const { app, clock } = clocked(running);
+    await get(app);
+    running.mockImplementation(async () => null);
+    clock.t += 121_000;
+    expect((await get(app)).body.runningLimit).toEqual({ running: null, max: 10 });
+    expect((await get(app)).body.runningLimit).toEqual({ running: null, max: 10 });
+    expect(running).toHaveBeenCalledTimes(2); // the failure was cached; the old good count did not linger and force another wait
+  });
   describe('keepWarmMs', () => {
     afterEach(() => { vi.useRealTimers(); });
     it('counts once at start and then every interval, so a page opened after an idle spell has one', async () => {
