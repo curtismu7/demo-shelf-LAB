@@ -117,10 +117,10 @@
         "cedar",
         "mcp",
         "pingone-privilege",
-        "real",
         "simulated",
         "pingfederate",
-        "pingone"
+        "pingone",
+        "real"
       ],
       "where": "installed",
       "repo": "https://github.com/curtismu7/privilege-demo-LAB",
@@ -142,7 +142,8 @@
       "tags": [
         "pingone-privilege",
         "authorization-policy",
-        "simulated"
+        "simulated",
+        "real"
       ],
       "where": "installed",
       "repo": "https://github.com/curtismu7/privilege-map-LAB",
@@ -167,7 +168,8 @@
         "agent-gateway",
         "pingone",
         "pingone-authorize",
-        "pingone-protect"
+        "pingone-protect",
+        "real"
       ],
       "where": "installed",
       "repo": "https://github.com/curtismu7/agent-mcp-door-demo-LAB",
@@ -315,8 +317,8 @@
         "agent-identity",
         "ai-agent-security",
         "pingone-privilege",
-        "real",
-        "simulated"
+        "simulated",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/agent-registry-demo-LAB",
       "pingProducts": [
@@ -357,7 +359,8 @@
         "mcp",
         "oauth",
         "simulated",
-        "pingone-privilege"
+        "pingone-privilege",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/attack-gallery-LAB"
     },
@@ -426,7 +429,8 @@
         "simulated",
         "token-exchange",
         "pinggateway",
-        "pingfederate"
+        "pingfederate",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/gateway-claims-LAB",
       "pingProducts": [
@@ -449,7 +453,8 @@
         "tool-poisoning",
         "a2a",
         "simulated",
-        "pingone-privilege"
+        "pingone-privilege",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/hostile-a2a-LAB"
     },
@@ -470,7 +475,8 @@
         "mcp",
         "simulated",
         "mcp-server-built",
-        "pingone-privilege"
+        "pingone-privilege",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/hostile-mcp-LAB"
     },
@@ -727,7 +733,8 @@
         "ai-agent-security",
         "token-exchange",
         "id-jag",
-        "simulated"
+        "simulated",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/intent-purpose-behaviour-LAB"
     },
@@ -745,7 +752,8 @@
         "pingone-privilege",
         "ai-agent-security",
         "agent-controls",
-        "simulated"
+        "simulated",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/coding-agents-LAB"
     },
@@ -763,7 +771,8 @@
         "pingone-privilege",
         "ai-agent-security",
         "audit-observability",
-        "simulated"
+        "simulated",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/data-protection-LAB"
     },
@@ -781,7 +790,8 @@
         "pingone-privilege",
         "agent-identity",
         "authorization-policy",
-        "simulated"
+        "simulated",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/saas-access-LAB"
     },
@@ -799,7 +809,8 @@
         "pingone-privilege",
         "agent-identity",
         "agent-controls",
-        "simulated"
+        "simulated",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/agent-governance-LAB"
     },
@@ -818,7 +829,8 @@
         "mcp-security",
         "mcp",
         "simulated",
-        "mcp-server-built"
+        "mcp-server-built",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/mcp-surface-LAB"
     },
@@ -836,7 +848,8 @@
         "pingone-privilege",
         "agent-identity",
         "token-security",
-        "simulated"
+        "simulated",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/federated-identity-LAB"
     },
@@ -854,7 +867,8 @@
         "pingone-privilege",
         "ai-agent-security",
         "agent-identity",
-        "simulated"
+        "simulated",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/secrets-vault-LAB"
     },
@@ -872,7 +886,8 @@
         "pingone-privilege",
         "authorization-policy",
         "human-in-the-loop",
-        "simulated"
+        "simulated",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/ai-policies-LAB"
     },
@@ -915,8 +930,8 @@
         "agent-controls",
         "human-in-the-loop",
         "simulated",
-        "real",
-        "mcp"
+        "mcp",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/agent-gateway-inspector-LAB"
     },
@@ -957,7 +972,8 @@
         "pingone-privilege",
         "audit-observability",
         "agent-identity",
-        "simulated"
+        "simulated",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/agent-audit-trail-LAB"
     },
@@ -1072,7 +1088,8 @@
         "mcp-security",
         "simulated",
         "mcp",
-        "pingone-privilege"
+        "pingone-privilege",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/mcp-elicitation-LAB"
     },
@@ -1542,7 +1559,8 @@
         "ai-agent-security",
         "simulated",
         "pingone-authorize",
-        "pingone-protect"
+        "pingone-protect",
+        "real"
       ],
       "where": "installed"
     },
@@ -1719,7 +1737,8 @@
       "tags": [
         "pingone-privilege",
         "simulated",
-        "learning"
+        "learning",
+        "real"
       ],
       "where": "installed",
       "repo": "https://github.com/curtismu7/privilege-k8-kits-LAB",
@@ -1799,7 +1818,8 @@
         "agent-identity",
         "token-exchange",
         "authorization-policy",
-        "simulated"
+        "simulated",
+        "real"
       ],
       "repo": "https://github.com/curtismu7/pf-privilege-obo-LAB",
       "alsoCatalogIds": [],
@@ -1877,6 +1897,26 @@
       "repo": "https://github.com/curtismu7/workload-identity-LAB",
       "port": "7816",
       "addedAt": "2026-11-14",
+      "pingProducts": []
+    },
+    {
+      "id": "pdf-to-md-lab",
+      "name": "PDF to Markdown LAB",
+      "catalogId": "D133 provisional",
+      "kind": "Tool",
+      "description": "Convert a PDF to Markdown locally: drop a file, get headings/bullets/paragraphs, download the .md. In-process pdfjs extraction, no external services.",
+      "url": "http://localhost:7818",
+      "healthPath": "/api/health",
+      "composeFile": "pdf-to-md-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "learning",
+        "simulated"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/pdf-to-md-LAB",
+      "port": "7818",
+      "addedAt": "2026-11-16",
       "pingProducts": []
     },
     {

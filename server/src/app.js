@@ -367,6 +367,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'field-notes-lab': '/field-notes-lab/',
     'env-map-lab': '/env-map-lab/',
     'workload-identity-lab': '/workload-identity/',
+    'pdf-to-md-lab': '/pdf-to-md/',
     'demo-map-lab': '/demo-map-lab/',
     'ping-services-stub': '/ping-services-stub/',
     'muse': '/muse/',
