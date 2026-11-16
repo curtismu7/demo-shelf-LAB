@@ -1987,6 +1987,29 @@
       "port": "7819",
       "addedAt": "2026-11-16",
       "pingProducts": []
+    },
+    {
+      "id": "cedar-in-privilege-lab",
+      "name": "Cedar in Privilege Lab",
+      "catalogId": "D135 provisional",
+      "kind": "Demo",
+      "description": "A guided tour of Cedar AI policies in PingOne Privilege: hold a call for a human, narrow a token's scope, and match the agent's act.sub claim. Set-up guide and a Cedar IS / IS NOT panel. Simulated here; only the act.sub case was measured on a real tenant (one agent, one run).",
+      "url": "http://localhost:7820",
+      "healthPath": "/api/health",
+      "composeFile": "cedar-in-privilege-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingone-privilege",
+        "pingfederate",
+        "agent-identity",
+        "authorization-policy",
+        "simulated"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/cedar-in-privilege-LAB",
+      "port": "7820",
+      "addedAt": "2026-11-16",
+      "pingProducts": []
     }
   ]
 }
