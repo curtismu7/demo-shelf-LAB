@@ -1964,6 +1964,29 @@
       "port": "7814",
       "addedAt": "2026-11-15",
       "pingProducts": []
+    },
+    {
+      "id": "cedar-act-sub-lab",
+      "name": "Cedar act.sub Lab",
+      "catalogId": "D134 provisional",
+      "kind": "Tester",
+      "description": "Does Privilege's Cedar match the agent's act.sub claim? Measured once on a real tenant (2026-11-16, one real agent), simulated here: same token, two tools, one act.sub policy each. The matching one is allowed, the one naming a different agent is refused. Mock only; Real is owner-run.",
+      "url": "http://localhost:7819",
+      "healthPath": "/api/health",
+      "composeFile": "cedar-act-sub-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingone-privilege",
+        "pingfederate",
+        "agent-identity",
+        "authorization-policy",
+        "simulated"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/cedar-act-sub-LAB",
+      "port": "7819",
+      "addedAt": "2026-11-16",
+      "pingProducts": []
     }
   ]
 }
