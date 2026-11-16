@@ -1,4 +1,10 @@
 {
   "schema": "demo-verification/1",
-  "marks": {}
+  "marks": {
+    "poppy-agent-tester": {
+      "status": "verified",
+      "note": "Full run proven 2026-11-15: PAR to PingFederate, sign-in, signed Company call (200)",
+      "updatedAt": "2026-11-16"
+    }
+  }
 }
