@@ -1900,6 +1900,26 @@
       "pingProducts": []
     },
     {
+      "id": "pdf-to-md-lab",
+      "name": "PDF to Markdown LAB",
+      "catalogId": "D133 provisional",
+      "kind": "Tool",
+      "description": "Convert a PDF to Markdown locally: drop a file, get headings/bullets/paragraphs, download the .md. In-process pdfjs extraction, no external services.",
+      "url": "http://localhost:7818",
+      "healthPath": "/api/health",
+      "composeFile": "pdf-to-md-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "learning",
+        "simulated"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/pdf-to-md-LAB",
+      "port": "7818",
+      "addedAt": "2026-11-16",
+      "pingProducts": []
+    },
+    {
       "id": "privilege-bulk-users",
       "name": "Privilege Bulk Users LAB",
       "kind": "Tester",
