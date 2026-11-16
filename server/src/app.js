@@ -216,13 +216,23 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
   // Asking Docker takes 1 to 5 s (docker compose ls, here or in the agent), so /api/shelf must not wait for it when it has a count:
   // it answers with the last one at once and, once that is over 5 s old, asks again behind the request. It waits only when there is
   // no count yet, the last is over 2 minutes old, or a Start / Stop just changed the answer (runningForget). Same shape as the poller.
+  // A failed ask (the agent timed out: running is null) never replaces a good count that is still under 2 minutes old: a count a little
+  // stale and true beats the shelf's own "limit 10" guess, which is wrong whenever the agent's limit is another number.
+  const RUNNING_STALE_MS = 120_000;
   let runningLast = null; // { at, value }
   let runningAsking = null;
   let runningGeneration = 0;
   function runningRefresh() {
     if (!runningAsking) {
       const started = runningGeneration;
-      const p = askRunning().then((value) => { if (started === runningGeneration) runningLast = { at: (now || Date.now)(), value }; return value; }).finally(() => { if (runningAsking === p) runningAsking = null; });
+      const p = askRunning().then((value) => {
+        if (started === runningGeneration) {
+          const t = (now || Date.now)();
+          const keepGood = value?.running == null && runningLast?.value?.running != null && t - runningLast.at < RUNNING_STALE_MS;
+          if (!keepGood) runningLast = { at: t, value };
+        }
+        return value;
+      }).finally(() => { if (runningAsking === p) runningAsking = null; });
       runningAsking = p;
     }
     return runningAsking;
@@ -232,7 +242,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     if (runningLast) {
       const age = (now || Date.now)() - runningLast.at;
       if (age < 5000) return runningLast.value;
-      if (age < 120_000) { runningRefresh().catch(() => {}); return runningLast.value; }
+      if (age < RUNNING_STALE_MS) { runningRefresh().catch(() => {}); return runningLast.value; }
     }
     return runningRefresh();
   }
