@@ -2010,6 +2010,32 @@
       "port": "7820",
       "addedAt": "2026-11-16",
       "pingProducts": []
+    },
+    {
+      "id": "poppy-verification",
+      "name": "Poppy Verification",
+      "catalogId": "D136 provisional",
+      "kind": "Tester",
+      "description": "Check a Company and its issuer against the Personal Agent Protocol 1.0: 107 spec-linked checks (discovery, issuer metadata, Poppy-Session, sign-in, resources). Mock runs a reference Company you can break with 28 defects; Real probes the Company you type.",
+      "url": "http://localhost:7821",
+      "healthPath": "/api/health",
+      "composeFile": "poppy-verification-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingfederate",
+        "agent-identity",
+        "oauth",
+        "par",
+        "cimd",
+        "rfc9728",
+        "simulated",
+        "real"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/poppy-verification-LAB",
+      "port": "7821",
+      "addedAt": "2026-11-16",
+      "pingProducts": []
     }
   ]
 }
