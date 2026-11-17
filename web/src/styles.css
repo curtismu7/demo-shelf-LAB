@@ -90,7 +90,7 @@
 .room {
   display: grid;
   gap: 20px;
-  max-width: 1180px;
+  max-width: 2200px;
   margin: 0 auto;
   padding-block: 16px 64px;
 }
