@@ -2015,6 +2015,42 @@
       "port": "7821",
       "addedAt": "2026-11-16",
       "pingProducts": []
+    },
+    {
+      "id": "wimse-lab",
+      "addedAt": "2026-11-18T18:00:42Z",
+      "name": "WIMSE Lab",
+      "catalogId": "D137",
+      "kind": "Demo",
+      "description": "Mock IETF WIMSE lab: trust domains, Workload Identity Tokens and Workload Proof Tokens across a multi-hop call chain. Decoded claims, break-it buttons, and a ReactFlow simulation.",
+      "url": "http://127.0.0.1:7822",
+      "healthPath": "/api/health",
+      "port": 7822,
+      "composeFile": "wimse-lab-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "workload-identity",
+        "jwt",
+        "token-security"
+      ]
+    },
+    {
+      "id": "workload-cert-lab",
+      "addedAt": "2026-11-18T18:00:42Z",
+      "name": "Workload Cert Lab",
+      "catalogId": "D138",
+      "kind": "Demo",
+      "description": "Mock X.509/SPIFFE-style workload identity: short-lived SVID-like certificates issued to workloads, mTLS handshake walkthrough, expiry and rotation, and a break-it pane.",
+      "url": "http://127.0.0.1:7823",
+      "healthPath": "/api/health",
+      "port": 7823,
+      "composeFile": "workload-cert-lab-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "workload-identity",
+        "mtls",
+        "token-security"
+      ]
     }
   ]
 }

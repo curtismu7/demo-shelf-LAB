@@ -370,6 +370,8 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'cedar-act-sub-lab': '/cedar-act-sub/',
     'cedar-in-privilege-lab': '/cedar-in-privilege/',
     'poppy-verification': '/poppy-verification/',
+    'wimse-lab': '/wimse-lab/',
+    'workload-cert-lab': '/workload-cert-lab/',
     'demo-map-lab': '/demo-map-lab/',
     'ping-services-stub': '/ping-services-stub/',
     'muse': '/muse/',
