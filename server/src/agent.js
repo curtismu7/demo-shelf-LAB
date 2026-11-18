@@ -82,11 +82,11 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
         if (!demoRoot) return res.status(409).json({ ok: false, error: 'no-demo-root' });
         const g = await ensureRepo(demo, demoRoot, { exec });
         if (!g.ok) return res.status(409).json({ ok: false, error: g.error, output: g.output || '' });
-        const r = await runCompose(demo, 'start', { exec, fileExists, shelfDir, networkLimit, cap });
+        const r = await runCompose(demo, 'start', { exec, fileExists, shelfDir, networkLimit, cap, attachProxy: true });
         if (r.status === 200) lastRunning?.recordStart(demo.id);
         return res.status(r.status).json({ ...r.body, deploy: g.how, dir: g.dir });
       }
-      const r = await runCompose(demo, req.params.action, { exec, fileExists, shelfDir, networkLimit, cap });
+      const r = await runCompose(demo, req.params.action, { exec, fileExists, shelfDir, networkLimit, cap, attachProxy: true });
       if (r.status === 200 && lastRunning) {
         if (req.params.action === 'start' || req.params.action === 'deploy') lastRunning.recordStart(demo.id);
         if (req.params.action === 'stop') lastRunning.recordStop(demo.id);
@@ -126,7 +126,7 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
       if (!demo?.composeFile) { lastRunning.recordStop(id); results.push({ id, started: false, error: 'not-registered' }); continue; }
       busy.add(id);
       try {
-        const r = await runCompose(demo, 'start', { exec, fileExists, shelfDir, networkLimit, cap });
+        const r = await runCompose(demo, 'start', { exec, fileExists, shelfDir, networkLimit, cap, attachProxy: true });
         if (r.status === 200) { lastRunning.recordStart(id); results.push({ id, started: true }); }
         else results.push({ id, started: false, error: r.body.error });
       } catch { results.push({ id, started: false, error: 'internal' }); }

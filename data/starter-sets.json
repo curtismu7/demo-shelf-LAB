@@ -16,7 +16,7 @@
       "id": "maps",
       "label": "Maps & Inspectors",
       "description": "Topology maps and inspector tools across the demo family.",
-      "demos": ["demo-map-lab", "privilege-map", "env-map-lab", "p1az-inspector", "pingone-mcp-inspector"]
+      "demos": ["demo-map-lab", "privilege-map", "env-map-lab", "p1az-inspector", "mfa-admin-mcp"]
     },
     {
       "id": "mock",

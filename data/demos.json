@@ -936,27 +936,6 @@
       "repo": "https://github.com/curtismu7/agent-gateway-inspector-LAB"
     },
     {
-      "id": "pingone-mcp-inspector",
-      "addedAt": "2026-11-02T13:46:42-06:00",
-      "name": "PingOne MCP Inspector LAB",
-      "catalogId": "D3",
-      "kind": "Tester",
-      "description": "Connect to PingOne's hosted MCP server (worker or interactive admin sign-in) or any MCP server, list its tools with a safety class, and call them read-only by default. Mock by default; Live is owner-run.",
-      "url": "http://localhost:5201",
-      "healthPath": "/api/health",
-      "composeFile": "pingone-mcp-inspector-LAB/docker-compose.yml",
-      "composeOverlays": [],
-      "notes": "Host-run: npm ci && npm run build && npm start (port 5201; npm run doctor checks it). Or: HOST_PORT=5201 docker compose up --build -d (published on 127.0.0.1 only). Mock mode needs no setup; Live is refused until the owner sets PINGONE_MCP_INSPECTOR_MODE=live. Not tested against a real tenant. The composeFile is relative to the folder the demo repos sit in.",
-      "tags": [
-        "pingone-mcp",
-        "mcp-security",
-        "simulated",
-        "real",
-        "mcp"
-      ],
-      "repo": "https://github.com/curtismu7/pingone-mcp-inspector-LAB"
-    },
-    {
       "id": "agent-audit-trail-lab",
       "addedAt": "2026-11-02T13:46:42-06:00",
       "name": "Agent Audit Trail LAB",
