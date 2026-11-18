@@ -2031,7 +2031,8 @@
       "tags": [
         "workload-identity",
         "jwt",
-        "token-security"
+        "token-security",
+        "simulated"
       ]
     },
     {
@@ -2049,7 +2050,26 @@
       "tags": [
         "workload-identity",
         "mtls",
-        "token-security"
+        "token-security",
+        "simulated"
+      ]
+    },
+    {
+      "id": "pf-agent-client-sync",
+      "addedAt": "2026-11-18T18:10:00Z",
+      "name": "PF Agent Client Sync LAB",
+      "catalogId": "D139",
+      "kind": "Demo",
+      "description": "PingFederate 13.1 AI-Agent-tagged OAuth clients (_pf_system_tag_ai_agent) synced one-way into simulated PingIDM managed agent records - the foundation for agent identity, ownership and lifecycle. Real mode reads a real PF read-only.",
+      "url": "http://127.0.0.1:7824",
+      "healthPath": "/api/health",
+      "port": 7824,
+      "composeFile": "pf-agent-client-sync-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "agent-identity",
+        "pingfederate",
+        "simulated"
       ]
     }
   ]
