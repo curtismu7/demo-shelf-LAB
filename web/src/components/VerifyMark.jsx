@@ -9,6 +9,10 @@ import React, { useEffect, useState } from "react";
 //
 // Both render nothing when there is no mark, when the mark is "none", while loading, and when the shelf cannot be reached: never an error,
 // never a placeholder. `note` shows the note under the label (the shelf's cards do); off, the note is the badge's tooltip instead.
+//
+// <VerifyMark> takes the same request options as ShelfLink so it can sit beside it in any lab: `path` (default "/api/shelf"), `headers` (an object, or a
+// function returning one, evaluated when the request fires: a lab that sends X-Workspace-Id on every request passes the same function it gives ShelfLink)
+// and `traceparent` (a function returning a W3C traceparent value, for labs whose tests assert one on every request).
 
 export function VerifyBadge({ mark, note = true, className = "" }) {
   if (!mark || mark.status === "none") return null;
@@ -29,11 +33,12 @@ export function VerifyBadge({ mark, note = true, className = "" }) {
   );
 }
 
-export default function VerifyMark({ id, path = "/api/shelf", headers, note = false, className = "" }) {
+export default function VerifyMark({ id, path = "/api/shelf", headers, traceparent, note = false, className = "" }) {
   const [mark, setMark] = useState(null);
   useEffect(() => {
     let alive = true;
-    fetch(path, { credentials: "omit", headers: { Accept: "application/json", ...(headers ?? {}) } })
+    const extra = typeof headers === "function" ? headers() : (headers ?? {});
+    fetch(path, { credentials: "same-origin", headers: { Accept: "application/json", ...extra, ...(traceparent ? { traceparent: traceparent() } : {}) } })
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => { if (alive) setMark(d?.demos?.find((x) => x.id === id)?.verification ?? null); })
       .catch(() => { /* no shelf, no mark */ });
