@@ -996,6 +996,57 @@ describe("Updates available banner", () => {
     expect(screen.queryByRole("button", { name: "Show all release notes" })).toBeNull();
   });
 
+  it("keeps the release-notes panel closed across a reload once the user closed it, for the same version", async () => {
+    const withReleases = () => {
+      const base = mockFetch(shelf());
+      const f = vi.fn(async (url, init) => {
+        if (String(url) === "/api/new-apps") return { ok: true, json: async () => ({ windowHours: 48, since: hrs(48), apps: [A] }) };
+        if (String(url) === "/api/notice") return { ok: true, json: async () => ({ notice: null, updateCommand: "curl" }) };
+        if (String(url) === "/api/releases") return { ok: true, json: async () => ({ version: "2.13", notes: "## 2.13 (2026-11-12)\n\n- A change", updateCommand: "curl" }) };
+        return base(url, init);
+      });
+      vi.stubGlobal("fetch", f);
+      return f;
+    };
+    withReleases();
+    const first = render(<App />);
+    // The panel auto-opens for a new version; the user closes it.
+    fireEvent.click(await screen.findByRole("button", { name: "Close release notes" }));
+    expect(screen.queryByRole("region", { name: "Release notes", selector: ".note:not(.note--strip)" })).toBeNull();
+    first.unmount();
+    // A fresh mount (page reload / app restart): the panel must NOT auto-open again.
+    withReleases();
+    render(<App />);
+    await screen.findByRole("list", { name: "New labs in the last 48 hours" });
+    await act(async () => {});
+    expect(screen.queryByRole("region", { name: "Release notes" })).toBeNull();
+    // The strip is gone too (the user said no for this version), and Show still works.
+    expect(screen.queryByRole("button", { name: "Show release notes" })).toBeNull();
+  });
+
+  it("auto-opens the release-notes panel again when a new version arrives after the user closed the old one", async () => {
+    const releasesFor = (version) => {
+      const base = mockFetch(shelf());
+      const f = vi.fn(async (url, init) => {
+        if (String(url) === "/api/new-apps") return { ok: true, json: async () => ({ windowHours: 48, since: hrs(48), apps: [A] }) };
+        if (String(url) === "/api/notice") return { ok: true, json: async () => ({ notice: null, updateCommand: "curl" }) };
+        if (String(url) === "/api/releases") return { ok: true, json: async () => ({ version, notes: `## ${version}\n\n- Changes`, updateCommand: "curl" }) };
+        return base(url, init);
+      });
+      vi.stubGlobal("fetch", f);
+      return f;
+    };
+    releasesFor("2.13");
+    const first = render(<App />);
+    fireEvent.click(await screen.findByRole("button", { name: "Close release notes" }));
+    first.unmount();
+    releasesFor("2.14");
+    render(<App />);
+    await screen.findByRole("region", { name: "Release notes" });
+    expect(screen.getByRole("region", { name: "Release notes", selector: ".note:not(.note--strip)" })).toHaveTextContent("Changes");
+  });
+
+
   it("shows the notice alone when no lab is new, and no banner when neither part has content", async () => {
     withUpdates({ notice: "Just a notice." });
     const { unmount } = render(<App />);

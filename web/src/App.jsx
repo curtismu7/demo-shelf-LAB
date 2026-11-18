@@ -140,8 +140,14 @@ export default function App() {
   // Release notes: { version, notes, updateCommand } from /api/releases.
   // Open by default when `version` differs from the last one the user dismissed;
   // the dismissal persists in localStorage until the next version appears.
+  // notesHidden records the user closing the panel THIS version showed; once set,
+  // even the auto-open and the strips' Show buttons leave it closed until the
+  // version changes — the choice survives reloads and restarts.
   const [releases, setReleases] = useState(null);
   const [notesOpen, setNotesOpen] = useState(false);
+  const [notesHidden, setNotesHidden] = useState(() => {
+    try { return window.localStorage.getItem("shelf-notes-hidden"); } catch { return null; }
+  });
   const [releaseVersion, setReleaseVersion] = useState(null);
   const [announce, setAnnounce] = useState("");
   const [where, setWhere] = useState("all");
@@ -236,13 +242,24 @@ export default function App() {
       setReleaseVersion(b.version);
       let seen = null;
       try { seen = window.localStorage.getItem("shelf-releases-seen"); } catch { /* private mode */ }
-      setNotesOpen(seen !== b.version);
+      setNotesOpen(seen !== b.version && notesHidden !== b.version);
     }).catch(() => { /* no release notes is fine */ });
   }, []);
 
   const dismissNotes = () => {
     setNotesOpen(false);
-    try { if (releaseVersion) window.localStorage.setItem("shelf-releases-seen", releaseVersion); } catch { /* private mode */ }
+    // Remember "this user closed it for this version" so a reload or restart
+    // does not pop the panel open again; a new release clears it by version.
+    if (releaseVersion) {
+      setNotesHidden(releaseVersion);
+      try { window.localStorage.setItem("shelf-notes-hidden", releaseVersion); } catch { /* private mode */ }
+    }
+  };
+
+  const showNotes = () => {
+    setNotesHidden(null);
+    try { window.localStorage.removeItem("shelf-notes-hidden"); } catch { /* private mode */ }
+    setNotesOpen(true);
   };
 
   useEffect(() => {
@@ -606,10 +623,10 @@ export default function App() {
             <p style={{ marginTop: 6, marginBottom: 0 }}>Run it in a terminal to get these updates. Safe to re-run. This panel stays closed until the next release.</p>
           </div>
         )}
-        {!notesOpen && releases?.notes && (
+        {!notesOpen && notesHidden !== releaseVersion && releases?.notes && (
           <div className="note note--strip" data-state="info" role="region" aria-label="Release notes">
             <strong>Release notes — every update to the shelf{releaseVersion ? `, currently v${releaseVersion}` : ""}.</strong>
-            <button type="button" aria-label="Show release notes" onClick={() => setNotesOpen(true)}>Show release notes</button>
+            <button type="button" aria-label="Show release notes" onClick={showNotes}>Show release notes</button>
           </div>
         )}
         {hasUpdates && !showUpdates && (
@@ -642,7 +659,7 @@ export default function App() {
               <p style={{ marginTop: 8, marginBottom: 0 }}>
                 {notesOpen
                   ? <span className="note__meta">Full release notes are open above.</span>
-                  : <button type="button" aria-label="Show all release notes" onClick={() => setNotesOpen(true)}>See all release notes</button>}
+                  : <button type="button" aria-label="Show all release notes" onClick={showNotes}>See all release notes</button>}
               </p>
             )}
             {/* One update command on screen at a time: the What's-new panel owns it
