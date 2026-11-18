@@ -139,7 +139,7 @@ export async function networkPoolGuard(exec, limit = NETWORK_LIMIT_DEFAULT) {
 
 // The one place that touches Docker. Used by the shelf (host-run) and by the start agent. Returns { status, body }.
 // `exec` and `fileExists` are injectable for tests.
-export async function runCompose(demo, action, { exec = defaultExec, fileExists = fs.existsSync, shelfDir = null, networkLimit, cap = null } = {}) {
+export async function runCompose(demo, action, { exec = defaultExec, fileExists = fs.existsSync, shelfDir = null, networkLimit, cap = null, attachProxy = false } = {}) {
   const fail = (status, error, extra = {}) => ({ status, body: { ok: false, error, ...extra } });
   if (isShelfItself(demo, shelfDir)) return fail(409, 'is-the-shelf');
   const guard = await orbstackGuard(exec);
@@ -182,11 +182,33 @@ export async function runCompose(demo, action, { exec = defaultExec, fileExists 
     const out = await exec('docker', composeArgs(demo, action), { cwd: path.dirname(demo.composeFile), timeoutMs: action === 'start' ? START_TIMEOUT_MS : EXEC_TIMEOUT_MS });
     const body = { ok: true, id: demo.id, action, output: redact(`${out.stdout}\n${out.stderr}`), ...(stopped ? { stopped, limit: cap.max } : {}) };
     if (sharedStarted.length) body.sharedStarted = sharedStarted;
+    // A lab started from the down-page is only reachable through the lab-proxy once the proxy
+    // sits on the lab's compose network (nginx resolves the container name over it). The watchdog
+    // catches this within minutes; doing it here makes "Start this lab" work on the first reload.
+    if (attachProxy && (action === 'start' || action === 'deploy')) await attachProxyNetwork(demo, exec);
     return { status: 200, body };
   } catch (e) {
     const timedOut = e.killed || e.signal === 'SIGTERM';
     return fail(502, timedOut ? 'timeout' : 'compose-failed', { output: redact(`${e.stdout || ''}\n${e.stderr || ''}`) });
   }
+}
+
+// Attach lab-proxy to the demo's compose network(s), idempotently. Best-effort: failure to attach
+// only delays reachability until the watchdog's next pass, so the start itself still succeeds.
+const PROXY_CONTAINER = 'lab-proxy-lab-proxy-1';
+async function attachProxyNetwork(demo, exec) {
+  try {
+    const project = projectOf(demo.composeFile);
+    const { stdout } = await exec('docker', ['ps', '--filter', `label=com.docker.compose.project=${project}`, '--format', '{{.Names}}']);
+    const names = stdout.split('\n').map((s) => s.trim()).filter(Boolean);
+    for (const name of names) {
+      const nets = await exec('docker', ['inspect', name, '--format', '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}']);
+      for (const net of nets.stdout.trim().split(/\s+/).filter((n) => n && n !== 'bridge' && n !== 'host' && n !== 'none')) {
+        await exec('docker', ['network', 'connect', net, PROXY_CONTAINER]).catch(() => {});
+      }
+    }
+    await exec('docker', ['exec', PROXY_CONTAINER, 'nginx', '-s', 'reload']).catch(() => {});
+  } catch { /* best-effort */ }
 }
 
 // Express middleware factory. With `agent` (the shelf in a container) the compose call is handed to the host-side start agent;

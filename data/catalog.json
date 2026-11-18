@@ -117,7 +117,8 @@
       "group": "D",
       "seed": "built",
       "wave": 2,
-      "status": "active"
+      "status": "retired",
+      "retiredNote": "2026-11-18: merged into mfa-admin-mcp-LAB (D132); the lab pingone-mcp-inspector-LAB is retired."
     },
     {
       "id": "D5",
@@ -542,7 +543,7 @@
       "name": "Delegation & entitlement",
       "kind": "Demo",
       "group": "D",
-      "oneLiner": "Consent mints act={agent}; the directory decides — group gate, then tier expansion.",
+      "oneLiner": "Consent mints act={agent}; the directory decides \u2014 group gate, then tier expansion.",
       "status": "active"
     },
     {
@@ -574,7 +575,7 @@
       "name": "MFA Admin MCP LAB",
       "kind": "Tester",
       "group": "D",
-      "oneLiner": "Administer PingOne's early-access MFA administration MCP tool set — environment MFA settings, device-auth and FIDO passkey policies, notification policies, OATH tokens, and email/phone/WhatsApp delivery settings — with safety classes, a confirm gate and a metadata scan."
+      "oneLiner": "Administer PingOne's early-access MFA administration MCP tool set \u2014 environment MFA settings, device-auth and FIDO passkey policies, notification policies, OATH tokens, and email/phone/WhatsApp delivery settings \u2014 with safety classes, a confirm gate and a metadata scan."
     }
   ]
 }

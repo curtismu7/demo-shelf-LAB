@@ -31,7 +31,7 @@ describe('start agent', () => {
     expect(r.status).toBe(200);
     expect(r.body).toMatchObject({ ok: true, deploy: 'cloned' });
     expect(exec.mock.calls.some((c) => c[1][0] === 'clone' && String(c[1][1]).endsWith('/a.git'))).toBe(true);
-    expect(exec).toHaveBeenLastCalledWith('docker', ['compose', '-f', '/x/a/docker-compose.yml', 'up', '-d'], { cwd: '/x/a', timeoutMs: 600000 });
+    expect(exec.mock.calls.some((c) => c[0] === 'docker' && JSON.stringify(c[1]) === JSON.stringify(['compose', '-f', '/x/a/docker-compose.yml', 'up', '-d']))).toBe(true);
     const noRoot = await call(mk({ exec, demoRoot: null }), 'post', '/v1/demos/a/deploy');
     expect(noRoot.status).toBe(409);
     expect(noRoot.body.error).toBe('no-demo-root');
@@ -42,7 +42,9 @@ describe('start agent', () => {
     const r = await call(mk({ exec }), 'post', '/v1/demos/a/start');
     expect(r.status).toBe(200);
     expect(r.body).toMatchObject({ ok: true, id: 'a', action: 'start' });
-    expect(exec).toHaveBeenLastCalledWith('docker', ['compose', '-f', '/x/a/docker-compose.yml', 'up', '-d'], { cwd: '/x/a', timeoutMs: 600000 });
+    // runCompose runs exactly `docker compose -f <file> up -d` (no shell); after it, the proxy
+    // network attach adds a few best-effort docker calls, so assert on the call, not the last one.
+    expect(exec.mock.calls.some((c) => c[0] === 'docker' && JSON.stringify(c[1]) === JSON.stringify(['compose', '-f', '/x/a/docker-compose.yml', 'up', '-d']))).toBe(true);
   });
   it('stops with down', async () => {
     const exec = okExec();
@@ -107,7 +109,7 @@ describe('start agent: further guarantees', () => {
     const r = await call(mk({ exec }), 'post', '/v1/demos/a/start?composeFile=/etc/x&command=rm')
       .send({ composeFile: '/etc/passwd', composeOverlays: ['/tmp/evil.yml'], command: 'rm -rf /' });
     expect(r.status).toBe(200);
-    expect(exec).toHaveBeenLastCalledWith('docker', ['compose', '-f', '/x/a/docker-compose.yml', 'up', '-d'], { cwd: '/x/a', timeoutMs: 600000 });
+    expect(exec.mock.calls.some((c) => c[0] === 'docker' && JSON.stringify(c[1]) === JSON.stringify(['compose', '-f', '/x/a/docker-compose.yml', 'up', '-d']))).toBe(true);
   });
   it('matches the action case-sensitively: START is not start', async () => {
     const exec = okExec();

@@ -20,6 +20,7 @@ Not shelf apps, so not in the registry; the allocator skips them.
 
 | Port | App | Catalog | |
 | --- | --- | --- | --- |
+| 4400 | demo-shelf-lab | E2 |  |
 | 4510 | privilege-demo | D1 |  |
 | 4701 | hostile-mcp | D6 |  |
 | 4720 | id-jag-standalone | C1 |  |
@@ -38,7 +39,6 @@ Not shelf apps, so not in the registry; the allocator skips them.
 | 5150 | gateway-claims-lab | D99 |  |
 | 5181 | attack-gallery | D33 |  |
 | 5200 | p1-third-party-exchange | D98 |  |
-| 5201 | pingone-mcp-inspector | D3 |  |
 | 5250 | cimd-lab | D36 |  |
 | 5301 | privilege-map |  |  |
 | 5310 | mcp-discovery | D5 |  |
@@ -82,12 +82,12 @@ Not shelf apps, so not in the registry; the allocator skips them.
 | 7580 | ciba-hitl-lab | C1 |  |
 | 7590 | demo-field-guide | D115 |  |
 | 7601 | agentcore-pingone-demo-lab | D114 |  |
-| 7660 | agent-preferences-lab |  |  |
-| 7670 | mcp-gateway-lab |  |  |
+| 7660 | agent-preferences-lab | D117 |  |
+| 7670 | mcp-gateway-lab | D116 |  |
 | 7680 | hitl-mfa-lab | D119 |  |
 | 7690 | delegation-lab | D120 |  |
 | 7700 | a2a-lab | D122 |  |
-| 7710 | diagram-prove-lab |  |  |
+| 7710 | diagram-prove-lab | E3 |  |
 | 7720 | meridian-a2a-hop | D110 |  |
 | 7800 | observability-lab | D123 |  |
 | 7801 | privilege-logging-lab |  |  |
@@ -131,7 +131,7 @@ Not shelf apps, so not in the registry; the allocator skips them.
 | 5050-5099 | ping-gateway-route-lab |
 | 5100-5149 | muse |
 | 5150-5199 | gateway-claims-lab, attack-gallery |
-| 5200-5249 | p1-third-party-exchange, pingone-mcp-inspector |
+| 5200-5249 | p1-third-party-exchange |
 | 5250-5299 | cimd-lab |
 | 5300-5349 | privilege-map, mcp-discovery |
 | 5350-5399 | no-tool-no-promise |

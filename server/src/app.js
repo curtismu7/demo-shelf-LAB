@@ -345,7 +345,6 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'coding-agents-lab': '/coding-agents/',
     'saas-access-lab': '/saas-access/',
     'p1az-inspector': '/p1az-inspector/',
-    'pingone-mcp-inspector': '/pingone-mcp-inspector/',
     'jev-lab': '/jev-lab/',
     'obo-lab': '/obo-lab/',
     'jit-lab': '/jit-lab/',
