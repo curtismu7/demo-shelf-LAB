@@ -2031,7 +2031,8 @@
       "tags": [
         "workload-identity",
         "jwt",
-        "token-security"
+        "token-security",
+        "simulated"
       ]
     },
     {
@@ -2049,7 +2050,8 @@
       "tags": [
         "workload-identity",
         "mtls",
-        "token-security"
+        "token-security",
+        "simulated"
       ]
     },
     {
