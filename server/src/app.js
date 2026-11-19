@@ -375,6 +375,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'intent-console-lab': '/intent-console-lab/',
     'privilege-google-secrets': '/privilege-google-secrets/',
     'agent-privilege-guide': '/agent-privilege-guide/',
+    'spiffe-issuer': '/spiffe-issuer/',
     'demo-map-lab': '/demo-map-lab/',
     'ping-services-stub': '/ping-services-stub/',
     'muse': '/muse/',
