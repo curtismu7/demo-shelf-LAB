@@ -2114,6 +2114,24 @@
       "where": "installed",
       "addedAt": "2026-11-19T00:00:00Z",
       "port": 7827
+    },
+    {
+      "id": "agent-privilege-guide",
+      "addedAt": "2026-11-19T00:00:00Z",
+      "name": "Agent Privilege Field Guide",
+      "catalogId": "D136",
+      "kind": "Demo",
+      "description": "The five sections of the PingOne Privilege Agent Privilege console area as a guided tour: Agent Registry, Agentic Apps, Federated Identity, Self-Hosted Agents, AI Platform Agents, plus the Identity/Grant/Guardrail mental model. From the field guide; deck-only behaviours labelled UNVERIFIED.",
+      "url": "http://127.0.0.1:7826",
+      "healthPath": "/api/health",
+      "port": 7826,
+      "composeFile": "agent-privilege-guide-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingone-privilege",
+        "ai-agent-security",
+        "simulated"
+      ]
     }
   ]
 }
