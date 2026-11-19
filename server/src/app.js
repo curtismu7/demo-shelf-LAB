@@ -372,6 +372,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'poppy-verification': '/poppy-verification/',
     'wimse-lab': '/wimse-lab/',
     'workload-cert-lab': '/workload-cert-lab/',
+    'intent-console-lab': '/intent-console-lab/',
     'demo-map-lab': '/demo-map-lab/',
     'ping-services-stub': '/ping-services-stub/',
     'muse': '/muse/',
