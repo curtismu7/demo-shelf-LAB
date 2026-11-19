@@ -2071,6 +2071,24 @@
         "pingfederate",
         "simulated"
       ]
+    },
+    {
+      "id": "intent-console-lab",
+      "addedAt": "2026-11-18T21:00:00Z",
+      "name": "AI Intents Console Lab",
+      "catalogId": "D134",
+      "kind": "Demo",
+      "description": "The Privilege console's AI Intents page as a standalone: define intents with exemplars, twins, floors and Acts, point an app at them, and resolve agent actions through an encoder sidecar. Shapes measured from the console swagger; the resolution engine is lab-invented and labelled.",
+      "url": "http://127.0.0.1:7825",
+      "healthPath": "/api/health",
+      "port": 7825,
+      "composeFile": "intent-console-lab/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingone-privilege",
+        "ai-agent-security",
+        "simulated"
+      ]
     }
   ]
 }
