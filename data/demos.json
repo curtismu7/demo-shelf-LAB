@@ -2138,7 +2138,7 @@
       "name": "SPIFFE Issuer LAB",
       "kind": "Tool",
       "description": "Mints three test JWT-SVIDs (valid, mismatched, untrusted), publishes the JWKS and OIDC discovery a Privilege gateway can fetch, and presents each token to an MCP door: expect 200, 401, 401. A token minter, not SPIRE.",
-      "url": "http://127.0.0.1:7828",
+      "url": "http://127.0.0.1:7829",
       "healthPath": "/api/health",
       "composeFile": "spiffe-issuer-LAB/docker-compose.yml",
       "composeOverlays": [],
@@ -2158,7 +2158,8 @@
       ],
       "where": "installed",
       "addedAt": "2026-11-19T00:00:00Z",
-      "port": 7828
+      "port": 7829,
+      "catalogId": "D141"
     },
     {
       "id": "privilege-shelf",
@@ -2198,7 +2199,8 @@
         "simulated"
       ],
       "where": "installed",
-      "repo": "https://github.com/curtismu7/pf-array-claims-LAB"
+      "repo": "https://github.com/curtismu7/pf-array-claims-LAB",
+      "catalogId": "D140"
     }
   ]
 }
