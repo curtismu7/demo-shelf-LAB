@@ -117,7 +117,7 @@ Not shelf apps, so not in the registry; the allocator skips them.
 | 7825 | intent-console-lab | D134 |  |
 | 7826 | agent-privilege-guide | D136 |  |
 | 7827 | privilege-google-secrets | D137 |  |
-| 7828 | pf-array-claims-lab |  |  |
+| 7828 | spiffe-issuer |  |  |
 | 7830 | privilege-shelf |  |  |
 | 8081 | mcp-resource-server | D0 |  |
 
@@ -191,7 +191,7 @@ Not shelf apps, so not in the registry; the allocator skips them.
 | 7650-7699 | agent-preferences-lab, mcp-gateway-lab, hitl-mfa-lab, delegation-lab |
 | 7700-7749 | a2a-lab, diagram-prove-lab, meridian-a2a-hop |
 | 7750-7799 | **open** |
-| 7800-7849 | observability-lab, privilege-logging-lab, aggregate-entitlement-lab, pingone-events-lab, field-notes-lab, env-map-lab, pingcli-lab, mcp-skills-lab, demo-map-lab, privilege-k8-kits, ai-demo-standalone, privilege-owasp-lab, pf-privilege-obo-lab, privilege-api-explorer, appfire-agent-governance-lab, mfa-admin-mcp, workload-identity-lab, privilege-bulk-users, pdf-to-md-lab, cedar-act-sub-lab, cedar-in-privilege-lab, poppy-verification, wimse-lab, workload-cert-lab, pf-agent-client-sync, intent-console-lab, agent-privilege-guide, privilege-google-secrets, pf-array-claims-lab, privilege-shelf |
+| 7800-7849 | observability-lab, privilege-logging-lab, aggregate-entitlement-lab, pingone-events-lab, field-notes-lab, env-map-lab, pingcli-lab, mcp-skills-lab, demo-map-lab, privilege-k8-kits, ai-demo-standalone, privilege-owasp-lab, pf-privilege-obo-lab, privilege-api-explorer, appfire-agent-governance-lab, mfa-admin-mcp, workload-identity-lab, privilege-bulk-users, pdf-to-md-lab, cedar-act-sub-lab, cedar-in-privilege-lab, poppy-verification, wimse-lab, workload-cert-lab, pf-agent-client-sync, intent-console-lab, agent-privilege-guide, privilege-google-secrets, spiffe-issuer, privilege-shelf |
 | 7850-7899 | **open** |
 | 7900-7949 | **open** |
 | 7950-7999 | **open** |
