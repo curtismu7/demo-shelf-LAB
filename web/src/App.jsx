@@ -194,6 +194,31 @@ export default function App() {
   // with the server's reason; the control still exists in the header and reports the honest answer.
   const [modeInfo, setModeInfo] = useState(null);
   useEffect(() => { call("/api/info").then(setModeInfo).catch(() => {}); }, []);
+  // Gateway target switch (owner tool): which Privilege gateway the demo app points at.
+  // Load once; refresh after a switch. Available only when the host has the profiles file.
+  const [gw, setGw] = useState(null);
+  const [gwBusy, setGwBusy] = useState(false);
+  const loadGw = useCallback(() => { call("/api/gateway").then(setGw).catch(() => setGw({ available: false })); }, []);
+  useEffect(() => { loadGw(); }, [loadGw]);
+  async function switchGw(profile) {
+    if (!profile || gwBusy) return;
+    setGwBusy(true);
+    setNote(`Switching the gateway target to ${profile}...`);
+    try {
+      const r = await call(`/api/gateway/${encodeURIComponent(profile)}`, "POST");
+      const parts = [`Gateway target switched to ${profile}`];
+      if (r.bff === "written") parts.push("BFF .env updated — run: cd ~/Development/AI-DEMO2 && docker compose up -d demo-api-server (up -d, not restart)");
+      if (r.agents === "written") parts.push(r.recreate === "ok" ? "agent containers recreated" : `agent .env written, but the recreate failed (${r.recreate})`);
+      if (r.claude === "written") parts.push("Claude Code entry updated — run /mcp to re-auth");
+      setNote(parts.join(" · "));
+      setAnnounce(`Gateway switched to ${profile}`);
+    } catch (e) {
+      const why = e.message === "no-profiles-file" ? "no gateway profiles file on this host" : e.message;
+      setNote(`Gateway switch did not run: ${why}`);
+    }
+    setGwBusy(false);
+    loadGw();
+  }
   const selectMode = useCallback(async (source) => {
     if (source === (modeInfo?.source || "mock")) return;
     try {
@@ -553,7 +578,17 @@ export default function App() {
     const groups = data?.groups || {};
     const letters = [...Object.keys(groups).sort(), "other"];
     // Running demos come first; the plan order holds inside the running group and inside the rest.
-    const sorted = shown.filter((i) => !i.planned).sort(byPlan);
+    // When the user is filtering (search text or tags), name matches rank above pure plan order so the
+    // thing they asked for is the first card they see.
+    const q = text.trim().toLowerCase();
+    const byRelevance = (a, b) => {
+      if (!q && !picked.size) return 0;
+      // Newest first inside a match: a lab just added for this search (e.g. a new Privilege index) leads.
+      const recency = (Number.isFinite(Date.parse(b.addedAt)) ? Date.parse(b.addedAt) : 0) - (Number.isFinite(Date.parse(a.addedAt)) ? Date.parse(a.addedAt) : 0);
+      const score = (i) => (i.name?.toLowerCase().startsWith(q) ? 0 : i.name?.toLowerCase().includes(q) ? 1 : 2);
+      return score(a) - score(b) || recency;
+    };
+    const sorted = shown.filter((i) => !i.planned).sort((a, b) => byRelevance(a, b) || byPlan(a, b));
     const mine = [...sorted.filter((i) => i.bucket === "running"), ...sorted.filter((i) => i.bucket !== "running")];
     const planned = letters.map((g) => ({
       key: g,
@@ -561,7 +596,7 @@ export default function App() {
       rows: shown.filter((i) => i.planned && (i.group && groups[i.group] ? i.group : "other") === g).sort(byPlan),
     }));
     return [{ key: "mine", title: "On your shelf", rows: mine }, ...planned].filter((sec) => sec.rows.length);
-  }, [shown, data]);
+  }, [shown, data, text, picked]);
 
   return (
     <>
@@ -572,6 +607,18 @@ export default function App() {
         </div>
         <div className="top__tools">
             <ShelfLink />
+          <div className="seg" role="group" aria-label="Gateway target" data-testid="gateway">
+            {gw?.available && gw.profiles?.length > 0 && gw.profiles.map((p) => (
+              <button key={p.name} type="button" data-testid={`gateway-${p.name}`}
+                aria-pressed={gw.current === p.name || undefined}
+                title={`Point the demo app, agents and Claude at ${p.bffUrl}. After switching: docker compose up -d demo-api-server, then /mcp re-auth and a fresh sign-in.`}
+                disabled={busy || gwBusy || gw.current === p.name}
+                aria-busy={gwBusy && gw.current !== p.name ? undefined : undefined}
+                onClick={() => switchGw(p.name)}>
+                {gwBusy ? <span className="spin" aria-hidden="true" /> : null}{p.name}
+              </button>
+            ))}
+          </div>
           <div className="seg" role="group" aria-label="Mode" data-testid="mode">
             <button type="button" aria-pressed={(modeInfo?.source || "mock") === "mock"} onClick={() => selectMode("mock")} data-testid="mode-mock">Mock</button>
             <button type="button" aria-pressed={modeInfo?.source === "real"} disabled={modeInfo?.realAvailable !== true} title={modeInfo?.realAvailable !== true ? modeInfo?.realReason : undefined} onClick={() => selectMode("real")} data-testid="mode-real">Real</button>
