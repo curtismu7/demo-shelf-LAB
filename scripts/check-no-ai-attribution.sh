@@ -15,7 +15,7 @@ tree_count=$(printf '%s' "$tree" | grep -c . || true)
 echo "tracked files with an AI-attribution credit: $tree_count"
 if [ "$tree_count" != "0" ]; then printf '%s\n' "$tree" | sed 's/^/  /'; status=1; fi
 
-self_coauthor='^[C]o-authored-by:[^<]*<([0-9]+\+)?curtismu7@users\.noreply\.github\.com>[[:space:]]*$'
+self_coauthor='^[C]o-authored-by:[^<]*<([0-9]+\+)?(curtismu7|cmuir)@users\.noreply\.github\.com>[[:space:]]*$'
 bad=0
 for h in $(git log --all --since="$rule_date" --format=%H 2>/dev/null); do
   # A co-author trailer naming the owner's own GitHub noreply address is not an AI credit: GitHub's squash merge adds one when
