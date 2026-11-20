@@ -744,7 +744,7 @@
       "name": "Coding Agents LAB",
       "catalogId": "D102",
       "kind": "Demo",
-      "description": "Inspection inside Claude Code, Cursor, Codex, Gemini CLI, GitHub Copilot and Antigravity: hooks as the enforcement point, the outcome follows the risk. Opens in Real mode — every decision is the live Privilege AI Guard on our tenant; Mock and Live are the offline rehearsal.",
+      "description": "Inspection inside Claude Code, Cursor, Codex, Gemini CLI, GitHub Copilot and Antigravity: hooks as the enforcement point, the outcome follows the risk. Opens in Real mode \u2014 every decision is the live Privilege AI Guard on our tenant; Mock and Live are the offline rehearsal.",
       "url": "http://localhost:7150",
       "healthPath": "/api/health",
       "composeFile": "coding-agents-LAB/docker-compose.yml",
@@ -1293,7 +1293,7 @@
       "addedAt": "2026-11-06T12:23:33Z",
       "name": "Agent Preferences Lab",
       "kind": "Demo",
-      "description": "The user sets what their AI agent may do — allowed action tiers, a spend cap, what happens when Protect detects an AI agent — enforced at a mock MCP tool boundary: permit, human approval (HITL) or deny. Standalone mock of the AI-DEMO2 agentPreferences feature. Mock only.",
+      "description": "The user sets what their AI agent may do \u2014 allowed action tiers, a spend cap, what happens when Protect detects an AI agent \u2014 enforced at a mock MCP tool boundary: permit, human approval (HITL) or deny. Standalone mock of the AI-DEMO2 agentPreferences feature. Mock only.",
       "url": "http://localhost:7660",
       "healthPath": "/api/health",
       "composeFile": "agent-preferences-lab/docker-compose.yml",
@@ -1503,7 +1503,7 @@
       "name": "CIBA HITL Lab",
       "catalogId": "C1",
       "kind": "Demo",
-      "description": "Twenty-four steps from scope to tool with a human in the loop: one login, one token exchange, an OBO token that keeps the full scope set; a write is denied with a CIBA identifier, the gateway rewrites the 403 into a JSON-RPC 2.0 error, the human approves, the agent replays, Authorize verifies…",
+      "description": "Twenty-four steps from scope to tool with a human in the loop: one login, one token exchange, an OBO token that keeps the full scope set; a write is denied with a CIBA identifier, the gateway rewrites the 403 into a JSON-RPC 2.0 error, the human approves, the agent replays, Authorize verifies\u2026",
       "url": "http://localhost:7580",
       "healthPath": "/api/health",
       "composeFile": "ciba-hitl-lab/docker-compose.yml",
@@ -1574,7 +1574,7 @@
       "name": "Meridian Pay A2A hop lab",
       "catalogId": "D110",
       "kind": "Demo",
-      "description": "Walk a delegated agent token chain one hop at a time: sign in, hand the job to a platform-signed external agent, exchange tokens (RFC 8693, third-party subject and actor), and call MCP tools through Privilege doors. Every hop shows sub/act/aud/scope, and refusals are demoed on purpose. Runs…",
+      "description": "Walk a delegated agent token chain one hop at a time: sign in, hand the job to a platform-signed external agent, exchange tokens (RFC 8693, third-party subject and actor), and call MCP tools through Privilege doors. Every hop shows sub/act/aud/scope, and refusals are demoed on purpose. Runs\u2026",
       "url": "http://127.0.0.1:7720",
       "healthPath": "/api/health",
       "composeFile": "meridian-a2a-hop-LAB/docker-compose.yml",
@@ -1781,7 +1781,7 @@
     {
       "id": "pf-privilege-obo-lab",
       "addedAt": "2026-11-11T22:53:57Z",
-      "name": "PF → Privilege OBO Lab",
+      "name": "PF \u2192 Privilege OBO Lab",
       "catalogId": "D130",
       "kind": "Demo",
       "description": "Simulated PingFederate to Privilege OBO chain: user SSO, RFC 8693 exchange (sub=user, act.sub=agent), federated-identity check, grant tiers, Cedar policy, Pass Agent Token passthrough. Interactive flow walk, eight scenarios, refusals mirror measured log lines, twelve-card issues panel. Mock only.",
@@ -2132,6 +2132,25 @@
         "ai-agent-security",
         "simulated"
       ]
+    },
+    {
+      "id": "privilege-shelf",
+      "addedAt": "2026-11-20T00:00:00Z",
+      "name": "Privilege Shelf LAB",
+      "kind": "Demo",
+      "description": "The Privilege family on one page: all 40 Privilege-tagged standalone labs with what each does and its open link, plus 21 Privilege feature cards and three presenter stories. Mock only.",
+      "url": "http://127.0.0.1:7830",
+      "healthPath": "/api/health",
+      "port": 7830,
+      "composeFile": "privilege-shelf-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "pingone-privilege",
+        "learning",
+        "simulated"
+      ],
+      "where": "installed",
+      "repo": "https://github.com/curtismu7/privilege-shelf-LAB"
     }
   ]
 }
