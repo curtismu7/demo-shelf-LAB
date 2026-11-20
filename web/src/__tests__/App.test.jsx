@@ -724,6 +724,26 @@ describe("tags", () => {
     expect(screen.queryByRole("button", { name: "Clear tags" })).toBeNull();
   });
 
+  it("Close collapses the tag panel, keeps picked tags filtering, and stays closed after a reload", async () => {
+    const m = new Map(); // jsdom under Node 26 has no window.localStorage; a fresh in-memory one survives the re-render below
+    vi.stubGlobal("localStorage", { getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: (k) => m.delete(k), clear: () => m.clear() });
+    mockFetch(tagShelf());
+    const first = render(<App />);
+    await screen.findByText("Demo A");
+    fireEvent.click(chip("Real"));
+    expect(names()).toEqual(["Demo A", "Demo D"]);
+    fireEvent.click(screen.getByRole("button", { name: "Close" }));
+    expect(screen.queryByRole("region", { name: "Filter by tag" })).toBeNull();
+    expect(names()).toEqual(["Demo A", "Demo D"]);
+    expect(screen.getByRole("button", { name: "Filter by tag (1 on)" })).toBeInTheDocument();
+    first.unmount();
+    render(<App />);
+    await screen.findByText("Demo A");
+    expect(screen.queryByRole("region", { name: "Filter by tag" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /^Filter by tag/ }));
+    expect(screen.getByRole("region", { name: "Filter by tag" })).toBeInTheDocument();
+  });
+
   it("keeps the filter in the address so a filtered view can be shared", async () => {
     mockFetch(tagShelf());
     render(<App />);

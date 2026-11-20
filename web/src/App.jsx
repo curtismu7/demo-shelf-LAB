@@ -159,6 +159,16 @@ export default function App() {
   const [newOnly, setNewOnly] = useState(false);
   const [present, setPresent] = useState(false);
   const [tagsOpen, setTagsOpen] = useState(false);
+  // The tag panel's Close button: once closed it stays closed across reloads until Filter by tag opens it again.
+  // Picked tags keep filtering while it is closed; the collapsed line says how many are on.
+  const [tagsClosed, setTagsClosed] = useState(() => {
+    try { return window.localStorage.getItem("shelf-tags-closed") === "1"; } catch { return false; }
+  });
+  const setTagsPanel = (closed) => {
+    setTagsClosed(closed);
+    setTagsOpen(!closed);
+    try { window.localStorage[closed ? "setItem" : "removeItem"]("shelf-tags-closed", "1"); } catch { /* the choice is a convenience */ }
+  };
   const [theme, setTheme] = useState(() => {
     try { return window.localStorage.getItem("shelf-theme") || "auto"; } catch { return "auto"; }
   });
@@ -783,10 +793,10 @@ export default function App() {
                 </label>
               )}
             </form>
-            {tagGroups.length > 0 && !tagsOpen && !picked.size && (
-              <p className="tag-toggle"><button type="button" aria-expanded="false" onClick={() => setTagsOpen(true)}>Filter by tag</button> <span className="tag-filters__count" role="status">{shown.length} of {items.length} shown</span></p>
+            {tagGroups.length > 0 && (tagsClosed || (!tagsOpen && !picked.size)) && (
+              <p className="tag-toggle"><button type="button" aria-expanded="false" onClick={() => setTagsPanel(false)}>Filter by tag{picked.size > 0 ? ` (${picked.size} on)` : ""}</button> <span className="tag-filters__count" role="status">{shown.length} of {items.length} shown</span></p>
             )}
-            {tagGroups.length > 0 && (tagsOpen || picked.size > 0) && (
+            {tagGroups.length > 0 && !tagsClosed && (tagsOpen || picked.size > 0) && (
               <section className="tag-filters" aria-label="Filter by tag">
                 {tagGroups.map((g) => (
                   <div key={g.id} role="group" aria-label={g.label} className="tag-filters__row">
@@ -804,8 +814,10 @@ export default function App() {
                 ))}
                 <div className="tag-filters__bar">
                   <span className="tag-filters__count" role="status">{shown.length} of {items.length} shown</span>
-                  {picked.size > 0 && <button type="button" onClick={() => setPicked(new Set())}>Clear tags</button>}
-                  {picked.size === 0 && <button type="button" aria-expanded="true" onClick={() => setTagsOpen(false)}>Hide tags</button>}
+                  <span className="tag-filters__actions">
+                    {picked.size > 0 && <button type="button" onClick={() => setPicked(new Set())}>Clear tags</button>}
+                    <button type="button" aria-expanded="true" onClick={() => setTagsPanel(true)}>Close</button>
+                  </span>
                 </div>
               </section>
             )}
