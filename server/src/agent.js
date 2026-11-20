@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import express from 'express';
 import { defaultExec, isLoopbackAddr, runCompose, runningDemos, stopSharedContainers } from './control.js';
+import { switchTo, profileOfCurrent, switchable, parseProfiles, PROFILES_PATH } from './gatewaySwitch.js';
 import { ensureRepo } from './deploy.js';
 import { createInstallChecker } from './install.js';
 import { VerificationError } from './verification.js';
@@ -35,6 +36,7 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
   const cap = maxRunningDemos ? { getDemos, lastRunning, max: maxRunningDemos } : null;
   const hosts = new Set([`127.0.0.1:${port}`, `localhost:${port}`, `[::1]:${port}`, `host.docker.internal:${port}`]);
   const busy = new Set();
+  const gwBusy = { v: false };
   const installs = createInstallChecker({ getDemos, exec, fileExists, shelfDir, ...installOptions });
   const app = express();
   app.disable('x-powered-by');
@@ -149,6 +151,44 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
     } catch (e) {
       if (!(e instanceof VerificationError)) throw e;
       res.status(e.code === 'unknown-demo' ? 404 : 400).json({ ok: false, error: e.code });
+    }
+  });
+
+  // Gateway target switch (owner tool): the host holds ~/.config/demo-kit, the BFF checkout
+  // and the a2a lab, so the switch itself runs here. The caller sends only a profile name.
+  app.get('/v1/gateway', (req, res) => {
+    let text;
+    try { text = fs.readFileSync(PROFILES_PATH, 'utf8'); } catch { return res.json({ ok: true, schema: 'gateway-targets/1', available: false, error: 'no-profiles-file', current: null, profiles: [] }); }
+    const profiles = parseProfiles(text);
+    res.json({
+      ok: true,
+      schema: 'gateway-targets/1',
+      available: true,
+      current: profileOfCurrent(profiles),
+      profiles: Object.entries(profiles).filter(([, p]) => switchable(p)).map(([name, p]) => ({ name, bffUrl: p.BFF_PRIVILEGE_MCPGW_URL })),
+    });
+  });
+  app.post('/v1/gateway/:profile([a-z0-9_-]+)', async (req, res) => {
+    if (gwBusy.v) return res.status(409).json({ ok: false, error: 'busy' });
+    gwBusy.v = true;
+    try {
+      const r = await switchTo(req.params.profile, { exec });
+      res.status(r.ok ? 200 : r.error === 'unknown-profile' ? 404 : 409).json(r);
+    } catch {
+      res.status(500).json({ ok: false, error: 'internal' });
+    } finally {
+      gwBusy.v = false;
+    }
+  });
+
+  // Privilege/PingID setup checks (owner tool): read-only, host-only (the checks
+  // read ~/.config and hit the agent status + public doors from the host).
+  app.get('/v1/privilege-setup', async (req, res) => {
+    try {
+      const { runChecks } = await import('./privilegeSetup.js');
+      res.json(await runChecks());
+    } catch {
+      res.status(500).json({ ok: false, error: 'internal' });
     }
   });
 

@@ -200,6 +200,14 @@ export default function App() {
   const [gwBusy, setGwBusy] = useState(false);
   const loadGw = useCallback(() => { call("/api/gateway").then(setGw).catch(() => setGw({ available: false })); }, []);
   useEffect(() => { loadGw(); }, [loadGw]);
+  // Privilege/PingID setup + debug (owner tool): read-only checks + runbook.
+  const [psetup, setPsetup] = useState(null);
+  const [psetupOpen, setPsetupOpen] = useState(false);
+  const [psetupBusy, setPsetupBusy] = useState(false);
+  const loadPsetup = useCallback(() => {
+    setPsetupBusy(true);
+    call("/api/privilege-setup").then(setPsetup).catch(() => setPsetup({ ok: false, error: "unavailable" })).finally(() => setPsetupBusy(false));
+  }, []);
   async function switchGw(profile) {
     if (!profile || gwBusy) return;
     setGwBusy(true);
@@ -629,6 +637,13 @@ export default function App() {
             </select>
           </label>
           <button type="button" aria-pressed={present} onClick={() => setPresent((p) => !p)}>Present</button>
+          {!present && (
+            <button type="button" aria-expanded={psetupOpen || undefined} data-testid="privilege-setup-toggle"
+              title="Privilege/PingID setup checks: gateways, desktop agent, console access — with the fix for each failure"
+              onClick={() => { setPsetupOpen((o) => !o); if (!psetup) loadPsetup(); }}>
+              {psetupBusy ? <span className="spin" aria-hidden="true" /> : null}Privilege setup
+            </button>
+          )}
           {starterSets.length > 0 && (
             <span className="inline" role="group" aria-label="Start a set">
               <select value={pickedSet} onChange={(e) => setPickedSet(e.target.value)} data-testid="starter-set" aria-label="Starter set">
@@ -723,6 +738,34 @@ export default function App() {
           </div>
         )}
         {error && <div className="note" data-state="error" role="alert">Cannot reach the shelf server ({error}). {data ? "Showing the last known state." : "Is it running?"}</div>}
+        {psetupOpen && (
+          <section className="psetup" aria-label="Privilege setup checks" data-testid="privilege-setup">
+            <div className="psetup__head">
+              <b>Privilege / PingID setup</b>
+              <button type="button" onClick={loadPsetup} disabled={psetupBusy}>{psetupBusy ? "Checking…" : "Re-check"}</button>
+            </div>
+            {!psetup && <p className="note" role="status">Loading checks…</p>}
+            {psetup && !psetup.ok && <p className="note" data-state="error" role="alert">Checks unavailable: {psetup.error || "the host agent is not running"}</p>}
+            {psetup?.ok && (
+              <ul className="psetup__checks">
+                {psetup.checks.map((c) => (
+                  <li key={c.name} data-state={c.status}>
+                    <span className={`chip psetup__chip`} data-state={c.status}>{c.status === "ok" ? "OK" : c.status === "down" ? "DOWN" : "CHECK"}</span>
+                    <span className="psetup__name">{c.name}</span>
+                    <span className="psetup__detail mono">{c.detail}</span>
+                    {c.status !== "ok" && psetup.runbook[c.id]?.fix && (
+                      <div className="psetup__fix">
+                        <b>{psetup.runbook[c.id].title}</b>
+                        <ol>{psetup.runbook[c.id].fix.map((f, i) => <li key={i}>{f}</li>)}</ol>
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <p className="psetup__foot">Checks are read-only. Full runbook: <code className="mono">~/Development/PRIVILEGE-CONSOLE-ACCESS-RUNBOOK.md</code></p>
+          </section>
+        )}
         {note && !present && <div className="note" role="status">{note}</div>}
         {data?.agent === "token-rejected" && !present && (
           <div className="note" role="status" data-state="warn">The start agent is running but refused the shelf's token, so Start and Stop cannot work. In the demo-shelf-LAB folder run <code className="mono">npm run docker</code> again to give the shelf the current token.</div>

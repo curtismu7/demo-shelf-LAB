@@ -40,6 +40,41 @@ export function createAgentClient({ url, token, fetchFn = fetch, now = () => Dat
       if (!body || typeof body !== 'object') return { status: 502, body: { ok: false, error: 'agent-bad-reply' } };
       return { status: res.status, body };
     },
+    // Gateway target switch (owner tool): list the profiles / switch. Returns { status, body } like run().
+    async gateway() {
+      let res;
+      try {
+        res = await fetchFn(`${base}/v1/gateway`, { headers, signal: AbortSignal.timeout(PING_TIMEOUT_MS * 4) });
+      } catch {
+        return { status: 503, body: { ok: true, schema: 'gateway-targets/1', available: false, error: 'agent-not-running', current: null, profiles: [] } };
+      }
+      const body = await res.json().catch(() => null);
+      if (!body || typeof body !== 'object') return { status: 502, body: { ok: false, error: 'agent-bad-reply' } };
+      return { status: res.status, body };
+    },
+    async gatewaySwitch(profile) {
+      let res;
+      try {
+        res = await fetchFn(`${base}/v1/gateway/${encodeURIComponent(profile)}`, { method: 'POST', headers, signal: AbortSignal.timeout(RUN_TIMEOUT_MS) });
+      } catch {
+        return { status: 503, body: { ok: false, error: 'agent-not-running' } };
+      }
+      const body = await res.json().catch(() => null);
+      if (!body || typeof body !== 'object') return { status: 502, body: { ok: false, error: 'agent-bad-reply' } };
+      return { status: res.status, body };
+    },
+    // Privilege/PingID setup checks (owner tool): read-only, run on the host.
+    async privilegeSetup() {
+      let res;
+      try {
+        res = await fetchFn(`${base}/v1/privilege-setup`, { headers, signal: AbortSignal.timeout(PING_TIMEOUT_MS * 8) });
+      } catch {
+        return { status: 503, body: { ok: false, error: 'agent-not-running' } };
+      }
+      const body = await res.json().catch(() => null);
+      if (!body || typeof body !== 'object') return { status: 502, body: { ok: false, error: 'agent-bad-reply' } };
+      return { status: res.status, body };
+    },
     // Save one tile's verification mark through the agent (it owns the writable .data). Returns { status, body } like run().
     async setVerification(id, input) {
       let res;

@@ -9,6 +9,8 @@ import { createPingProducts } from './pingProducts.js';
 import { hostedTags } from './tags.js';
 import { isNewDemo, NEW_WINDOW_HOURS } from './registry.js';
 import { NOTE_MAX, STATUS_INFO, VerificationError } from './verification.js';
+import { profileOfCurrent, switchable, parseProfiles, PROFILES_PATH } from './gatewaySwitch.js';
+import { runChecks, RUNBOOK } from './privilegeSetup.js';
 
 const VERSION = JSON.parse(fs.readFileSync(new URL('../../package.json', import.meta.url), 'utf8')).version;
 
@@ -446,6 +448,90 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     });
   }
   if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: (id) => { poller.invalidate(); install.invalidate(id); runningForget(); }, exec, fileExists, agent, inDocker, shelfDir, demoRoot, lastRunning, networkLimit, maxRunningDemos }));
+
+  // Gateway target switch (owner tool). Same caller guards as Start / Stop: loopback + same-origin.
+  // The heavy lifting always runs on the host: host-run does it here; the containerised shelf asks
+  // the start agent (which holds ~/.config, the BFF checkout and the a2a lab).
+  const gatewayBusy = { v: false };
+  const gwGuard = (req) => {
+    if (!inDocker && !isLoopbackAddr(req.socket.remoteAddress)) return 'loopback-only';
+    const xfHost = req.headers['x-forwarded-host'];
+    const expectedOrigin = xfHost ? `${req.headers['x-forwarded-proto'] || 'https'}://${xfHost}` : `http://${req.headers.host}`;
+    if (!req.headers.origin || req.headers.origin !== expectedOrigin) return 'bad-origin';
+    return null;
+  };
+  const gwList = () => {
+    let text;
+    try { text = fs.readFileSync(PROFILES_PATH, 'utf8'); } catch { return { profiles: {}, error: 'no-profiles-file' }; }
+    return { profiles: parseProfiles(text), error: null };
+  };
+  const gwSummary = (profiles, error) => (error
+    ? { ok: true, schema: 'gateway-targets/1', available: false, error, current: null, profiles: [] }
+    : {
+        ok: true, schema: 'gateway-targets/1', available: true,
+        current: profileOfCurrent(profiles),
+        profiles: Object.entries(profiles).filter(([, p]) => switchable(p)).map(([name, p]) => ({ name, bffUrl: p.BFF_PRIVILEGE_MCPGW_URL })),
+      });
+  app.get('/api/gateway', (req, res) => {
+    if (agent) {
+      agent.gateway().then((r) => res.status(r.status === 404 ? 200 : r.status).json(r.status === 404 ? { ok: true, schema: 'gateway-targets/1', available: false, error: 'agent-too-old', current: null, profiles: [] } : r.body)).catch(() => res.status(502).json({ ok: false, error: 'agent-bad-reply' }));
+      return;
+    }
+    const { profiles, error } = gwList();
+    res.json(gwSummary(profiles, error));
+  });
+  app.post('/api/gateway/:profile([a-z0-9_-]+)', async (req, res) => {
+    const guard = gwGuard(req);
+    if (guard) return res.status(403).json({ ok: false, error: guard });
+    if (gatewayBusy.v) return res.status(409).json({ ok: false, error: 'busy' });
+    if (agent) {
+      gatewayBusy.v = true;
+      try {
+        const r = await agent.gatewaySwitch(req.params.profile);
+        return res.status(r.status).json(r.body);
+      } catch {
+        return res.status(502).json({ ok: false, error: 'agent-bad-reply' });
+      } finally {
+        gatewayBusy.v = false;
+      }
+    }
+    gatewayBusy.v = true;
+    try {
+      const { switchTo } = await import('./gatewaySwitch.js');
+      const r = await switchTo(req.params.profile, { exec });
+      return res.status(r.ok ? 200 : r.error === 'unknown-profile' ? 404 : 409).json(r);
+    } catch {
+      return res.status(500).json({ ok: false, error: 'internal' });
+    } finally {
+      gatewayBusy.v = false;
+    }
+  });
+  // Privilege/PingID setup + debug (owner tool): read-only checks plus the runbook.
+  // The checks read ~/.config and host-only URLs, so they run on the host agent;
+  // the local runChecks is the fallback when no agent is configured.
+  app.get('/api/privilege-setup', async (req, res) => {
+    const fallback = async () => {
+      try {
+        const r = await runChecks();
+        return { ...r, runbook: RUNBOOK };
+      } catch {
+        return null;
+      }
+    };
+    if (agent) {
+      try {
+        const r = await agent.privilegeSetup();
+        if (r.status === 200 && r.body?.ok) return res.json({ ...r.body, runbook: RUNBOOK });
+        if (r.status === 503) { const fb = await fallback(); if (fb) return res.json(fb); return res.status(503).json({ ok: false, error: r.body?.error || 'agent-not-running' }); }
+        return res.status(r.status).json(r.body);
+      } catch {
+        return res.status(502).json({ ok: false, error: 'agent-bad-reply' });
+      }
+    }
+    const fb = await fallback();
+    if (fb) return res.json(fb);
+    res.status(500).json({ ok: false, error: 'internal' });
+  });
   app.use('/api', (req, res) => res.status(404).json({ error: 'not-found' }));
 
   if (webDist && fs.existsSync(path.join(webDist, 'index.html'))) {

@@ -549,3 +549,46 @@ button[aria-pressed="true"] {
 .mode-toggle button:focus-visible {
   outline-offset: -3px;
 }
+
+/* Privilege setup panel (owner tool): check rows + inline fixes. */
+.psetup {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0;
+  background: var(--surface-2);
+}
+.psetup__head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.psetup__checks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.psetup__checks li {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  border-top: 1px solid var(--border);
+}
+.psetup__checks li[data-state="ok"] .psetup__chip { border-color: var(--ok-text, #2a7); color: var(--ok-text, #2a7); }
+.psetup__checks li[data-state="down"] .psetup__chip { border-color: var(--danger-text); color: var(--danger-text); }
+.psetup__checks li[data-state="warn"] .psetup__chip { border-color: var(--warn-text, #b80); color: var(--warn-text, #b80); }
+.psetup__fix {
+  grid-column: 1 / -1;
+  margin: 0.25rem 0 0 0.25rem;
+  padding: 0.5rem 0.75rem;
+  border-left: 3px solid var(--danger-text);
+  background: var(--surface);
+}
+.psetup__fix ol { margin: 0.25rem 0 0 1.2rem; padding: 0; }
+.psetup__fix li { border: 0; padding: 0.1rem 0; }
+.psetup__foot { margin: 0.5rem 0 0; font-size: 0.8em; color: var(--text-muted, inherit); opacity: 0.8; }
