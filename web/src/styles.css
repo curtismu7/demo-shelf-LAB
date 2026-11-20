@@ -288,6 +288,12 @@ html[data-present] {
   font-size: 0.8rem;
 }
 
+.tag-filters__actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
 .tag-toggle {
   display: flex;
   gap: 12px;
