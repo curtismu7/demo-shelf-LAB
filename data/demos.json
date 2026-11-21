@@ -2275,7 +2275,7 @@
     },
     {
       "id": "ciba-approval-sequence",
-      "addedAt": "2026-11-21T18:30:00Z",
+      "addedAt": "2026-11-21T17:58:00Z",
       "name": "CIBA Approval Sequence LAB",
       "catalogId": "",
       "kind": "Demo",
@@ -2287,7 +2287,11 @@
         "human-in-the-loop",
         "token-exchange"
       ],
-      "composeFile": "../ciba-approval-sequence-LAB/docker-compose.yml"
+      "composeFile": "ciba-approval-sequence-LAB/docker-compose.yml",
+      "url": "http://127.0.0.1:7834",
+      "healthPath": "/api/health",
+      "repo": "https://github.com/curtismu7/ciba-approval-sequence-LAB",
+      "where": "installed"
     }
   ]
 }
