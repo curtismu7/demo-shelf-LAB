@@ -309,6 +309,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'ai-guard-sidecar': '/ai-guard-sidecar/',
     'agentcore-pingone-demo-lab': '/agentcore-pingone/',
     'ciba-hitl-lab': '/ciba-hitl-lab/',
+    'ciba-approval-sequence': '/ciba-approval-sequence/',
     'hitl-mfa-lab': '/hitl-mfa-lab/',
     'delegation-lab': '/delegation-lab/',
     'a2a-lab': '/a2a-lab/',
