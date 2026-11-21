@@ -2138,7 +2138,7 @@
       "id": "spiffe-issuer",
       "name": "SPIFFE Issuer LAB",
       "kind": "Tool",
-      "description": "Mints three test JWT-SVIDs (valid, mismatched, untrusted), publishes the JWKS and OIDC discovery a Privilege gateway can fetch, and presents each token to an MCP door: expect 200, 401, 401. A token minter, not SPIRE.",
+      "description": "Mints three test JWT-SVIDs (valid, mismatched, untrusted), publishes the JWKS and OIDC discovery a Privilege gateway can fetch, and presents each token to an MCP door: expect 200, 401, 401. A token minter, not SPIRE. (searches: spifee, spiff, SVID)",
       "url": "http://127.0.0.1:7829",
       "healthPath": "/api/health",
       "composeFile": "spiffe-issuer-LAB/docker-compose.yml",
