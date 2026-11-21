@@ -323,6 +323,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'gateway-suite-lab': '/gateway-suite/',
     'hostile-mcp': '/hostile-mcp/',
     'meridian-a2a-hop': '/meridian-a2a-hop/',
+    'meridian-air-lab': '/meridian-air/',
     'mcp-gateway-lab': '/mcp-gateway-lab/',
     'no-tool-no-promise': '/no-tool-no-promise/',
     'pingfederate-lab': '/pingfederate-lab/',
