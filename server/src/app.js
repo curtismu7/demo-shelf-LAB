@@ -397,8 +397,10 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'privilege-bulk-users': '/privilege-bulk-users/',
     'appfire-agent-governance-lab': '/appfire-agent-governance/',
     'privilege-shelf': '/privilege-shelf/',
-      'spiffe-issuer': '/spiffe-issuer/',
-    'pf-array-claims-lab': '/pf-array-claims/',};
+    'spiffe-issuer': '/spiffe-issuer/',
+    'pf-array-claims-lab': '/pf-array-claims/',
+    'agent-identity-academy': '/agent-identity-academy/',
+  };
   app.get('/api/shelf', async (req, res, next) => {
     try { res.set('Cache-Control', 'no-store').json({ ...(await shelf(await poller.get())), starterSets, shelfUrl: shelfOrigin(req) }); } catch (e) { next(e); }
   });
