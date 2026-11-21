@@ -397,6 +397,7 @@
       "kind": "Tool",
       "description": "Pick or edit a flow diagram stored as data: move boxes, Simulate the arrows, change the speed, Reset, undo, tidy, present, embed, and export as JSON, SVG, PNG or one offline HTML file.",
       "url": "http://localhost:6001",
+      "openPath": "/#all",
       "healthPath": "/api/health",
       "composeFile": "diagram-studio-LAB/docker-compose.yml",
       "tags": [
