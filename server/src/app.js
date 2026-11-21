@@ -21,6 +21,8 @@ const q = (a) => (/^[\w@%+=:,./-]+$/.test(a) ? a : `'${a.replace(/'/g, `'\\''`)}
 
 // The URL Open goes to: the registered origin plus openPath when one is set.
 export const openUrl = ({ url, openPath }) => (url && openPath ? url.replace(/\/$/, '') + openPath : url);
+// The lab-proxy address Open goes to: the lab's proxy path, plus its openPath when it has one (for example "/diagram-studio/" + "/#all").
+export const proxyOpenUrl = (proxyPath, openPath) => (proxyPath ? `https://local.ping-devops.com:8443${openPath ? proxyPath.replace(/\/$/, '') + openPath : proxyPath}` : null);
 
 export function startScript({ composeFile, composeOverlays = [], url, openPath, healthPath = '/api/health' }) {
   if (!composeFile) return null;
@@ -275,7 +277,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
       isNew: isNewDemo(d.addedAt, nowMs),
       tags: d.tags ?? [],
       url: openUrl(d),
-      proxyUrl: PROXY_PATHS[d.id] ? `https://local.ping-devops.com:8443${PROXY_PATHS[d.id]}` : null,
+      proxyUrl: proxyOpenUrl(PROXY_PATHS[d.id], d.openPath),
       where: d.where,
       wave: byCatalogId.get(d.catalogId)?.wave ?? null,
       canStart: allowStart && Boolean(d.composeFile),
