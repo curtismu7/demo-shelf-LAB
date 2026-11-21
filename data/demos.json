@@ -2146,14 +2146,19 @@
       "pingProducts": [
         "pingone-privilege"
       ],
-      "notes": "Host-run: ./scripts/run.sh (port 7828). Mock needs no tenant and no settings. Docker: docker compose up --build -d (published on 127.0.0.1 only). Real needs a public https URL for /.well-known/ (PUBLIC_URL), the gateway origin and door names (SPIFFE_GW_URL, SPIFFE_GW_APPS) in the lab's own .env; the owner runs it.",
+      "notes": "Host-run: ./scripts/run.sh (port 7828). Mock needs no tenant and no settings. Docker: docker compose up --build -d (published on 127.0.0.1 only). Real needs a public https URL for /.well-known/ (PUBLIC_URL), the gateway origin and door names (SPIFFE_GW_URL, SPIFFE_GW_APPS) in the lab's own .env; the owner runs it. PingFederate setup guide (accept SPIRE JWT-SVIDs in your own PF, three modes, PDF): docs/pf-setup-guide/ in the repo.",
       "repo": "https://github.com/curtismu7/spiffe-issuer-LAB",
       "alsoCatalogIds": [],
       "tags": [
         "pingone-privilege",
+        "pingfederate",
         "ai-agent-security",
         "agent-identity",
         "token-security",
+        "workload-identity",
+        "jwt",
+        "token-exchange",
+        "id-jag",
         "simulated",
         "real"
       ],
