@@ -2201,6 +2201,28 @@
       "where": "installed",
       "repo": "https://github.com/curtismu7/pf-array-claims-LAB",
       "catalogId": "D140"
+    },
+    {
+      "id": "agent-identity-academy",
+      "addedAt": "2026-11-20T00:00:00Z",
+      "name": "Agent Identity Academy LAB",
+      "catalogId": "D142",
+      "kind": "Demo",
+      "description": "Standalone port of the Agent Identity Academy: one lesson per agent type with the discover/register/authenticate/authorize/govern lifecycle, a frame-by-frame evidence reel per lesson, mock token claim diffs and a diagram per lesson. Mock only.",
+      "url": "http://127.0.0.1:7831",
+      "mockUrl": "http://127.0.0.1:7831",
+      "healthPath": "/api/health",
+      "port": 7831,
+      "composeFile": "agent-identity-academy-LAB/docker-compose.yml",
+      "composeOverlays": [],
+      "tags": [
+        "agent-identity",
+        "ai-agent-security",
+        "learning",
+        "simulated"
+      ],
+      "where": "mock",
+      "repo": "https://github.com/curtismu7/agent-identity-academy-LAB"
     }
   ]
 }
