@@ -2303,7 +2303,7 @@
    "addedAt": "2026-11-22",
    "name": "Salesforce Privilege LAB",
    "kind": "Demo",
-   "description": "Connect a Salesforce Developer org to PingOne Privilege, then grant and revoke a permission set for a time window, against a mock org: what goes wrong while connecting, and why. Mock, or an owner-run read-only Real. Observed once, UNVERIFIED.",
+   "description": "A support engineer with no access to Salesforce Cases gets time-boxed access through PingOne Privilege, works the P1, and the access is removed with a receipt left behind. Simulated Salesforce org; an owner-run, read-only Real can be switched on. Only behaviour seen in one real run is shown.",
    "url": "http://localhost:7835",
    "healthPath": "/api/health",
    "composeFile": "salesforce-privilege-LAB/docker-compose.yml",
