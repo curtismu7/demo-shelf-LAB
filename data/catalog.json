@@ -576,6 +576,14 @@
       "kind": "Tester",
       "group": "D",
       "oneLiner": "Administer PingOne's early-access MFA administration MCP tool set \u2014 environment MFA settings, device-auth and FIDO passkey policies, notification policies, OATH tokens, and email/phone/WhatsApp delivery settings \u2014 with safety classes, a confirm gate and a metadata scan."
+    },
+    {
+      "id": "D145",
+      "name": "Salesforce Privilege LAB",
+      "kind": "Demo",
+      "group": "D",
+      "oneLiner": "Connect a Salesforce Developer org to PingOne Privilege, then grant and revoke a permission set for a time window, against a mock org: what goes wrong while connecting, and why. Simulated, UNVERIFIED as a product claim.",
+      "status": "active"
     }
   ]
 }
