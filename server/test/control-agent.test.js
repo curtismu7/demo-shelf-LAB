@@ -40,6 +40,21 @@ describe('Start / Stop through the start agent (the shelf in a container)', () =
     expect((await post(app, '/api/demos/b/start')).status).toBe(400);
     expect(agent.run).not.toHaveBeenCalled();
   });
+  it('accepts a lab-proxy path as the id, so the proxy\'s "This lab isn\'t running" Start button works', async () => {
+    // The down page sends the first URL segment (/saas-access/), not the shelf id (saas-access-lab).
+    const labs = [...demos, { id: 'saas-access-lab', name: 'SaaS', description: 'd', url: 'http://localhost:7250', healthPath: '/api/health', composeFile: '/h/s/docker-compose.yml', composeOverlays: [] }];
+    const agent = agentStub();
+    const app = mk(agent, { demos: labs });
+    expect((await post(app, '/api/demos/saas-access/start')).status).toBe(200);
+    expect(agent.run).toHaveBeenLastCalledWith('saas-access-lab', 'start');
+    expect((await post(app, '/api/demos/saas-access-lab/stop')).status).toBe(200); // the id itself still works
+    expect(agent.run).toHaveBeenLastCalledWith('saas-access-lab', 'stop');
+    expect((await post(app, '/api/demos/saas-access/stop')).status).toBe(404); // only Start takes the alias: the down page never stops
+    for (const bad of ['customer-agent', 'constructor', '__proto__', 'saas']) { // an alias of an unregistered demo, prototype keys, a prefix
+      expect((await post(app, `/api/demos/${bad}/start`)).status, bad).toBe(404);
+    }
+    expect(agent.run).toHaveBeenCalledTimes(2);
+  });
   it('passes the agent failure through, for example when it is not running', async () => {
     const agent = agentStub({ run: vi.fn(async () => ({ status: 503, body: { ok: false, error: 'agent-not-running' } })) });
     const r = await post(mk(agent), '/api/demos/a/start');

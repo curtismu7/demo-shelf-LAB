@@ -407,6 +407,9 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'pf-array-claims-lab': '/pf-array-claims/',
     'agent-identity-academy': '/agent-identity-academy/',
   };
+  // The lab-proxy's "This lab isn't running" page (shared/lab-proxy/502.html) only knows its URL, so its Start button sends the
+  // proxy path ("saas-access"), not the shelf id ("saas-access-lab"). Start accepts that path as an alias for the id.
+  const proxyAliases = new Map(Object.entries(PROXY_PATHS).map(([id, p]) => [p.replace(/^\/+|\/+$/g, ''), id]).filter(([seg, id]) => seg !== id));
   app.get('/api/shelf', async (req, res, next) => {
     try { res.set('Cache-Control', 'no-store').json({ ...(await shelf(await poller.get())), starterSets, shelfUrl: shelfOrigin(req) }); } catch (e) { next(e); }
   });
@@ -456,7 +459,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
       }
     });
   }
-  if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, onChange: (id) => { poller.invalidate(); install.invalidate(id); runningForget(); }, exec, fileExists, agent, inDocker, shelfDir, demoRoot, lastRunning, networkLimit, maxRunningDemos }));
+  if (allowStart) app.use('/api', createControlRouter({ express, getDemos: () => registry, proxyAliases, onChange: (id) => { poller.invalidate(); install.invalidate(id); runningForget(); }, exec, fileExists, agent, inDocker, shelfDir, demoRoot, lastRunning, networkLimit, maxRunningDemos }));
 
   // Gateway target switch (owner tool). Same caller guards as Start / Stop: loopback + same-origin.
   // The heavy lifting always runs on the host: host-run does it here; the containerised shelf asks

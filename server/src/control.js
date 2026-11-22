@@ -214,7 +214,7 @@ async function attachProxyNetwork(demo, exec) {
 // Express middleware factory. With `agent` (the shelf in a container) the compose call is handed to the host-side start agent;
 // without it the shelf runs Docker itself. `inDocker` skips the remote-address check, because inside a container every request
 // arrives from the Docker network: the compose file publishes the port on 127.0.0.1 only, and the Host and Origin checks still apply.
-export function createControlRouter({ express, getDemos, onChange, exec = defaultExec, fileExists = fs.existsSync, agent = null, inDocker = false, shelfDir = null, demoRoot = null, lastRunning = null, networkLimit, maxRunningDemos = null }) {
+export function createControlRouter({ express, getDemos, proxyAliases = new Map(), onChange, exec = defaultExec, fileExists = fs.existsSync, agent = null, inDocker = false, shelfDir = null, demoRoot = null, lastRunning = null, networkLimit, maxRunningDemos = null }) {
   const router = express.Router({ caseSensitive: true });
   const cap = maxRunningDemos ? { getDemos, lastRunning, max: maxRunningDemos } : null;
   const busy = new Set();
@@ -229,7 +229,11 @@ export function createControlRouter({ express, getDemos, onChange, exec = defaul
     const xfHost = req.headers['x-forwarded-host'];
     const expectedOrigin = xfHost ? `${req.headers['x-forwarded-proto'] || 'https'}://${xfHost}` : `http://${req.headers.host}`;
     if (!req.headers.origin || req.headers.origin !== expectedOrigin) return fail(403, 'bad-origin');
-    const demo = getDemos().find((d) => d.id === req.params.id);
+    // An exact id wins. Start alone also takes a lab-proxy path: the proxy's down page only knows its URL and only ever starts.
+    const demos = getDemos();
+    const asked = req.params.id;
+    const id = demos.some((d) => d.id === asked) || req.params.action !== 'start' ? asked : (proxyAliases.get(asked) ?? asked);
+    const demo = demos.find((d) => d.id === id);
     if (!demo) return fail(404, 'unknown-demo');
     if (!demo.composeFile) return fail(400, 'no-compose-file');
     if (busy.has(demo.id)) return fail(409, 'busy');
