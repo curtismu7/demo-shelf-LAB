@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { runCompose } from '../src/control.js';
+import { runCompose, maxRunning, MAX_RUNNING_DEFAULT } from '../src/control.js';
 
 const demo = (id) => ({ id, name: `Demo ${id}`, composeFile: `/labs/${id}/docker-compose.yml`, composeOverlays: [] });
 const all = Array.from({ length: 14 }, (_, i) => demo(`d${i}`));
@@ -91,5 +91,22 @@ describe('running cap', () => {
     const r = await runCompose(demo('d9'), 'start', { exec: w.exec, fileExists: () => true });
     expect(r.status).toBe(200);
     expect(w.calls.some((c) => c.startsWith('compose ls'))).toBe(false);
+  });
+});
+
+describe('the default limit', () => {
+  it('is 20 demos at once, and SHELF_MAX_RUNNING still overrides it', () => {
+    const before = process.env.SHELF_MAX_RUNNING;
+    try {
+      delete process.env.SHELF_MAX_RUNNING;
+      expect(MAX_RUNNING_DEFAULT).toBe(20);
+      expect(maxRunning()).toBe(20);
+      process.env.SHELF_MAX_RUNNING = '7';
+      expect(maxRunning()).toBe(7);
+      process.env.SHELF_MAX_RUNNING = 'not-a-number';
+      expect(maxRunning()).toBe(20);
+    } finally {
+      if (before === undefined) delete process.env.SHELF_MAX_RUNNING; else process.env.SHELF_MAX_RUNNING = before;
+    }
   });
 });
