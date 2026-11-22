@@ -347,6 +347,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     // Routed and checked through the launcher on the Air, 2026-11-09.
     'privilege-map': '/privilege-map/',
     'privilege-gateway-client': '/privilege-gateway-client/',
+    'salesforce-privilege-lab': '/salesforce-privilege-lab/',
     'mcp-discovery': '/mcp-discovery/',
     'intent-purpose-behaviour-lab': '/intent-purpose-behaviour/',
     'coding-agents-lab': '/coding-agents/',

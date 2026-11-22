@@ -2297,6 +2297,29 @@
    "healthPath": "/api/health",
    "repo": "https://github.com/curtismu7/ciba-approval-sequence-LAB",
    "where": "installed"
+  },
+  {
+   "id": "salesforce-privilege-lab",
+   "addedAt": "2026-11-22",
+   "name": "Salesforce Privilege LAB",
+   "kind": "Demo",
+   "description": "Connect a Salesforce Developer org to PingOne Privilege, then grant and revoke a permission set for a time window, against a mock org: what goes wrong while connecting, and why. Mock, or an owner-run read-only Real. Observed once, UNVERIFIED.",
+   "url": "http://localhost:7835",
+   "healthPath": "/api/health",
+   "composeFile": "salesforce-privilege-LAB/docker-compose.yml",
+   "composeOverlays": [],
+   "pingProducts": [],
+   "notes": "Catalog id D145 (next free after D144). Host-run: ./scripts/run.sh (port 7835). Docker: docker compose up --build -d (published on 127.0.0.1 only; Mock by default, Real only from this lab's own .env and secrets/). Mock makes zero outbound calls; Real is owner-run, read-only, one origin.",
+   "repo": "https://github.com/curtismu7/salesforce-privilege-LAB",
+   "catalogId": "D145",
+   "alsoCatalogIds": [],
+   "tags": [
+    "pingone-privilege",
+    "simulated",
+    "real",
+    "learning"
+   ],
+   "where": "installed"
   }
  ]
 }
