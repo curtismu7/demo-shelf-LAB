@@ -49,6 +49,7 @@ describe('Start / Stop through the start agent (the shelf in a container)', () =
     expect(agent.run).toHaveBeenLastCalledWith('saas-access-lab', 'start');
     expect((await post(app, '/api/demos/saas-access-lab/stop')).status).toBe(200); // the id itself still works
     expect(agent.run).toHaveBeenLastCalledWith('saas-access-lab', 'stop');
+    expect((await post(app, '/api/demos/saas-access/stop')).status).toBe(404); // only Start takes the alias: the down page never stops
     for (const bad of ['customer-agent', 'constructor', '__proto__', 'saas']) { // an alias of an unregistered demo, prototype keys, a prefix
       expect((await post(app, `/api/demos/${bad}/start`)).status, bad).toBe(404);
     }

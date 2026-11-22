@@ -408,7 +408,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'agent-identity-academy': '/agent-identity-academy/',
   };
   // The lab-proxy's "This lab isn't running" page (shared/lab-proxy/502.html) only knows its URL, so its Start button sends the
-  // proxy path ("saas-access"), not the shelf id ("saas-access-lab"). Start / Stop accepts that path as an alias for the id.
+  // proxy path ("saas-access"), not the shelf id ("saas-access-lab"). Start accepts that path as an alias for the id.
   const proxyAliases = new Map(Object.entries(PROXY_PATHS).map(([id, p]) => [p.replace(/^\/+|\/+$/g, ''), id]).filter(([seg, id]) => seg !== id));
   app.get('/api/shelf', async (req, res, next) => {
     try { res.set('Cache-Control', 'no-store').json({ ...(await shelf(await poller.get())), starterSets, shelfUrl: shelfOrigin(req) }); } catch (e) { next(e); }

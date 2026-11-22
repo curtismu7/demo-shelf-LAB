@@ -229,9 +229,11 @@ export function createControlRouter({ express, getDemos, proxyAliases = new Map(
     const xfHost = req.headers['x-forwarded-host'];
     const expectedOrigin = xfHost ? `${req.headers['x-forwarded-proto'] || 'https'}://${xfHost}` : `http://${req.headers.host}`;
     if (!req.headers.origin || req.headers.origin !== expectedOrigin) return fail(403, 'bad-origin');
-    // An exact id wins; otherwise a lab-proxy path (from the proxy's down page) names its demo.
+    // An exact id wins. Start alone also takes a lab-proxy path: the proxy's down page only knows its URL and only ever starts.
     const demos = getDemos();
-    const demo = demos.find((d) => d.id === req.params.id) || demos.find((d) => d.id === proxyAliases.get(req.params.id));
+    const asked = req.params.id;
+    const id = demos.some((d) => d.id === asked) || req.params.action !== 'start' ? asked : (proxyAliases.get(asked) ?? asked);
+    const demo = demos.find((d) => d.id === id);
     if (!demo) return fail(404, 'unknown-demo');
     if (!demo.composeFile) return fail(400, 'no-compose-file');
     if (busy.has(demo.id)) return fail(409, 'busy');
