@@ -122,7 +122,7 @@ Not shelf apps, so not in the registry; the allocator skips them.
 | 7830 | privilege-shelf |  |  |
 | 7831 | agent-identity-academy | D142 |  |
 | 7832 | meridian-air-lab | D1 |  |
-| 7833 | privilege-gateway-client |  |  |
+| 7833 | privilege-gateway-client | D144 |  |
 | 7834 | ciba-approval-sequence |  |  |
 | 8081 | mcp-resource-server | D0 |  |
 

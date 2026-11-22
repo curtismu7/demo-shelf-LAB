@@ -2232,24 +2232,28 @@
   },
   {
    "id": "privilege-gateway-client",
-   "addedAt": "2026-11-21T09:00:00Z",
+   "addedAt": "2026-11-22",
    "name": "Privilege Gateway Client Lab",
+   "catalogId": "D144",
    "kind": "Demo",
-   "description": "Verdict-first client for a PingOne Privilege MCP gateway: three standing doors (all tools, 7 permitted, no policy), identity rail, pop-out Movie reel / Token sequence / Sequence panels, six stories and a talk track. Mock runs offline; Real mode is pi.flow page login plus agent key.",
+   "description": "A client for a PingOne Privilege MCP gateway. Pick a door (all tools, some tools, none), discover its tools, run one and see the verdict first, then the evidence. Mock is a simulated gateway; Real uses your own door keys.",
    "url": "http://127.0.0.1:7833",
    "healthPath": "/api/health",
    "composeFile": "privilege-gateway-client-LAB/docker-compose.yml",
    "composeOverlays": [],
+   "notes": "Host-run: ./scripts/run.sh (port 7833). Mock needs no tenant and no credentials. Docker: docker compose up --build -d (published on 127.0.0.1 only). Real (owner-run) reads PGC_* settings from this lab's own .env. The catalog id D144 is the owner's choice (2026-11-22, moved from D143, which ciba-approval-sequence-LAB holds); the content pack uses the same one.",
    "tags": [
     "pingone-privilege",
+    "agent-gateway",
+    "ai-agent-security",
+    "mcp",
+    "agent-controls",
     "simulated",
     "real"
    ],
    "where": "installed",
    "repo": "https://github.com/curtismu7/privilege-gateway-client-LAB",
-   "pingProducts": [
-    "pingone-privilege"
-   ]
+   "pingProducts": []
   },
   {
    "id": "meridian-air-lab",
