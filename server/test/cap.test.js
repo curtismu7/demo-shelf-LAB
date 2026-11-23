@@ -95,16 +95,16 @@ describe('running cap', () => {
 });
 
 describe('the default limit', () => {
-  it('is 20 demos at once, and SHELF_MAX_RUNNING still overrides it', () => {
+  it('is 25 demos at once, and SHELF_MAX_RUNNING still overrides it', () => {
     const before = process.env.SHELF_MAX_RUNNING;
     try {
       delete process.env.SHELF_MAX_RUNNING;
-      expect(MAX_RUNNING_DEFAULT).toBe(20);
-      expect(maxRunning()).toBe(20);
+      expect(MAX_RUNNING_DEFAULT).toBe(25);
+      expect(maxRunning()).toBe(25);
       process.env.SHELF_MAX_RUNNING = '7';
       expect(maxRunning()).toBe(7);
       process.env.SHELF_MAX_RUNNING = 'not-a-number';
-      expect(maxRunning()).toBe(20);
+      expect(maxRunning()).toBe(25);
     } finally {
       if (before === undefined) delete process.env.SHELF_MAX_RUNNING; else process.env.SHELF_MAX_RUNNING = before;
     }
