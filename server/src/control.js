@@ -96,7 +96,7 @@ export async function stopSharedContainers(getDemos, exec) {
 }
 
 // At most this many shelf demos run at once (SHELF_MAX_RUNNING overrides). Starting one more stops the oldest, and says so.
-export const MAX_RUNNING_DEFAULT = 20;
+export const MAX_RUNNING_DEFAULT = 25;
 // Shared services other demos lean on: they still count toward the limit, but the limit never picks one to stop (Stop all and Stop do).
 export const NEVER_AUTO_STOPPED = new Set(['ai-guard-sidecar']);
 export function maxRunning() {
