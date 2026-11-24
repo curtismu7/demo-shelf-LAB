@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import express from 'express';
-import { composeArgs, createControlRouter, defaultExec, isLoopbackAddr, runningDemos } from './control.js';
+import { composeArgs, createControlRouter, defaultExec, isLoopbackAddr, runningProjects } from './control.js';
 import { createInstallState } from './install.js';
 import { createPoller } from './poller.js';
 import { createNewApps } from './newApps.js';
@@ -213,7 +213,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     }
     if (!maxRunningDemos) return null;
     if (Date.now() - runningCache.at < 5000) return runningCache.value;
-    const list = await runningDemos(demos.filter((d) => d.where === 'installed'), exec || defaultExec, shelfDir).catch(() => null);
+    const list = await runningProjects(exec || defaultExec, shelfDir).catch(() => null);
     runningCache = { at: Date.now(), value: { running: list ? list.length : null, max: maxRunningDemos } };
     return runningCache.value;
   }
