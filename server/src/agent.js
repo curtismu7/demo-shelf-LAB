@@ -5,7 +5,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import express from 'express';
-import { defaultExec, isLoopbackAddr, runCompose, runningDemos, stopSharedContainers } from './control.js';
+import { defaultExec, isLoopbackAddr, runCompose, runningDemos, runningProjects, stopSharedContainers } from './control.js';
 import { switchTo, profileOfCurrent, switchable, parseProfiles, PROFILES_PATH } from './gatewaySwitch.js';
 import { ensureRepo } from './deploy.js';
 import { createInstallChecker } from './install.js';
@@ -57,7 +57,7 @@ export function createAgent({ getDemos, token, port, exec, fileExists, shelfDir 
   // can show "13 running · limit 10" before anyone clicks. running is null when Docker could not tell; max is null with no limit.
   app.get('/v1/running', async (req, res) => {
     let list;
-    try { list = await runningDemos(getDemos(), exec || defaultExec, shelfDir); } catch { list = null; }
+    try { list = await runningProjects(exec || defaultExec, shelfDir); } catch { list = null; }
     res.json({ ok: true, schema: 'shelf-agent-running/1', running: list ? list.length : null, max: cap ? cap.max : null });
   });
 

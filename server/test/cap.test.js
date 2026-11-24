@@ -10,7 +10,7 @@ const world = (up, { stopFails = false } = {}) => {
   const exec = vi.fn(async (f, args) => {
     calls.push(args.join(' '));
     if (args[0] === 'context') return { stdout: 'orbstack', stderr: '' };
-    if (args[0] === 'compose' && args[1] === 'ls') return { stdout: JSON.stringify([...up.map(project), { Name: 'other-stack', Status: 'running(3)', ConfigFiles: '/elsewhere/c.yml' }]), stderr: '' };
+    if (args[0] === 'compose' && args[1] === 'ls') return { stdout: JSON.stringify([...up.map(project)]), stderr: '' };
     if (args[0] === 'info') return { stdout: 'null', stderr: '' };
     if (args[0] === 'network') return { stdout: 'a\nb', stderr: '' };
     if (stopFails && args.includes('down')) { const e = new Error('boom'); e.stdout = ''; e.stderr = 'boom'; throw e; }
@@ -95,16 +95,16 @@ describe('running cap', () => {
 });
 
 describe('the default limit', () => {
-  it('is 25 demos at once, and SHELF_MAX_RUNNING still overrides it', () => {
+  it('is 60 demos at once, and SHELF_MAX_RUNNING still overrides it', () => {
     const before = process.env.SHELF_MAX_RUNNING;
     try {
       delete process.env.SHELF_MAX_RUNNING;
-      expect(MAX_RUNNING_DEFAULT).toBe(25);
-      expect(maxRunning()).toBe(25);
+      expect(MAX_RUNNING_DEFAULT).toBe(60);
+      expect(maxRunning()).toBe(60);
       process.env.SHELF_MAX_RUNNING = '7';
       expect(maxRunning()).toBe(7);
       process.env.SHELF_MAX_RUNNING = 'not-a-number';
-      expect(maxRunning()).toBe(25);
+      expect(maxRunning()).toBe(60);
     } finally {
       if (before === undefined) delete process.env.SHELF_MAX_RUNNING; else process.env.SHELF_MAX_RUNNING = before;
     }

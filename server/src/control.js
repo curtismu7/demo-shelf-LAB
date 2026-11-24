@@ -96,12 +96,24 @@ export async function stopSharedContainers(getDemos, exec) {
 }
 
 // At most this many shelf demos run at once (SHELF_MAX_RUNNING overrides). Starting one more stops the oldest, and says so.
-export const MAX_RUNNING_DEFAULT = 25;
+export const MAX_RUNNING_DEFAULT = 60;
 // Shared services other demos lean on: they still count toward the limit, but the limit never picks one to stop (Stop all and Stop do).
 export const NEVER_AUTO_STOPPED = new Set(['ai-guard-sidecar']);
 export function maxRunning() {
   const n = Number(process.env.SHELF_MAX_RUNNING);
   return Number.isInteger(n) && n >= 1 && n <= 100 ? n : MAX_RUNNING_DEFAULT;
+}
+// Every running compose project on this machine, whatever started it (the shelf, another session, a /tmp copy). Each entry lists its
+// compose config files. The shelf's own project is left out. null = could not tell.
+export async function runningProjects(exec, shelfDir = null) {
+  let projects;
+  try { projects = JSON.parse((await exec('docker', ['compose', 'ls', '--format', 'json'])).stdout.trim() || '[]'); } catch { return null; }
+  if (!Array.isArray(projects)) return null;
+  const shelfFile = shelfDir ? path.join(shelfDir, 'docker-compose.yml') : null;
+  return projects
+    .filter((p) => /^running/.test(String(p.Status)))
+    .map((p) => ({ name: String(p.Name || ''), files: String(p.ConfigFiles || '').split(',') }))
+    .filter((p) => !(shelfFile && p.files.includes(shelfFile)));
 }
 // Which registered demos are up right now: `docker compose ls` lists the running projects with their compose files. null = could not tell.
 export async function runningDemos(demos, exec, shelfDir = null) {
@@ -152,14 +164,18 @@ export async function runCompose(demo, action, { exec = defaultExec, fileExists 
   if ((action === 'start' || action === 'deploy') && cap) {
     // Keep the shelf to cap.max running demos. At the limit: stop the oldest one, then start this one. Already over it (the user started
     // more by hand): refuse rather than stop several at once, and say how many are running.
+    // Every running project counts; only shelf demos can be stopped automatically (infrastructure never is).
+    const projects = await runningProjects(exec, shelfDir) || [];
+    const selfRunning = projects.some((p) => p.files.includes(demo.composeFile));
+    const otherCount = projects.length - (selfRunning ? 1 : 0);
     const others = (await runningDemos(cap.getDemos(), exec, shelfDir) || []).filter((d) => d.id !== demo.id);
-    if (others.length > cap.max) {
-      return fail(409, `too-many-running:${others.length}:${cap.max}`, { output: `${others.length} demos are running and the limit is ${cap.max}. Stop some first (Stop all stops every one).` });
+    if (otherCount > cap.max) {
+      return fail(409, `too-many-running:${otherCount}:${cap.max}`, { output: `${otherCount} demos are running and the limit is ${cap.max}. Stop some first (Stop all stops every one).` });
     }
-    if (others.length === cap.max) {
+    if (otherCount === cap.max) {
       const rank = (d) => { const i = (cap.lastRunning?.list() || []).findIndex((e) => e.id === d.id); return i < 0 ? Infinity : i; };
       const candidates = others.filter((d) => !NEVER_AUTO_STOPPED.has(d.id));
-      if (!candidates.length) return fail(409, `no-demo-to-stop:${others.length}:${cap.max}`, { output: `${others.length} demos are running and the limit is ${cap.max}, and none of them may be stopped automatically. Stop one first.` });
+      if (!candidates.length) return fail(409, `no-demo-to-stop:${otherCount}:${cap.max}`, { output: `${otherCount} demos are running and the limit is ${cap.max}, and none of them may be stopped automatically. Stop one first.` });
       const oldest = candidates.reduce((a, b) => (rank(b) > rank(a) ? b : a));
       const r = await runCompose(oldest, 'stop', { exec, fileExists, shelfDir });
       if (r.status !== 200) return fail(502, 'could-not-stop-oldest', { output: `To stay within ${cap.max} running, ${oldest.name} had to stop, but it would not: ${r.body.error}` });
