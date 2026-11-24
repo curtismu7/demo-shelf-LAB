@@ -2320,6 +2320,50 @@
     "learning"
    ],
    "where": "installed"
+  },
+  {
+   "id": "privilege-model-fallback-lab",
+   "addedAt": "2026-11-24",
+   "name": "Privilege Model Fallback LAB",
+   "kind": "Demo",
+   "description": "An LLM key names an ordered chain of models: the next answers when the first is down, overloaded or out of budget, charged on its own budget. Nine scenarios and a named refusal when nothing can answer. Simulated, Mock only; beyond the 2026-11-21 release notes it is UNVERIFIED.",
+   "url": "http://localhost:7836",
+   "healthPath": "/api/health",
+   "composeFile": "privilege-model-fallback-LAB/docker-compose.yml",
+   "composeOverlays": [],
+   "pingProducts": [],
+   "notes": "Catalog id D146 (next free after D145). Host-run: ./scripts/run.sh (port 7836). Docker: HOST_PORT=7836 docker compose up --build -d (published on 127.0.0.1 only). Mock only, no tenant and no credentials; Real is not built. Mock makes zero outbound calls.",
+   "repo": "https://github.com/curtismu7/privilege-model-fallback-LAB",
+   "catalogId": "D146",
+   "alsoCatalogIds": [],
+   "tags": [
+    "pingone-privilege",
+    "simulated",
+    "learning"
+   ],
+   "where": "installed"
+  },
+  {
+   "id": "privilege-rate-limit-lab",
+   "addedAt": "2026-11-24",
+   "name": "Privilege Rate Limit LAB",
+   "kind": "Demo",
+   "description": "A refilling bucket, an in-flight cap, a limit shared across a gateway cluster and the app-wide MCP and A2A caps, on a lab clock: seven scenarios with a chart and a verdict. Simulated, Mock only; beyond the 2026-11-21 release notes it is UNVERIFIED.",
+   "url": "http://localhost:7837",
+   "healthPath": "/api/health",
+   "composeFile": "privilege-rate-limit-LAB/docker-compose.yml",
+   "composeOverlays": [],
+   "pingProducts": [],
+   "notes": "Catalog id D147 (next free after D146). Host-run: npm start (port 7837). Docker: docker compose up --build -d (published on 127.0.0.1 only). Mock only, no tenant and no credentials; Real is not built. Mock makes zero outbound calls.",
+   "repo": "https://github.com/curtismu7/privilege-rate-limit-LAB",
+   "catalogId": "D147",
+   "alsoCatalogIds": [],
+   "tags": [
+    "pingone-privilege",
+    "simulated",
+    "learning"
+   ],
+   "where": "installed"
   }
  ]
 }
