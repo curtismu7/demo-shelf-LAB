@@ -2364,6 +2364,52 @@
     "learning"
    ],
    "where": "installed"
+  },
+  {
+   "id": "privilege-bedrock-assume-role-lab",
+   "addedAt": "2026-11-24",
+   "name": "Privilege Bedrock Assume Role LAB",
+   "kind": "Demo",
+   "description": "An LLM key reaches Bedrock under an assumed IAM role and stores no cloud credential, with metering, AI Guard and audit still on the call. Thirteen scenarios, each failure named with its fix, plus a Vertex tab. Simulated, Mock only; beyond the 2026-11-21 release notes it is UNVERIFIED.",
+   "url": "http://localhost:7838",
+   "healthPath": "/api/health",
+   "composeFile": "privilege-bedrock-assume-role-LAB/docker-compose.yml",
+   "composeOverlays": [],
+   "pingProducts": [],
+   "notes": "Catalog id D148. Host-run: ./scripts/run.sh (port 7838). Docker: HOST_PORT=7838 docker compose up --build -d (published on 127.0.0.1 only). Mock only, no tenant and no credentials; Real is not built. Mock makes zero outbound calls.",
+   "repo": "https://github.com/curtismu7/privilege-bedrock-assume-role-LAB",
+   "catalogId": "D148",
+   "alsoCatalogIds": [],
+   "tags": [
+    "pingone-privilege",
+    "aws-bedrock",
+    "simulated",
+    "learning"
+   ],
+   "where": "installed"
+  },
+  {
+   "id": "privilege-model-armor-lab",
+   "addedAt": "2026-11-24",
+   "name": "Privilege Model Armor LAB",
+   "kind": "Demo",
+   "description": "One external inspector per LLM key (Model Armor, with Azure and Bedrock stubs) and the authority cap: the same finding blocks when enforcing and is only logged when advisory. Fail open or closed, a timeout, a named error. Simulated, Mock only; beyond the 2026-11-21 release notes it is UNVERIFIED.",
+   "url": "http://localhost:7846",
+   "healthPath": "/api/health",
+   "composeFile": "privilege-model-armor-LAB/docker-compose.yml",
+   "composeOverlays": [],
+   "pingProducts": [],
+   "notes": "Catalog id D149. A fork of ai-guard-sidecar-LAB: it keeps only that lab's sanitize, fold and PII helpers and the finding shape; the engine, UI and tests are new. Host-run: ./scripts/run.sh (port 7846; 7839 belongs to the ap-* labs). Docker: HOST_PORT=7846 docker compose up --build -d (published on 127.0.0.1 only). Mock only, no tenant and no credentials; Real is not built. Mock makes zero outbound calls.",
+   "repo": "https://github.com/curtismu7/privilege-model-armor-LAB",
+   "catalogId": "D149",
+   "alsoCatalogIds": [],
+   "tags": [
+    "pingone-privilege",
+    "agent-controls",
+    "simulated",
+    "learning"
+   ],
+   "where": "installed"
   }
  ]
 }

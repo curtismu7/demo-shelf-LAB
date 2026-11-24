@@ -350,6 +350,8 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'salesforce-privilege-lab': '/salesforce-privilege-lab/',
     'privilege-model-fallback-lab': '/privilege-model-fallback-lab/',
     'privilege-rate-limit-lab': '/privilege-rate-limit-lab/',
+    'privilege-bedrock-assume-role-lab': '/privilege-bedrock-assume-role-lab/',
+    'privilege-model-armor-lab': '/privilege-model-armor-lab/',
     'mcp-discovery': '/mcp-discovery/',
     'intent-purpose-behaviour-lab': '/intent-purpose-behaviour/',
     'coding-agents-lab': '/coding-agents/',

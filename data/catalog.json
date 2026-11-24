@@ -600,6 +600,22 @@
       "group": "D",
       "oneLiner": "A refilling bucket, an in-flight cap, a limit shared across a gateway cluster and the app-wide MCP and A2A caps on a lab clock: seven scenarios with a chart and a verdict. Simulated, UNVERIFIED beyond the 2026-11-21 release notes.",
       "status": "active"
+    },
+    {
+      "id": "D148",
+      "name": "Privilege Bedrock Assume Role LAB",
+      "kind": "Demo",
+      "group": "D",
+      "oneLiner": "An LLM key reaches Bedrock under an assumed IAM role and stores no cloud credential, with each failure named and its fix; thirteen scenarios and a Vertex tab against a mock. Simulated, UNVERIFIED beyond the 2026-11-21 release notes.",
+      "status": "active"
+    },
+    {
+      "id": "D149",
+      "name": "Privilege Model Armor LAB",
+      "kind": "Demo",
+      "group": "D",
+      "oneLiner": "One external inspector per LLM key and the authority cap: the same finding blocks when enforcing and is only logged when advisory, with fail open or closed and a timeout; eleven scenarios against a mock. A fork of ai-guard-sidecar-LAB. Simulated, UNVERIFIED beyond the 2026-11-21 release notes.",
+      "status": "active"
     }
   ]
 }
