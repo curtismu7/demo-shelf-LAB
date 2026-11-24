@@ -283,11 +283,11 @@ describe('running count against the limit', () => {
     if (args[0] === 'compose' && args[1] === 'ls') return { stdout: JSON.stringify(files.map((f, i) => ({ Name: `p${i}`, Status: 'running(1)', ConfigFiles: f }))), stderr: '' };
     return { stdout: 'orbstack\n', stderr: '' };
   });
-  it('GET /v1/running counts the registered demos docker compose has up, with the limit; token required', async () => {
+  it('GET /v1/running counts every running compose project, registered or not, with the limit; token required', async () => {
     const app = mk({ exec: lsExec(['/x/a/docker-compose.yml', '/elsewhere/other.yml']), maxRunningDemos: 10 });
     const r = await call(app, 'get', '/v1/running');
     expect(r.status).toBe(200);
-    expect(r.body).toEqual({ ok: true, schema: 'shelf-agent-running/1', running: 1, max: 10 });
+    expect(r.body).toEqual({ ok: true, schema: 'shelf-agent-running/1', running: 2, max: 10 });
     expect((await call(app, 'get', '/v1/running', { token: null })).status).toBe(401);
   });
   it('says null when Docker cannot tell, or when there is no limit', async () => {
