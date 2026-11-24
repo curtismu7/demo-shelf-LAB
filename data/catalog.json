@@ -584,6 +584,22 @@
       "group": "D",
       "oneLiner": "Connect a Salesforce Developer org to PingOne Privilege, then grant and revoke a permission set for a time window, against a mock org: what goes wrong while connecting, and why. Simulated, UNVERIFIED as a product claim.",
       "status": "active"
+    },
+    {
+      "id": "D146",
+      "name": "Privilege Model Fallback LAB",
+      "kind": "Demo",
+      "group": "D",
+      "oneLiner": "An LLM key names an ordered chain of models, and the next one answers when the first is down, overloaded or out of budget, each charged on its own budget; nine scenarios against a mock. Simulated, UNVERIFIED beyond the 2026-11-21 release notes.",
+      "status": "active"
+    },
+    {
+      "id": "D147",
+      "name": "Privilege Rate Limit LAB",
+      "kind": "Demo",
+      "group": "D",
+      "oneLiner": "A refilling bucket, an in-flight cap, a limit shared across a gateway cluster and the app-wide MCP and A2A caps on a lab clock: seven scenarios with a chart and a verdict. Simulated, UNVERIFIED beyond the 2026-11-21 release notes.",
+      "status": "active"
     }
   ]
 }

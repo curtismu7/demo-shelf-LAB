@@ -348,6 +348,8 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'privilege-map': '/privilege-map/',
     'privilege-gateway-client': '/privilege-gateway-client/',
     'salesforce-privilege-lab': '/salesforce-privilege-lab/',
+    'privilege-model-fallback-lab': '/privilege-model-fallback-lab/',
+    'privilege-rate-limit-lab': '/privilege-rate-limit-lab/',
     'mcp-discovery': '/mcp-discovery/',
     'intent-purpose-behaviour-lab': '/intent-purpose-behaviour/',
     'coding-agents-lab': '/coding-agents/',
