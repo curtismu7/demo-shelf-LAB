@@ -1216,7 +1216,7 @@
    "addedAt": "2026-11-04T23:19:14Z",
    "name": "Privilege A2A Anthropic demo LAB",
    "kind": "Demo",
-   "description": "Three Node processes that show an access review through A2A and MCP, on Anthropic or Google models.",
+   "description": "A2A and A2A with AWS Agent: two of our agents talking over A2A, then our agent calling an AWS Bedrock AgentCore agent, every hop through the Privilege gateway. A Demo | Story toggle walks it with pop-ups; Mock runs offline.",
    "url": "http://127.0.0.1:6881",
    "healthPath": "/api/health",
    "composeFile": "privilege-a2a-anthropic-demo-LAB/docker-compose.yml",
