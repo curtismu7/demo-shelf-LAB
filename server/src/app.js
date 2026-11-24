@@ -352,6 +352,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'privilege-rate-limit-lab': '/privilege-rate-limit-lab/',
     'privilege-bedrock-assume-role-lab': '/privilege-bedrock-assume-role-lab/',
     'privilege-model-armor-lab': '/privilege-model-armor-lab/',
+    'privilege-semantic-cache-lab': '/privilege-semantic-cache-lab/',
     'mcp-discovery': '/mcp-discovery/',
     'intent-purpose-behaviour-lab': '/intent-purpose-behaviour/',
     'coding-agents-lab': '/coding-agents/',

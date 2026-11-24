@@ -616,6 +616,14 @@
       "group": "D",
       "oneLiner": "One external inspector per LLM key and the authority cap: the same finding blocks when enforcing and is only logged when advisory, with fail open or closed and a timeout; eleven scenarios against a mock. A fork of ai-guard-sidecar-LAB. Simulated, UNVERIFIED beyond the 2026-11-21 release notes.",
       "status": "active"
+    },
+    {
+      "id": "D150",
+      "name": "Privilege Semantic Cache LAB",
+      "kind": "Demo",
+      "group": "D",
+      "oneLiner": "A semantic cache in front of the model: the embedding score against the strictness decides hit or miss, a hit never reaches the model, and the Similarity card shows the score that decided. Simulated, UNVERIFIED beyond the 2026-11-21 release notes.",
+      "status": "active"
     }
   ]
 }

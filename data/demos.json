@@ -2410,6 +2410,28 @@
     "learning"
    ],
    "where": "installed"
+  },
+  {
+   "id": "privilege-semantic-cache-lab",
+   "addedAt": "2026-11-24",
+   "name": "Privilege Semantic Cache LAB",
+   "kind": "Demo",
+   "description": "A semantic cache in front of the model: the embedding score against the strictness decides hit or miss, a hit never reaches the model, and the Similarity card shows the score that decided. Simulated, Mock only; beyond the release notes it is UNVERIFIED.",
+   "url": "http://localhost:7847",
+   "healthPath": "/api/health",
+   "composeFile": "privilege-semantic-cache-LAB/docker-compose.yml",
+   "composeOverlays": [],
+   "pingProducts": [],
+   "notes": "Catalog id D150. Host-run: ./scripts/run.sh (port 7847; 7839-7843 belong to the ap-* labs). Docker: HOST_PORT=7847 docker compose up --build -d (published on 127.0.0.1 only). Mock only, no tenant and no credentials; Real is not built. Mock makes zero outbound calls.",
+   "repo": "https://github.com/curtismu7/privilege-semantic-cache-LAB",
+   "catalogId": "D150",
+   "alsoCatalogIds": [],
+   "tags": [
+    "pingone-privilege",
+    "simulated",
+    "learning"
+   ],
+   "where": "installed"
   }
  ]
 }
