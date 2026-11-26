@@ -307,6 +307,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'mfa-admin-mcp': '/mfa-admin-mcp/',
     'privilege-k8-kits': '/privilege-k8-kits/',
     'ai-guard-sidecar': '/ai-guard-sidecar/',
+    'ai-guard-demo': '/ai-guard-demo/',
     'agentcore-pingone-demo-lab': '/agentcore-pingone/',
     'ciba-hitl-lab': '/ciba-hitl-lab/',
     'ciba-approval-sequence': '/ciba-approval-sequence/',

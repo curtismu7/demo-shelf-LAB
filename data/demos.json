@@ -2432,6 +2432,27 @@
     "learning"
    ],
    "where": "installed"
+  },
+  {
+   "id": "ai-guard-demo",
+   "addedAt": "2026-11-26T15:30:00Z",
+   "name": "AI Guard Demo",
+   "catalogId": "D151",
+   "kind": "Demo",
+   "description": "AI Guard end to end: an agent gateway, Agentic Apps (MCP doors) and an Agent Registry of mock keys with per-key guardrails. Try a call as a key: identity, grant, tool filter, then the stand-in sidecar's verdict. Contract unverified; offline.",
+   "url": "http://localhost:7900",
+   "healthPath": "/api/health",
+   "composeFile": "ai-guard-demo-LAB/docker-compose.yml",
+   "tags": [
+    "agent-gateway",
+    "ai-agent-security",
+    "agent-controls",
+    "simulated"
+   ],
+   "repo": "https://github.com/curtismu7/ai-guard-demo-LAB",
+   "pingProducts": [
+    "privilege-gateway"
+   ]
   }
  ]
 }
