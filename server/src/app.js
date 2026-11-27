@@ -369,7 +369,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'worker-demo': '/worker-demo/',
     'session-lab': '/session-lab/',
     'intent-par-inspector': '/intent-par-inspector/',
-    'poppy-agent-tester': '/poppy-agent-tester/',
+    'poppy-demo': '/poppy-demo/',
     'agent-governance-lab': '/agent-governance-lab/',
     'mcp-surface-lab': '/mcp-surface-lab/',
     'federated-identity-lab': '/federated-identity-lab/',
