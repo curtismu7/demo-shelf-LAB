@@ -1193,15 +1193,15 @@
    ]
   },
   {
-   "id": "poppy-agent-tester",
+   "id": "poppy-demo",
    "addedAt": "2026-11-04T23:19:09Z",
-   "name": "Poppy Agent Tester",
+   "name": "Poppy demo",
    "catalogId": "D100",
    "kind": "Demo",
    "description": "Play the personal agent from the Personal Agent Protocol (Poppy, spec 1.0): read a Company's poppy.json, sign in to PingFederate with a URL as the client id, then call its API with a signed Poppy-Session. Step through it or ask the Agent chat (scripted or live Claude). Every request is shown raw.",
    "url": "http://localhost:5450",
    "healthPath": "/api/health",
-   "composeFile": "poppy-agent-tester-LAB/docker-compose.yml",
+   "composeFile": "poppy-demo-LAB/docker-compose.yml",
    "tags": [
     "pingfederate",
     "agent-identity",
@@ -1209,7 +1209,7 @@
     "simulated",
     "real"
    ],
-   "repo": "https://github.com/curtismu7/poppy-agent-tester-LAB"
+   "repo": "https://github.com/curtismu7/poppy-demo-LAB"
   },
   {
    "id": "privilege-a2a-anthropic-demo",
@@ -1993,7 +1993,7 @@
   },
   {
    "id": "poppy-verification",
-   "name": "Poppy Verification",
+   "name": "Poppy verification",
    "catalogId": "D136 provisional",
    "kind": "Tester",
    "description": "Check a Company and its issuer against the Personal Agent Protocol 1.0: 107 spec-linked checks (discovery, issuer metadata, Poppy-Session, sign-in, resources). Mock runs a reference Company you can break with 28 defects; Real probes the Company you type.",
