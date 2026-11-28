@@ -2460,20 +2460,19 @@
       "catalogId": "D128",
       "kind": "Demo",
       "description": "Run a Larkspur Air agent request and read what each layer logged for that run \u2014 agent, gateway, authorize (policy), resource server \u2014 in one pane: per-layer log lines with decisions, the chain and the tokens. Mock simulates; Real measures your own gateway.",
-      "url": "https://local.ping-devops.com:8443/observability-run/",
+      "url": "http://localhost:7848",
       "healthPath": "/api/health",
       "composeFile": "observability-run-LAB/docker-compose.yml",
       "composeOverlays": [],
       "notes": "Port 7848, loopback only. Mock needs nothing. Real: OBSRUN_GW_URL, OBSRUN_GW_APPS, OBSRUN_GW_KEY_<NAME>. Fork of aggregate-entitlement-LAB.",
-      "where": "standalone/observability-run-LAB",
-      "mockUrl": "https://local.ping-devops.com:8443/observability-run/",
       "tags": [
-        "observability",
         "agent-gateway",
-        "airline",
+        "audit-observability",
         "simulated",
         "real"
-      ]
+      ],
+      "addedAt": "2026-11-28T16:00:00Z",
+      "pingProducts": []
     }
   ]
 }
