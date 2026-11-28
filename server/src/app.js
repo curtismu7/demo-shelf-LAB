@@ -408,6 +408,7 @@ export function createApp({ demos: registry, catalog, tags, catalogTags = {}, al
     'agent-audit-trail-lab': '/agent-audit-trail-lab/',
     'privilege-bulk-users': '/privilege-bulk-users/',
     'appfire-agent-governance-lab': '/appfire-agent-governance/',
+    'observability-run-lab': '/observability-run/',
     'privilege-shelf': '/privilege-shelf/',
     'spiffe-issuer': '/spiffe-issuer/',
     'pf-array-claims-lab': '/pf-array-claims/',
